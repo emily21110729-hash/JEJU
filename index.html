@@ -7,162 +7,153 @@
     <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root { --orange: #FF8C00; --paper: #ffffff; --text: #333; --bg-grey: #d7ccc8; --header-bg: #fff9f0; }
-        
-        body { 
-            margin: 0; padding: 0; background-color: var(--bg-grey); 
-            font-family: 'Shippori Mincho', serif; 
-            height: 100vh; overflow: hidden; color: var(--text);
-        }
-        
+        body { margin: 0; padding: 0; background-color: var(--bg-grey); font-family: 'Shippori Mincho', serif; height: 100vh; overflow: hidden; color: var(--text); }
         #slider { width: 100vw; height: 100vh; position: relative; overflow: hidden; background: #333; }
         .slides-wrapper { display: flex; width: 1100%; height: 100%; transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
         .slide { width: 9.09%; height: 100%; flex-shrink: 0; position: relative; background-color: var(--bg-grey); }
-        
-        /* 🖼️ 封面與封底：維持直角 */
-        .cover-img { 
-            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 88%; height: 75%; object-fit: contain; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2); background-color: #fff;
-        }
-
-        /* 📋 白色主方框 (圓角) */
-        .content-overlay { 
-            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 88%; height: 75%; z-index: 10; 
-            background: var(--paper); 
-            box-sizing: border-box; overflow: hidden; /* 防止內部圓角溢出 */
-            border-radius: 25px; 
-            box-shadow: 0 8px 30px rgba(0,0,0,0.1); 
-            display: flex; flex-direction: column;
-        }
-
-        /* 🌅 上方橫向長方形區塊 (頁眉) */
-        .day-header {
-            background-color: var(--header-bg);
-            padding: 20px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-radius: 18px; /* 頁眉本身的圓角 */
-            margin: 10px; /* 與主方框邊緣留一點距離，更有層次感 */
-            border: 1px solid #ffe0b2;
-        }
-
-        /* Day 文字放大放左側 */
-        .day-label {
-            font-size: 28px;
-            font-weight: 700;
-            color: var(--orange);
-            letter-spacing: -1px;
-        }
-
-        /* 標籤放右側 */
-        .header-tags {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-            gap: 5px;
-        }
-
-        .nav-tag { 
-            text-decoration: none; background: #fff; color: #f57f17; padding: 4px 10px; 
-            border-radius: 12px; font-weight: 700; border: 1px solid #ffcc80; 
-            font-size: 11px; white-space: nowrap;
-        }
-
-        /* 📜 下方詳細行程區域 */
-        .scroll-content {
-            flex: 1;
-            overflow-y: auto;
-            padding: 0 25px 25px 25px;
-        }
-        
-        .check-item { display: flex; align-items: center; padding: 12px 5px; border-bottom: 1px solid #f5f5f5; font-size: 15px; cursor: pointer; }
+        .cover-img { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 88%; height: 75%; object-fit: contain; box-shadow: 0 10px 30px rgba(0,0,0,0.2); background-color: #fff; }
+        .content-overlay { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 88%; height: 75%; z-index: 10; background: var(--paper); box-sizing: border-box; overflow: hidden; border-radius: 25px; box-shadow: 0 8px 30px rgba(0,0,0,0.1); display: flex; flex-direction: column; }
+        .day-header { background-color: var(--header-bg); padding: 18px 20px; display: flex; justify-content: space-between; align-items: center; border-radius: 18px; margin: 12px; border: 1px solid #ffe0b2; }
+        .day-label { font-size: 26px; font-weight: 700; color: var(--orange); letter-spacing: -0.5px; }
+        .header-tags { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
+        .nav-tag { text-decoration: none; background: #fff; color: #f57f17; padding: 5px 12px; border-radius: 12px; font-weight: 700; border: 1.5px solid #ffcc80; font-size: 11px; white-space: nowrap; }
+        .scroll-content { flex: 1; overflow-y: auto; padding: 0 25px 25px 25px; }
+        .check-item { display: flex; align-items: center; padding: 13px 5px; border-bottom: 1px solid #f5f5f5; font-size: 15px; cursor: pointer; }
         .check-item input[type="checkbox"] { width: 22px; height: 22px; margin-right: 12px; accent-color: var(--orange); }
-
         ul { list-style: none; padding: 0; margin: 0; }
-        li { padding: 12px 0; border-bottom: 1px solid #f5f5f5; font-size: 14px; line-height: 1.6; }
+        li { padding: 13px 0; border-bottom: 1px solid #f5f5f5; font-size: 14px; line-height: 1.6; }
         li b { color: #000; font-weight: 700; margin-right: 8px; }
-        
-        .flight-card { 
-            background: #fffef0; border: 1px dashed #ffcc80; padding: 15px; 
-            border-radius: 15px; margin-bottom: 15px; font-size: 14px; text-align: center;
-        }
-
-        /* 導航點與按鈕 */
+        .flight-card { background: #fff; border: 2px dashed #ffcc80; padding: 15px; border-radius: 15px; margin: 5px 0 15px 0; font-size: 14px; text-align: center; line-height: 1.8; }
         .dots { position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); display: flex; gap: 5px; z-index: 101; }
         .dot { width: 6px; height: 6px; background: rgba(255,255,255,0.3); border-radius: 50%; }
         .dot.active { background: var(--orange); width: 16px; border-radius: 10px; }
-        .nav-btn { position: absolute; top: 0; width: 10%; height: 100%; z-index: 100; cursor: pointer; }
+        .nav-btn { position: absolute; top: 0; width: 12%; height: 100%; z-index: 100; cursor: pointer; }
         .next-btn { right: 0; } .prev-btn { left: 0; }
+        .stay-info { font-size: 12px; color: #888; margin-top: 10px; text-align: right; font-style: italic; }
     </style>
 </head>
 <body>
     <div id="slider">
         <div class="nav-btn prev-btn" onclick="moveSlide(-1)"></div>
         <div class="nav-btn next-btn" onclick="moveSlide(1)"></div>
-
         <div class="slides-wrapper" id="wrapper">
             <div class="slide"><img src="JEJU.png" class="cover-img"></div>
 
             <div class="slide"><div class="content-overlay">
-                <div class="day-header">
-                    <div class="day-label">Ready</div>
-                    <div class="header-tags"><span class="nav-tag">Check List</span></div>
-                </div>
+                <div class="day-header"><div class="day-label">航班資訊</div><div class="header-tags"><span class="nav-tag">Flight</span></div></div>
                 <div class="scroll-content">
-                    <div class="flight-card">去程 IT 654 | <b>06:40 - 09:50</b><br>回程 IT 655 | <b>11:45 - 12:55</b></div>
+                    <div class="flight-card">去程 ✈️ <b>IT 654</b><br>06:40 - 09:50</div>
+                    <div class="flight-card">回程 ✈️ <b>IT 655</b><br>11:45 - 12:55</div>
+                </div>
+            </div></div>
+
+            <div class="slide"><div class="content-overlay">
+                <div class="day-header"><div class="day-label">行李清單</div><div class="header-tags"><span class="nav-tag">Packing</span></div></div>
+                <div class="scroll-content">
                     <label class="check-item"><input type="checkbox"> 護照 / K-ETA 簽證</label>
                     <label class="check-item"><input type="checkbox"> WOWPASS / 韓幣現金</label>
                     <label class="check-item"><input type="checkbox"> 轉接頭 / 網卡 / 行動電源</label>
+                    <label class="check-item"><input type="checkbox"> 個人藥品 / 盥洗用品</label>
+                    <label class="check-item"><input type="checkbox"> 爆買用的空行李箱</label>
                 </div>
             </div></div>
 
             <div class="slide"><div class="content-overlay">
-                <div class="day-header">
-                    <div class="day-label">Day 1</div>
-                    <div class="header-tags">
-                        <a href="https://naver.me/G8tU3GqI" class="nav-tag" target="_blank">📍 海景麥當勞</a>
-                        <a href="https://naver.me/9UP_Je_j" class="nav-tag" target="_blank">📍 umu 布丁</a>
-                    </div>
-                </div>
+                <div class="day-header"><div class="day-label">Day 1</div><div class="header-tags"><a href="https://naver.me/G8tU3GqI" class="nav-tag" target="_blank">📍 海景麥當勞</a><a href="https://naver.me/9UP_Je_j" class="nav-tag" target="_blank">📍 umu 布丁</a></div></div>
                 <div class="scroll-content">
                     <ul>
-                        <li><b>09:00</b> 落地 ➔ 寄存機場櫃檯</li>
-                        <li><b>11:00</b> 東門市場午餐 ➔ 買布丁</li>
-                        <li><b>13:00</b> 蓮洞商圈 Olive Young 掃貨</li>
-                        <li><b>20:00</b> 熟成到黑豬肉晚餐 🐷</li>
+                        <li><b>09:00</b> 落地 ➔ 行李寄存機場櫃檯</li>
+                        <li><b>11:00</b> 東門市場午餐 ➔ 買伴手禮</li>
+                        <li><b>13:00</b> 蓮洞/老衡掃貨 ➔ Olive Young</li>
+                        <li><b>15:30</b> <b>海景麥當勞</b> ➔ <b>umu 布丁</b></li>
+                        <li><b>17:00</b> 機場領行李 ➔ 前往咸德</li>
+                        <li><b>20:00</b> <b>熟成到</b>黑豬肉 (咸德店)</li>
+                    </ul>
+                    <div class="stay-info">🏨 住宿：咸德飯店</div>
+                </div>
+            </div></div>
+
+            <div class="slide"><div class="content-overlay">
+                <div class="day-header"><div class="day-label">Day 2</div><div class="header-tags"><a href="https://naver.me/FvWqXqXq" class="nav-tag" target="_blank">📍 倫敦貝果</a><a href="https://naver.me/MdmvQxbl" class="nav-tag" target="_blank">📍 Hugely Jeju</a></div></div>
+                <div class="scroll-content">
+                    <ul>
+                        <li><b>11:30</b> <b>海女飯卷</b> (鮑魚飯卷/拉麵)</li>
+                        <li><b>13:30</b> 咸德文創街 ➔ 橘子紀念品店</li>
+                        <li><b>15:30</b> 東福里：<b>倫敦貝果</b> (先抽號)</li>
+                        <li><b>空檔</b> 逛 Object 客製化 / Blue Elephant</li>
+                        <li><b>18:00</b> <b>Hugely Jeju</b> 拍 3D 橘子 🍊</li>
+                    </ul>
+                    <div class="stay-info">🏨 住宿：咸德飯店</div>
+                </div>
+            </div></div>
+
+            <div class="slide"><div class="content-overlay">
+                <div class="day-header"><div class="day-label">Day 3</div><div class="header-tags"><a href="https://naver.me/5fP8P8P8" class="nav-tag" target="_blank">📍 Meohamen</a></div></div>
+                <div class="scroll-content">
+                    <ul>
+                        <li><b>早餐</b> 咸德 <b>鮑魚粥</b></li>
+                        <li><b>11:00</b> <b>牛島 Udo</b> 租電動車環島</li>
+                        <li><b>12:30</b> <b>Meohamen</b> 吃誇張海鮮拉麵</li>
+                        <li><b>15:00</b> <b>涉地可支</b> 看絕美海景燈塔</li>
+                        <li><b>晚上</b> 西歸浦飯店 Check-in</li>
+                    </ul>
+                    <div class="stay-info">🏨 住宿：西歸浦飯店 (搬行李)</div>
+                </div>
+            </div></div>
+
+            <div class="slide"><div class="content-overlay">
+                <div class="day-header"><div class="day-label">Day 4</div><div class="header-tags"><a href="https://naver.me/x6f6f6f6" class="nav-tag" target="_blank">📍 三麗鷗樂園</a></div></div>
+                <div class="scroll-content">
+                    <ul>
+                        <li><b>上午</b> <b>Ein 濟州 Bat</b> 橘子園咖啡廳</li>
+                        <li><b>下午</b> <b>三麗鷗主題樂園</b> (Hello Kitty)</li>
+                        <li><b>晚上</b> 西歸浦每日偶來市場吃小吃</li>
+                        <li><b>20:30</b> <b>亂打秀 (Nanta)</b> 🎭</li>
+                    </ul>
+                    <div class="stay-info">🏨 住宿：西歸浦飯店</div>
+                </div>
+            </div></div>
+
+            <div class="slide"><div class="content-overlay">
+                <div class="day-header"><div class="day-label">Day 5</div><div class="header-tags"><a href="https://naver.me/5LANKOqH" class="nav-tag" target="_blank">📍 Merci 濟州</a></div></div>
+                <div class="scroll-content">
+                    <ul>
+                        <li><b>09:00</b> 行李托運 (西歸浦 ➔ 市區飯店)</li>
+                        <li><b>上午</b> 大靜邑海岸路尋野生海豚 🐬</li>
+                        <li><b>下午</b> 涯月：<b>Merci Jeju</b> 買香水 🍊</li>
+                        <li><b>散步</b> 漢潭散步路 ➔ 彩虹防波堤</li>
+                        <li><b>終極爆買</b> E-Mart / 樂天超市</li>
+                    </ul>
+                    <div class="stay-info">🏨 住宿：濟州市區飯店</div>
+                </div>
+            </div></div>
+
+            <div class="slide"><div class="content-overlay">
+                <div class="day-header"><div class="day-label">Day 6</div><div class="header-tags"><span class="nav-tag">Go Home</span></div></div>
+                <div class="scroll-content">
+                    <ul>
+                        <li><b>09:00</b> 最後打包行李清點</li>
+                        <li><b>10:30</b> 前往機場辦理退稅</li>
+                        <li><b>11:45</b> IT 655 起飛回家 ✈️</li>
                     </ul>
                 </div>
             </div></div>
 
             <div class="slide"><div class="content-overlay">
-                <div class="day-header">
-                    <div class="day-label">Day 2</div>
-                    <div class="header-tags">
-                        <a href="https://naver.me/FvWqXqXq" class="nav-tag" target="_blank">📍 倫敦貝果</a>
-                        <a href="https://naver.me/MdmvQxbl" class="nav-tag" target="_blank">📍 Hugely Jeju</a>
-                    </div>
-                </div>
+                <div class="day-header"><div class="day-label">小提醒</div><div class="header-tags"><span class="nav-tag">Memo</span></div></div>
                 <div class="scroll-content">
                     <ul>
-                        <li><b>11:30</b> 海女飯卷鮑魚餐</li>
-                        <li><b>15:30</b> 倫敦貝果 ➔ 逛 Object</li>
-                        <li><b>17:30</b> Hugely Jeju 拍 3D 橘子</li>
+                        <li>Naver Map / Papago 必備</li>
+                        <li>濟州海風大，帽子要戴好 🧢</li>
+                        <li>爆買伴手禮記得預留託運重量！</li>
                     </ul>
                 </div>
             </div></div>
-
-            <div class="slide"><div class="content-overlay"><div class="day-header"><div class="day-label">Day 3</div><div class="header-tags"><span class="nav-tag">牛島</span></div></div><div class="scroll-content"><ul><li>11:00 牛島環島</li><li>12:30 海鮮拉麵</li></ul></div></div></div>
-            <div class="slide"><div class="content-overlay"><div class="day-header"><div class="day-label">Day 4</div><div class="header-tags"><span class="nav-tag">三麗鷗</span></div></div><div class="scroll-content"><ul><li>14:00 三麗鷗樂園</li><li>20:30 亂打秀</li></ul></div></div></div>
-            <div class="slide"><div class="content-overlay"><div class="day-header"><div class="day-label">Day 5</div><div class="header-tags"><span class="nav-tag">追海豚</span></div></div><div class="scroll-content"><ul><li>11:00 尋找野生海豚</li><li>14:30 涯月買香水</li></ul></div></div></div>
-            <div class="slide"><div class="content-overlay"><div class="day-header"><div class="day-label">Day 6</div><div class="header-tags"><span class="nav-tag">歸途</span></div></div><div class="scroll-content"><ul><li>10:30 機場退稅</li><li>11:45 飛機起飛</li></ul></div></div></div>
 
             <div class="slide"><img src="JEJU B.png" class="cover-img"></div>
         </div>
         <div class="dots" id="dots"></div>
     </div>
-
     <script>
         let currentIdx = 0; const totalSlides = 11;
         const wrapper = document.getElementById('wrapper');
