@@ -4,46 +4,67 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>濟州島旅遊手帳</title>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        :root { --orange: #FF8C00; --paper: #fdfaf6; --text: #4a4a4a; }
-        body { margin: 0; padding: 0; background-color: #d7ccc8; font-family: 'Noto Sans TC', sans-serif; height: 100vh; overflow: hidden; }
+        /* 匯入岳門天工體 (UoqMunThenKhung) */
+        @import url('https://cdn.jsdelivr.net/gh/jason820610/UoqMunThenKhung@master/fonts.css');
+
+        :root { --orange: #FF8C00; --paper: #fdfaf6; --text: #333; }
+        
+        body { 
+            margin: 0; padding: 0; background-color: #d7ccc8; 
+            /* 內文類預設使用 Shippori Mincho */
+            font-family: 'Shippori Mincho', serif; 
+            height: 100vh; overflow: hidden; 
+        }
         
         #slider { width: 100vw; height: 100vh; position: relative; overflow: hidden; background: #333; }
-        /* 總共 11 頁，寬度 1100% */
         .slides-wrapper { display: flex; width: 1100%; height: 100%; transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
         .slide { width: 9.09%; height: 100%; flex-shrink: 0; position: relative; background-color: var(--paper); }
         
-        /* 🖼️ 封面與封底：比例與內容方框一致 (85% x 75%) */
+        /* 🖼️ 封面比例鎖定 85% x 75% */
         .cover-img { 
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 85%; height: 75%; 
-            object-fit: contain; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            background-color: #fff; /* 避免透明圖顯示背景色 */
+            width: 85%; height: 75%; object-fit: contain; border-radius: 15px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3); background-color: #fff;
         }
 
-        /* 📋 固定方框比例 85% x 75% */
+        /* 📋 方框比例固定 */
         .content-overlay { 
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 85%; height: 75%; 
-            z-index: 10; background: rgba(255, 255, 255, 0.98); 
-            padding: 20px; box-sizing: border-box; overflow-y: auto; border-radius: 15px; 
+            width: 85%; height: 75%; z-index: 10; background: rgba(255, 255, 255, 0.98); 
+            padding: 22px; box-sizing: border-box; overflow-y: auto; border-radius: 15px; 
             box-shadow: 0 8px 20px rgba(0,0,0,0.1); 
         }
         
-        h2 { color: var(--orange); border-bottom: 2px solid var(--orange); padding-bottom: 8px; margin: 0 0 10px 0; font-size: 19px; text-align: center; }
+        /* 🎨 標題類使用岳門天工體 */
+        h2 { 
+            color: var(--orange); border-bottom: 2px solid var(--orange); padding-bottom: 8px; 
+            margin: 0 0 12px 0; font-size: 24px; text-align: center;
+            font-family: 'UoqMunThenKhung', sans-serif;
+            font-weight: normal;
+        }
         
-        /* 📋 勾選清單樣式 */
         .check-item { display: flex; align-items: center; padding: 12px 5px; border-bottom: 1px solid #eee; font-size: 15px; cursor: pointer; position: relative; z-index: 20; }
         .check-item input[type="checkbox"] { width: 22px; height: 22px; margin-right: 12px; accent-color: var(--orange); }
 
-        .nav-tag { text-decoration: none; background: #fff9c4; color: #f57f17; padding: 6px 10px; border-radius: 15px; font-weight: bold; border: 1px solid #fff176; display: inline-block; margin: 2px 0; font-size: 12px; position: relative; z-index: 20; }
+        .nav-tag { 
+            text-decoration: none; background: #fff9c4; color: #f57f17; padding: 6px 10px; 
+            border-radius: 15px; font-weight: bold; border: 1px solid #fff176; 
+            display: inline-block; margin: 2px 0; font-size: 12px; 
+            font-family: 'Shippori Mincho', serif;
+        }
+        
         ul { list-style: none; padding: 0; margin: 5px 0 0 0; }
-        li { padding: 8px 0; border-bottom: 1px solid #eee; font-size: 13px; line-height: 1.5; color: var(--text); }
-        li b { color: #000; }
-        .flight-card { background: #fffef0; border: 1.5px dashed var(--orange); padding: 8px; border-radius: 10px; margin-bottom: 10px; font-size: 13px; text-align: center; }
+        li { padding: 9px 0; border-bottom: 1px solid #eee; font-size: 14px; line-height: 1.6; color: var(--text); }
+        li b { color: #000; font-weight: 700; }
+        
+        .flight-card { 
+            background: #fffef0; border: 1.5px dashed var(--orange); padding: 10px; 
+            border-radius: 10px; margin-bottom: 10px; font-size: 14px; text-align: center;
+            font-family: 'Shippori Mincho', serif;
+        }
 
-        /* 導航點擊區縮小至 10%，確保不擋住中間內容 */
         .nav-btn { position: absolute; top: 0; width: 10%; height: 100%; z-index: 100; cursor: pointer; }
         .next-btn { right: 0; } .prev-btn { left: 0; }
         .dots { position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); display: flex; gap: 4px; z-index: 101; }
@@ -60,14 +81,13 @@
             <div class="slide"><img src="JEJU.png" class="cover-img"></div>
 
             <div class="slide"><div class="content-overlay">
-                <h2>✈️ 航班資訊</h2>
+                <h2>航班資訊</h2>
                 <div class="flight-card">去程 IT 654 | <b>06:40 - 09:50</b></div>
                 <div class="flight-card">回程 IT 655 | <b>11:45 - 12:55</b></div>
-                <p style="text-align:center; color:#888; font-size:12px;"></p>
             </div></div>
 
             <div class="slide"><div class="content-overlay">
-                <h2>📋 行李勾選清單</h2>
+                <h2>行李必備</h2>
                 <label class="check-item"><input type="checkbox"> 護照 / K-ETA 簽證</label>
                 <label class="check-item"><input type="checkbox"> WOWPASS / 韓幣現金</label>
                 <label class="check-item"><input type="checkbox"> 轉接頭 / 網卡 / 行動電源</label>
@@ -78,11 +98,9 @@
             <div class="slide"><div class="content-overlay">
                 <h2>Day 1 北區登陸</h2>
                 <a href="https://naver.me/G8tU3GqI" class="nav-tag" target="_blank">📍 海景麥當勞</a>
-                <a href="https://naver.me/9UP_Je_j" class="nav-tag" target="_blank">📍 umu 布丁</a>
                 <ul>
                     <li><b>09:00</b> 落地 ➔ 寄存機場櫃檯</li>
                     <li><b>11:00</b> 東門市場午餐 ➔ <b>umu 布丁</b></li>
-                    <li><b>12:30</b> <b>海景麥當勞</b> (限定漢堡)</li>
                     <li><b>13:00</b> 蓮洞商圈 Olive Young 掃貨</li>
                     <li><b>15:30</b> Audrant Bakery 蒜香麵包</li>
                     <li><b>18:30</b> 咸德飯店 Check-in</li>
@@ -93,7 +111,6 @@
             <div class="slide"><div class="content-overlay">
                 <h2>Day 2 文創美拍</h2>
                 <a href="https://naver.me/FvWqXqXq" class="nav-tag" target="_blank">📍 倫敦貝果</a>
-                <a href="https://naver.me/MdmvQxbl" class="nav-tag" target="_blank">📍 Hugely Jeju</a>
                 <ul>
                     <li><b>11:30</b> 海女飯卷 (鮑魚飯卷/拉麵)</li>
                     <li><b>13:30</b> 咸德文創街 ➔ 橘子紀念品店</li>
@@ -107,10 +124,9 @@
                 <a href="https://naver.me/5fP8P8P8" class="nav-tag" target="_blank">📍 Meohamen 拉麵</a>
                 <ul>
                     <li><b>09:00</b> 咸德鮑魚粥 ➔ 城山港</li>
-                    <li><b>11:00</b> 牛島 Udo 租電動車環島</li>
+                    <li><b>11:00</b> 牛島租電動車環島 🚲</li>
                     <li><b>12:30</b> Meohamen 吃海鮮拉麵 🐙</li>
                     <li><b>15:00</b> 涉地可支絕美海景與燈塔</li>
-                    <li>晚上抵達西歸浦飯店 Check-in</li>
                 </ul>
             </div></div>
 
@@ -129,7 +145,6 @@
                 <h2>Day 5 追海豚</h2>
                 <a href="https://naver.me/5LANKOqH" class="nav-tag" target="_blank">📍 Merci 濟州香水</a>
                 <ul>
-                    <li><b>09:00</b> 行李托運至市區飯店</li>
                     <li><b>11:00</b> 大靜邑海岸路尋野生海豚 🐬</li>
                     <li><b>14:30</b> 涯月 Merci Jeju 買香水 🍊</li>
                     <li><b>16:00</b> 漢潭散步路 ➔ 彩虹防波堤</li>
@@ -143,16 +158,15 @@
                     <li><b>08:30</b> 最後行李打包確認</li>
                     <li><b>10:30</b> 前往機場辦理退稅</li>
                     <li><b>11:45</b> IT 655 起飛回家 ✈️</li>
-                    <li>See You Next Time Jeju! 🍊</li>
                 </ul>
             </div></div>
 
             <div class="slide"><div class="content-overlay">
-                <h2>📝 小提醒</h2>
+                <h2>小提醒</h2>
                 <ul>
                     <li>記得帶帽子擋海風 🧢</li>
                     <li>下載 Naver Map 並存景點</li>
-                    <li>準備好 Papago 翻譯 App</li>
+                    <li>祝你旅途愉快，玩得開心！🍊</li>
                 </ul>
             </div></div>
 
