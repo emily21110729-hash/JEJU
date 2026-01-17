@@ -10,39 +10,46 @@
         body { margin: 0; padding: 0; background-color: #d7ccc8; font-family: 'Noto Sans TC', sans-serif; height: 100vh; overflow: hidden; }
         
         #slider { width: 100vw; height: 100vh; position: relative; overflow: hidden; background: #333; }
-        .slides-wrapper { display: flex; width: 1000%; height: 100%; transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        .slides-wrapper { display: flex; width: 1000%; height: 100%; transition: transform 0.4s ease; }
         .slide { width: 10%; height: 100%; flex-shrink: 0; position: relative; background-color: var(--paper); }
         
-        /* 🖼️ 封面：設定為 85% 與內容框視覺一致 */
+        /* 🖼️ 封面比例調整：固定為寬度 85% */
         .cover-img { 
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 85%; height: auto; max-height: 75%;
-            object-fit: contain; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+            width: 85%; height: auto; max-height: 80%;
+            object-fit: contain; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            z-index: 5;
         }
 
         /* 📋 固定方框：維持 85% 寬度與 75% 高度 */
         .content-overlay { 
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
             width: 85%; height: 75%; 
-            z-index: 2; background: rgba(255, 255, 255, 0.96); 
+            z-index: 2; background: rgba(255, 255, 255, 0.98); 
             padding: 20px; box-sizing: border-box; overflow-y: auto; border-radius: 15px; 
             box-shadow: 0 8px 20px rgba(0,0,0,0.1); 
         }
         
         h2 { color: var(--orange); border-bottom: 2px solid var(--orange); padding-bottom: 8px; margin: 0 0 10px 0; font-size: 20px; text-align: center; }
-        .nav-tag { text-decoration: none; background: #fff9c4; color: #f57f17; padding: 8px 12px; border-radius: 20px; font-weight: bold; border: 1px solid #fff176; display: inline-block; margin: 3px 2px; font-size: 13px; }
         
-        /* 📋 打勾清單樣式 */
-        .check-list { list-style: none; padding: 0; margin: 5px 0 0 0; }
-        .check-item { display: flex; align-items: center; padding: 12px 0; border-bottom: 1px solid #eee; font-size: 15px; color: var(--text); cursor: pointer; }
-        .check-item input { width: 20px; height: 20px; margin-right: 12px; accent-color: var(--orange); }
-        
+        /* 📋 行李清單勾選區：加強手機點擊感 */
+        .check-item { 
+            display: flex; align-items: center; padding: 15px 5px; 
+            border-bottom: 1px solid #eee; font-size: 16px; 
+            cursor: pointer; position: relative; z-index: 999;
+        }
+        .check-item input[type="checkbox"] { 
+            width: 22px; height: 22px; margin-right: 15px; 
+            accent-color: var(--orange); flex-shrink: 0;
+        }
+
+        .nav-tag { text-decoration: none; background: #fff9c4; color: #f57f17; padding: 8px 12px; border-radius: 20px; font-weight: bold; border: 1px solid #fff176; display: inline-block; margin: 3px 2px; font-size: 13px; position: relative; z-index: 999; }
         ul { list-style: none; padding: 0; margin: 5px 0 0 0; }
         li { padding: 9px 0; border-bottom: 1px solid #eee; font-size: 14px; line-height: 1.5; color: var(--text); }
-        li b { color: #000; }
         .flight-card { background: #fffef0; border: 1.5px dashed var(--orange); padding: 10px; border-radius: 10px; margin-bottom: 10px; font-size: 14px; text-align: center; }
 
-        .nav-btn { position: absolute; top: 0; width: 25%; height: 100%; z-index: 100; cursor: pointer; }
+        /* 導航按鈕：縮小點擊區域以免擋住勾選框 */
+        .nav-btn { position: absolute; top: 0; width: 15%; height: 100%; z-index: 10; cursor: pointer; }
         .next-btn { right: 0; } .prev-btn { left: 0; }
         .dots { position: absolute; bottom: 25px; left: 50%; transform: translateX(-50%); display: flex; gap: 5px; z-index: 101; }
         .dot { width: 6px; height: 6px; background: rgba(255,255,255,0.3); border-radius: 50%; }
@@ -53,96 +60,42 @@
     <div id="slider">
         <div class="nav-btn prev-btn" onclick="moveSlide(-1)"></div>
         <div class="nav-btn next-btn" onclick="moveSlide(1)"></div>
-        <div class="slides-wrapper" id="wrapper">
-            
-            <div class="slide"><img src="JEJU.png" class="cover-img"></div>
 
+        <div class="slides-wrapper" id="wrapper">
+            <div class="slide"><img src="JEJU.png" class="cover-img"></div>
+            
             <div class="slide"><div class="content-overlay">
                 <h2>✈️ 航班資訊</h2>
                 <div class="flight-card">去程 IT 654 | <b>06:40 - 09:50</b></div>
                 <div class="flight-card">回程 IT 655 | <b>11:45 - 12:55</b></div>
-                <p style="text-align:center; font-size:12px; color:#888;">向左滑動看行李清單 ➔</p>
             </div></div>
 
             <div class="slide"><div class="content-overlay">
-                <h2>📋 行李必備</h2>
-                <div class="check-list">
-                    <label class="check-item"><input type="checkbox"> 護照 / K-ETA 簽證</label>
-                    <label class="check-item"><input type="checkbox"> WOWPASS 卡 / 現金</label>
-                    <label class="check-item"><input type="checkbox"> 韓國專接頭 / 延長線</label>
-                    <label class="check-item"><input type="checkbox"> 網卡 / 行動電源</label>
-                    <label class="check-item"><input type="checkbox"> 常備藥品 / 盥洗用品</label>
-                    <label class="check-item"><input type="checkbox"> 大容量空行李箱</label>
-                </div>
+                <h2>📋 行李勾選清單</h2>
+                <label class="check-item"><input type="checkbox"> 護照 / K-ETA 簽證</label>
+                <label class="check-item"><input type="checkbox"> WOWPASS 卡 / 韓幣現金</label>
+                <label class="check-item"><input type="checkbox"> 韓國轉接頭 / 網卡</label>
+                <label class="check-item"><input type="checkbox"> 行動電源 / 常備藥</label>
+                <label class="check-item"><input type="checkbox"> 空行李箱 (爆買用)</label>
             </div></div>
 
             <div class="slide"><div class="content-overlay">
-                <h2>Day 1 北區網美</h2>
+                <h2>Day 1 北區</h2>
                 <a href="https://naver.me/G8tU3GqI" class="nav-tag" target="_blank">📍 海景麥當勞</a>
-                <a href="https://naver.me/9UP_Je_j" class="nav-tag" target="_blank">📍 umu 布丁</a>
                 <ul>
-                    <li><b>10:30</b> 機場寄行李 ➔ 蓮洞商圈</li>
                     <li><b>12:00</b> 海景麥當勞吃漢堡 🍔</li>
                     <li><b>14:30</b> umu 布丁 & Hugely 橘子</li>
-                    <li><b>18:00</b> 熟成到黑豬肉 (排隊名店)</li>
+                    <li><b>18:00</b> 熟成到黑豬肉</li>
                 </ul>
             </div></div>
 
-            <div class="slide"><div class="content-overlay">
-                <h2>Day 2 東北區</h2>
-                <a href="https://naver.me/FvWqXqXq" class="nav-tag" target="_blank">📍 倫敦貝果</a>
-                <ul>
-                    <li><b>09:00</b> 倫敦貝果抽號碼牌</li>
-                    <li><b>11:00</b> 逛 Object 文創 & 咸德商圈</li>
-                    <li><b>13:00</b> 海女飯卷海景午餐 🍙</li>
-                    <li><b>15:30</b> 咸德海邊散步美拍</li>
-                </ul>
-            </div></div>
-
-            <div class="slide"><div class="content-overlay">
-                <h2>Day 3 東區牛島</h2>
-                <a href="https://naver.me/5fP8P8P8" class="nav-tag" target="_blank">📍 牛島碼頭</a>
-                <ul>
-                    <li><b>09:30</b> 搭船前往牛島環島之旅</li>
-                    <li><b>12:00</b> 章魚海鮮拉麵 🐙</li>
-                    <li><b>15:00</b> 涉地可支 ➔ 絕美海岸線</li>
-                    <li><b>18:00</b> 城山黑豬肉或海鮮餐</li>
-                </ul>
-            </div></div>
-
-            <div class="slide"><div class="content-overlay">
-                <h2>Day 4 南區三麗鷗</h2>
-                <a href="https://naver.me/x6f6f6f6" class="nav-tag" target="_blank">📍 三麗鷗樂園</a>
-                <ul>
-                    <li><b>10:00</b> Hello Kitty 樂園 🎀</li>
-                    <li><b>13:00</b> 橘子咖啡廳 Ein Bat 🍊</li>
-                    <li><b>16:00</b> 每日偶來市場買伴手禮</li>
-                    <li><b>18:30</b> 西歸浦排骨湯飯</li>
-                </ul>
-            </div></div>
-
-            <div class="slide"><div class="content-overlay">
-                <h2>Day 5 西北區</h2>
-                <a href="https://naver.me/5LANKOqH" class="nav-tag" target="_blank">📍 亂打秀</a>
-                <ul>
-                    <li><b>10:00</b> 大靜邑追野生海豚 🐬</li>
-                    <li><b>14:00</b> 涯月邑海景咖啡廳</li>
-                    <li><b>17:00</b> 濟州亂打秀精彩觀賞 🎭</li>
-                    <li><b>20:00</b> 樂天超市最後採購 🛒</li>
-                </ul>
-            </div></div>
-
-            <div class="slide"><div class="content-overlay">
-                <h2>Day 6 歸途</h2>
-                <ul>
-                    <li><b>08:30</b> 最後行李打包確認</li>
-                    <li><b>09:30</b> 抵達機場並辦理退稅</li>
-                    <li><b>11:45</b> IT 655 起飛回家 ✈️</li>
-                </ul>
-            </div></div>
+            <div class="slide"><div class="content-overlay"><h2>Day 2 東北區</h2><a href="https://naver.me/FvWqXqXq" class="nav-tag" target="_blank">📍 倫敦貝果</a><ul><li><b>09:00</b> 倫敦貝果</li><li><b>13:00</b> 海女飯卷午餐</li></ul></div></div>
+             <div class="slide"><div class="content-overlay"><h2>Day 3 東區</h2><a href="https://naver.me/5fP8P8P8" class="nav-tag" target="_blank">📍 牛島碼頭</a><ul><li><b>10:00</b> 牛島環島</li><li><b>12:30</b> 章魚海鮮拉麵</li></ul></div></div>
+             <div class="slide"><div class="content-overlay"><h2>Day 4 南區</h2><a href="https://naver.me/x6f6f6f6" class="nav-tag" target="_blank">📍 三麗鷗樂園</a><ul><li><b>10:30</b> 三麗鷗樂園</li><li><b>16:00</b> 每日偶來市場</li></ul></div></div>
+             <div class="slide"><div class="content-overlay"><h2>Day 5 西北區</h2><a href="https://naver.me/5LANKOqH" class="nav-tag" target="_blank">📍 亂打秀</a><ul><li><b>10:00</b> 追野生海豚</li><li><b>17:00</b> 濟州亂打秀</li></ul></div></div>
+             <div class="slide"><div class="content-overlay"><h2>Day 6 歸途</h2><ul><li><b>09:30</b> 抵達機場</li><li><b>11:45</b> 飛機起飛</li></ul></div></div>
 
             <div class="slide"><img src="JEJU B.png" class="cover-img"></div>
-
         </div>
         <div class="dots" id="dots"></div>
     </div>
@@ -168,12 +121,15 @@
         }
 
         let touchStartX = 0;
-        document.getElementById('slider').addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; });
+        document.getElementById('slider').addEventListener('touchstart', e => { 
+            // 只有在邊緣滑動才翻頁，避免干擾勾選框
+            touchStartX = e.changedTouches[0].screenX; 
+        }, {passive: true});
         document.getElementById('slider').addEventListener('touchend', e => {
             let touchEndX = e.changedTouches[0].screenX;
-            if (touchStartX - touchEndX > 50) moveSlide(1);
-            if (touchEndX - touchStartX > 50) moveSlide(-1);
-        });
+            if (touchStartX - touchEndX > 60) moveSlide(1);
+            if (touchEndX - touchStartX > 60) moveSlide(-1);
+        }, {passive: true});
     </script>
 </body>
 </html>
