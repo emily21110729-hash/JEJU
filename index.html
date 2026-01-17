@@ -10,37 +10,37 @@
         body { margin: 0; padding: 0; background-color: #d7ccc8; font-family: 'Noto Sans TC', sans-serif; height: 100vh; overflow: hidden; }
         
         #slider { width: 100vw; height: 100vh; position: relative; overflow: hidden; background: #333; }
-        /* 總共 9 頁，所以寬度是 900% */
-        .slides-wrapper { display: flex; width: 900%; height: 100%; transition: transform 0.4s ease-out; }
+        .slides-wrapper { display: flex; width: 900%; height: 100%; transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
         .slide { width: 11.11%; height: 100%; flex-shrink: 0; position: relative; background-color: var(--paper); }
         
-        /* 📱 封面比例調小優化 */
+        /* 🖼️ 封面縮小：設定為 55% 讓它看起來更精緻 */
         .cover-img { 
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 80%; height: auto; max-height: 70%;
-            object-fit: contain; border-radius: 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            width: 55%; height: auto; max-height: 50%;
+            object-fit: contain; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.25);
         }
 
+        /* 📋 固定方框：高度固定 75%，位置絕對置中 */
         .content-overlay { 
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 88%; max-height: 85%; 
-            z-index: 2; background: rgba(255, 255, 255, 0.95); 
+            width: 86%; height: 75%; 
+            z-index: 2; background: rgba(255, 255, 255, 0.96); 
             padding: 20px; box-sizing: border-box; overflow-y: auto; border-radius: 15px; 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1); 
         }
         
-        h2 { color: var(--orange); border-bottom: 2px solid var(--orange); padding-bottom: 5px; margin: 0 0 10px 0; font-size: 20px; }
-        .nav-tag { text-decoration: none; background: #fff9c4; color: #f57f17; padding: 6px 12px; border-radius: 15px; font-weight: bold; border: 1px solid #fff176; display: inline-block; margin: 3px 0; font-size: 13px; }
-        ul { list-style: none; padding: 0; margin: 0; }
-        li { padding: 8px 0; border-bottom: 1px solid #eee; font-size: 14px; line-height: 1.5; color: var(--text); }
+        h2 { color: var(--orange); border-bottom: 2px solid var(--orange); padding-bottom: 8px; margin: 0 0 10px 0; font-size: 20px; text-align: center; }
+        .nav-tag { text-decoration: none; background: #fff9c4; color: #f57f17; padding: 8px 12px; border-radius: 20px; font-weight: bold; border: 1px solid #fff176; display: inline-block; margin: 3px 2px; font-size: 13px; }
+        ul { list-style: none; padding: 0; margin: 5px 0 0 0; }
+        li { padding: 9px 0; border-bottom: 1px solid #eee; font-size: 14px; line-height: 1.5; color: var(--text); }
         li b { color: #000; }
         .flight-card { background: #fffef0; border: 1.5px dashed var(--orange); padding: 10px; border-radius: 10px; margin-bottom: 10px; font-size: 14px; text-align: center; }
 
-        .nav-btn { position: absolute; top: 0; width: 20%; height: 100%; z-index: 100; }
+        .nav-btn { position: absolute; top: 0; width: 25%; height: 100%; z-index: 100; cursor: pointer; }
         .next-btn { right: 0; } .prev-btn { left: 0; }
-        .dots { position: absolute; bottom: 15px; left: 50%; transform: translateX(-50%); display: flex; gap: 5px; z-index: 101; }
-        .dot { width: 6px; height: 6px; background: rgba(255,255,255,0.4); border-radius: 50%; }
-        .dot.active { background: var(--orange); width: 15px; border-radius: 10px; }
+        .dots { position: absolute; bottom: 25px; left: 50%; transform: translateX(-50%); display: flex; gap: 6px; z-index: 101; }
+        .dot { width: 7px; height: 7px; background: rgba(255,255,255,0.3); border-radius: 50%; }
+        .dot.active { background: var(--orange); width: 18px; border-radius: 10px; }
     </style>
 </head>
 <body>
@@ -52,13 +52,14 @@
             <div class="slide"><img src="JEJU.png" class="cover-img"></div>
 
             <div class="slide"><div class="content-overlay">
-                <h2>✈️ 航班 & 準備</h2>
+                <h2>✈️ 航班資訊</h2>
                 <div class="flight-card">去程 IT 654 | <b>06:40 - 09:50</b></div>
                 <div class="flight-card">回程 IT 655 | <b>11:45 - 12:55</b></div>
                 <ul>
-                    <li>✅ 護照 / 簽證 K-ETA</li>
-                    <li>✅ WOWPASS 卡 / 韓國轉接頭</li>
-                    <li>✅ 網卡確認 / 換匯</li>
+                    <li>✅ 護照 / K-ETA / WOWPASS</li>
+                    <li>✅ 韓國轉接頭 / 網卡 / 換匯</li>
+                    <li>✅ 空行李箱 (準備爆買)</li>
+                    <li>✅ 個人藥品 / 行動電源</li>
                 </ul>
             </div></div>
 
@@ -68,9 +69,9 @@
                 <a href="https://naver.me/9UP_Je_j" class="nav-tag" target="_blank">📍 umu 布丁</a>
                 <ul>
                     <li><b>10:30</b> 機場寄行李 ➔ 蓮洞商圈</li>
-                    <li><b>12:00</b> 海景麥當勞吃限定漢堡 🍔</li>
-                    <li><b>14:00</b> umu 布丁 & Hugely Jeju 橘子</li>
-                    <li><b>18:00</b> 熟成到黑豬肉 (需提早排隊)</li>
+                    <li><b>12:00</b> 海景麥當勞吃漢堡 🍔</li>
+                    <li><b>14:30</b> umu 布丁 & Hugely 橘子</li>
+                    <li><b>18:00</b> 熟成到黑豬肉 (排隊名店)</li>
                 </ul>
             </div></div>
 
@@ -78,10 +79,10 @@
                 <h2>Day 2 東北區</h2>
                 <a href="https://naver.me/FvWqXqXq" class="nav-tag" target="_blank">📍 倫敦貝果</a>
                 <ul>
-                    <li><b>09:00</b> 倫敦貝果 (先抽號碼牌)</li>
+                    <li><b>09:00</b> 倫敦貝果 (現場抽號碼)</li>
                     <li><b>11:00</b> 逛 Object 文創 & 咸德商圈</li>
                     <li><b>13:00</b> 海女飯卷海景午餐 🍙</li>
-                    <li><b>15:00</b> 咸德海域散步拍美照</li>
+                    <li><b>15:30</b> 咸德海邊散步拍美照</li>
                 </ul>
             </div></div>
 
@@ -89,10 +90,10 @@
                 <h2>Day 3 東區牛島</h2>
                 <a href="https://naver.me/5fP8P8P8" class="nav-tag" target="_blank">📍 牛島碼頭</a>
                 <ul>
-                    <li><b>09:30</b> 城山港搭船 ➔ 牛島</li>
-                    <li><b>11:00</b> 環島電動車 ➔ 拍燈塔</li>
-                    <li><b>12:30</b> Meohamen 章魚海鮮拉麵 🐙</li>
-                    <li><b>15:30</b> 涉地可支絕美海景步行</li>
+                    <li><b>09:30</b> 搭船前往牛島環島之旅</li>
+                    <li><b>12:00</b> 章魚海鮮拉麵 🐙</li>
+                    <li><b>15:00</b> 涉地可支 ➔ 絕美海岸線</li>
+                    <li><b>18:00</b> 城山黑豬肉或海鮮餐</li>
                 </ul>
             </div></div>
 
@@ -102,8 +103,8 @@
                 <ul>
                     <li><b>10:00</b> Hello Kitty 樂園 🎀</li>
                     <li><b>13:00</b> 橘子咖啡廳 Ein Bat 🍊</li>
-                    <li><b>16:00</b> 每日偶來市場搜括美食</li>
-                    <li><b>18:00</b> 西歸浦排骨湯飯</li>
+                    <li><b>16:00</b> 每日偶來市場買伴手禮</li>
+                    <li><b>18:30</b> 西歸浦排骨湯飯</li>
                 </ul>
             </div></div>
 
@@ -111,20 +112,20 @@
                 <h2>Day 5 西北區</h2>
                 <a href="https://naver.me/5LANKOqH" class="nav-tag" target="_blank">📍 亂打秀</a>
                 <ul>
-                    <li><b>10:00</b> 大靜邑尋找野生海豚 🐬</li>
+                    <li><b>10:00</b> 大靜邑追野生海豚 🐬</li>
                     <li><b>14:00</b> 涯月邑海景咖啡廳</li>
                     <li><b>17:00</b> 濟州亂打秀精彩觀賞 🎭</li>
-                    <li><b>20:00</b> 樂天超市最後採購 🛒</li>
+                    <li><b>20:00</b> 樂天超市最後衝刺 🛒</li>
                 </ul>
             </div></div>
 
             <div class="slide"><div class="content-overlay">
                 <h2>Day 6 歸途</h2>
                 <ul>
-                    <li><b>08:30</b> 最後打包清點</li>
-                    <li><b>09:30</b> 前往濟州機場</li>
-                    <li><b>11:45</b> IT 655 起飛回家 ✈️</li>
-                    <li>記得在機場領取退稅！</li>
+                    <li><b>08:30</b> 最後行李打包確認</li>
+                    <li><b>09:30</b> 抵達濟州機場 (辦理退稅)</li>
+                    <li><b>11:45</b> IT 655 準時起飛 ✈️</li>
+                    <li>期待下一次的濟州旅行！</li>
                 </ul>
             </div></div>
 
@@ -155,9 +156,7 @@
         }
 
         let touchStartX = 0;
-        document.getElementById('slider').addEventListener('touchstart', e => { 
-            touchStartX = e.changedTouches[0].screenX; 
-        });
+        document.getElementById('slider').addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; });
         document.getElementById('slider').addEventListener('touchend', e => {
             let touchEndX = e.changedTouches[0].screenX;
             if (touchStartX - touchEndX > 50) moveSlide(1);
