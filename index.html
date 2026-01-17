@@ -3,225 +3,214 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>濟州島 3D 旅遊手帳</title>
+    <title>濟州島旅遊手帳</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@500;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --orange: #FF8C00;
             --paper: #fdfaf6;
             --text: #4a4a4a;
-            --book-width: 420px;
-            --book-height: 580px;
-            --click-zone: 50px;
         }
-
-        /* 📱 手機直立螢幕專屬優化 */
-        @media screen and (max-width: 768px) {
-            :root {
-                --book-width: 92vw;
-                --book-height: 78vh; /* 增加高度讓內容更好讀 */
-                --click-zone: 60px;
-            }
-            .book {
-                /* 手機版預設置中，不偏移 */
-                transform: translateX(0) !important;
-            }
-        }
-
         body {
-            background-color: #d7ccc8;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            perspective: 2000px;
+            margin: 0; padding: 0; background-color: #d7ccc8;
             font-family: 'Noto Sans TC', sans-serif;
-            overflow: hidden;
-            touch-action: manipulation;
+            display: flex; justify-content: center; align-items: center;
+            height: 100vh; overflow: hidden;
         }
-
-        .book {
-            position: relative;
-            width: var(--book-width);
-            height: var(--book-height);
-            transition: transform 0.6s cubic-bezier(0.645, 0.045, 0.355, 1);
-            transform-style: preserve-3d;
+        /* 主容器 */
+        #slider {
+            width: 100vw; height: 100vh;
+            max-width: 500px; /* 電腦看也不會過寬 */
+            position: relative; overflow: hidden;
+            box-shadow: 0 0 30px rgba(0,0,0,0.2);
+            background: var(--paper);
         }
-
-        .page {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
-            transform-origin: left;
-            transform-style: preserve-3d;
-            transition: transform 0.8s cubic-bezier(0.645, 0.045, 0.355, 1);
+        /* 每一頁的容器 */
+        .slides-wrapper {
+            display: flex; width: 800%; /* 8頁 */
+            height: 100%; transition: transform 0.4s ease-out;
         }
-
-        .front, .back {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            backface-visibility: hidden;
+        .slide {
+            width: 12.5%; height: 100%; /* 100/8 */
+            flex-shrink: 0; position: relative;
             box-sizing: border-box;
-            border-radius: 12px;
-            background-color: var(--paper);
-            border: 1px solid #e0e0e0;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            overflow: hidden;
         }
-
-        .back { transform: rotateY(180deg); }
-        .page.flipped { transform: rotateY(-180deg); }
-
-        /* 內容滾動優化 */
-        .content-scroll {
-            width: 100%;
-            height: 100%;
-            padding: 25px;
-            overflow-y: auto;
-            -webkit-overflow-scrolling: touch;
-            position: relative;
-            z-index: 1;
+        /* 背景圖設定 */
+        .bg-img {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background-size: cover; background-position: center; z-index: 1;
         }
-
-        /* 標籤連結層級最高 */
-        .map-tags-container { 
-            display: flex; 
-            flex-wrap: wrap; 
-            gap: 10px; 
-            margin-bottom: 15px;
-            position: relative;
-            z-index: 999;
+        .content-overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 2; background: rgba(255, 255, 255, 0.85); /* 半透明遮罩 */
+            padding: 30px; box-sizing: border-box; overflow-y: auto;
+            display: flex; flex-direction: column;
         }
-        
+        /* 封面與封底不需要遮罩 */
+        .no-overlay .content-overlay { background: transparent; }
+
+        /* 內容美化 */
+        h2 { color: var(--orange); border-bottom: 2px dashed var(--orange); padding-bottom: 10px; margin-top: 10px; }
+        .tag-box { display: flex; flex-wrap: wrap; gap: 8px; margin: 15px 0; }
         .nav-tag { 
-            text-decoration: none; 
-            background: #fff9c4; 
-            color: #f57f17; 
-            padding: 10px 16px; 
-            border-radius: 20px; 
-            font-size: 14px; 
-            font-weight: bold; 
-            border: 1px solid #fff176;
-            pointer-events: auto;
+            text-decoration: none; background: #fff9c4; color: #f57f17; padding: 10px 18px; 
+            border-radius: 25px; font-size: 14px; font-weight: bold; border: 1px solid #fff176;
         }
+        ul { list-style: none; padding: 0; }
+        li { padding: 12px 0; border-bottom: 1px solid #eee; line-height: 1.6; }
+        .flight-card { background: #fff; border: 2px dashed var(--orange); padding: 15px; border-radius: 15px; margin-bottom: 15px; }
 
-        /* 隱形翻頁感應區 */
-        .click-layer {
-            position: absolute;
-            top: 0;
-            width: var(--click-zone);
-            height: 100%;
-            z-index: 10; 
-            cursor: pointer;
-            background: transparent;
+        /* 左右點擊區域 */
+        .nav-btn {
+            position: absolute; top: 0; width: 15%; height: 100%;
+            z-index: 100; cursor: pointer;
         }
-        .right-zone { right: 0; }
-        .left-zone { left: 0; }
-
-        .cover-front { background-image: url('JEJU.png'); background-size: cover; background-position: center; }
-        .back-cover-img { background-image: url('JEJU B.png'); background-size: cover; background-position: center; }
-        .photo-side { width: 100%; height: 100%; background-size: cover; background-position: center; }
-
-        h2 { color: var(--orange); margin-top: 0; border-bottom: 2px dashed var(--orange); padding-bottom: 5px; font-size: 20px; }
-        ul { list-style: none; padding: 0; border-top: 1px dashed #ddd; padding-top: 10px; }
-        li { padding: 8px 0; border-bottom: 1px solid #eee; font-size: 15px; line-height: 1.6; }
-        li::before { content: "🍊 "; }
-        .flight-card { background: #fff; border: 2px dashed var(--orange); padding: 12px; border-radius: 12px; margin-bottom: 10px; font-size: 14px; }
+        .prev-btn { left: 0; }
+        .next-btn { right: 0; }
+        
+        /* 頁碼指示器 */
+        .dots {
+            position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
+            display: flex; gap: 8px; z-index: 101;
+        }
+        .dot { width: 8px; height: 8px; background: #ccc; border-radius: 50%; }
+        .dot.active { background: var(--orange); width: 20px; border-radius: 10px; transition: 0.3s; }
     </style>
 </head>
 <body>
 
-    <div class="book" id="book">
-        
-        <div class="page" id="p1">
-            <div class="front cover-front"><div class="click-layer right-zone" onclick="flip(1)"></div></div>
-            <div class="back">
-                <div class="click-layer left-zone" onclick="flip(1)"></div>
-                <div class="content-scroll">
-                    <h2>✈️ 航班資訊</h2>
-                    <div class="flight-card">去程 IT 654 | TPE ➔ CJU<br><b>06:40 - 09:50</b></div>
-                    <div class="flight-card">回程 IT 655 | CJU ➔ TPE<br><b>11:45 - 12:55</b></div>
-                </div>
-            </div>
-        </div>
+    <div id="slider">
+        <div class="nav-btn prev-btn" onclick="moveSlide(-1)"></div>
+        <div class="nav-btn next-btn" onclick="moveSlide(1)"></div>
 
-        <div class="page" id="p2">
-            <div class="front">
-                <div class="click-layer right-zone" onclick="flip(2)"></div>
-                <div class="content-scroll">
-                    <h2>📋 行李清單</h2>
-                    <ul><li>護照 / 簽證 K-ETA</li><li>WOWPASS / 轉接頭</li><li>空行李箱 (爆買用)</li></ul>
+        <div class="slides-wrapper" id="wrapper">
+            <div class="slide no-overlay">
+                <div class="bg-img" style="background-image: url('JEJU.png');"></div>
+                <div class="content-overlay"></div>
+            </div>
+
+            <div class="slide">
+                <div class="content-overlay">
+                    <h2>✈️ 航班資訊</h2>
+                    <div class="flight-card">去程 IT 654<br><b>06:40 - 09:50</b></div>
+                    <div class="flight-card">回程 IT 655<br><b>11:45 - 12:55</b></div>
+                    <p style="color:#888; font-size:12px;">點擊右側邊緣看下一頁 ➔</p>
                 </div>
             </div>
-            <div class="back">
-                <div class="click-layer left-zone" onclick="flip(2)"></div>
-                <div class="content-scroll">
-                    <h2>Day 1 北區網美行</h2>
-                    <div class="map-tags-container">
-                        <a href="https://naver.me/G8tU3GqI" class="nav-tag" target="_blank">📍 海景麥當勞</a>
-                        <a href="https://naver.me/9UP_Je_j" class="nav-tag" target="_blank">📍 umu 布丁</a>
-                        <a href="https://naver.me/MdmvQxbl" class="nav-tag" target="_blank">📍 Hugely Jeju</a>
-                    </div>
+
+            <div class="slide">
+                <div class="content-overlay">
+                    <h2>📋 行李清單</h2>
                     <ul>
-                        <li>機場寄物 ➔ 海景麥當勞吃漢堡</li>
-                        <li>東門市場 ➔ umu 買布丁</li>
-                        <li>蓮洞商圈 ➔ Hugely Jeju 3D橘子</li>
-                        <li>咸德飯店 ➔ 熟成到黑豬肉</li>
+                        <li>護照 / K-ETA</li>
+                        <li>WOWPASS / 轉接頭</li>
+                        <li>空行李箱 (爆買用)</li>
                     </ul>
                 </div>
             </div>
-        </div>
 
-        <div class="page" id="p3">
-            <div class="front"><div class="click-layer right-zone" onclick="flip(3)"></div><div class="photo-side" style="background-image: url('https://picsum.photos/400/600?random=11');"></div></div>
-            <div class="back"><div class="click-layer left-zone" onclick="flip(3)"></div><div class="content-scroll"><h2>Day 2 東北區</h2>
-                <div class="map-tags-container"><a href="https://naver.me/FvWqXqXq" class="nav-tag" target="_blank">📍 倫敦貝果</a></div>
-                <ul><li>海女飯卷 ➔ 咸德文創街</li><li>倫敦貝果 ➔ 逛 Object 文創</li></ul></div></div>
-        </div>
-
-        <div class="page" id="p8">
-            <div class="front">
-                <div class="click-layer right-zone" onclick="flip(8)"></div>
-                <div style="display:flex; justify-content:center; align-items:center; height:100%; background:#4a4a4a; color:white;"><h1>SEE YOU!</h1></div>
+            <div class="slide">
+                <div class="content-overlay">
+                    <h2>Day 1 北區</h2>
+                    <div class="tag-box">
+                        <a href="https://naver.me/G8tU3GqI" class="nav-tag" target="_blank">📍 海景麥當勞</a>
+                        <a href="https://naver.me/9UP_Je_j" class="nav-tag" target="_blank">📍 umu 布丁</a>
+                    </div>
+                    <ul>
+                        <li>麥當勞看海吃漢堡</li>
+                        <li>umu & Hugely Jeju 掃店</li>
+                        <li>熟成到黑豬肉慶祝</li>
+                    </ul>
+                </div>
             </div>
-            <div class="back back-cover-img"><div class="click-layer left-zone" onclick="flip(8)"></div></div>
+
+            <div class="slide">
+                <div class="content-overlay">
+                    <h2>Day 2 & 3 東區</h2>
+                    <div class="tag-box">
+                        <a href="https://naver.me/FvWqXqXq" class="nav-tag" target="_blank">📍 倫敦貝果</a>
+                    </div>
+                    <ul>
+                        <li>倫敦貝果、文創店巡禮</li>
+                        <li>牛島環島、章魚拉麵</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="slide">
+                <div class="content-overlay">
+                    <h2>Day 4 南區</h2>
+                    <div class="tag-box">
+                        <a href="https://naver.me/xG6f0Xf0" class="nav-tag" target="_blank">📍 每日偶來市場</a>
+                    </div>
+                    <ul>
+                        <li>三麗鷗樂園 🎀</li>
+                        <li>市場美食搜括</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="slide">
+                <div class="content-overlay">
+                    <h2>Day 5 & 6</h2>
+                    <div class="tag-box">
+                        <a href="https://naver.me/5LANKOqH" class="nav-tag" target="_blank">📍 亂打秀</a>
+                    </div>
+                    <ul>
+                        <li>追海豚 & 亂打秀 🎭</li>
+                        <li>樂天超市最後採購</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="slide no-overlay">
+                <div class="bg-img" style="background-image: url('JEJU B.png');"></div>
+                <div class="content-overlay"></div>
+            </div>
         </div>
 
+        <div class="dots" id="dots"></div>
     </div>
 
     <script>
-        let flippedPages = 0;
-        const totalPages = 8;
-        const pages = [];
-        for(let i=1; i<=totalPages; i++) { pages.push(document.getElementById('p' + i)); }
+        let currentIdx = 0;
+        const totalSlides = 8;
+        const wrapper = document.getElementById('wrapper');
+        const dotsContainer = document.getElementById('dots');
 
-        function flip(pageId) {
-            const index = pageId - 1;
-            const page = pages[index];
-            const book = document.getElementById('book');
-            
-            if (!page.classList.contains('flipped')) {
-                page.classList.add('flipped');
-                flippedPages++;
-                setTimeout(() => { page.style.zIndex = pageId; }, 500);
-            } else {
-                page.classList.remove('flipped');
-                flippedPages--;
-                setTimeout(() => { page.style.zIndex = totalPages + 1 - index; }, 500);
-            }
-
-            // 電腦版偏移，手機版保持置中
-            if (window.innerWidth > 768) {
-                book.style.transform = flippedPages > 0 ? "translateX(50%)" : "translateX(0%)";
-            } else {
-                book.style.transform = "translateX(0%)";
-            }
+        // 初始化指示點
+        for (let i = 0; i < totalSlides; i++) {
+            const dot = document.createElement('div');
+            dot.classList.add('dot');
+            if (i === 0) dot.classList.add('active');
+            dotsContainer.appendChild(dot);
         }
-        window.onload = () => { pages.forEach((p, idx) => { p.style.zIndex = totalPages + 1 - idx; }); };
+
+        function moveSlide(dir) {
+            currentIdx += dir;
+            if (currentIdx < 0) currentIdx = 0;
+            if (currentIdx >= totalSlides) currentIdx = totalSlides - 1;
+            
+            wrapper.style.transform = `translateX(-${currentIdx * (100 / totalSlides)}%)`;
+            
+            // 更新指示點
+            const dots = document.querySelectorAll('.dot');
+            dots.forEach((dot, i) => {
+                dot.classList.toggle('active', i === currentIdx);
+            });
+        }
+
+        // 支援手機滑動 (Swipe)
+        let touchStartX = 0;
+        let touchEndX = 0;
+        document.getElementById('slider').addEventListener('touchstart', e => {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+        document.getElementById('slider').addEventListener('touchend', e => {
+            touchEndX = e.changedTouches[0].screenX;
+            if (touchStartX - touchEndX > 50) moveSlide(1); // 左滑
+            if (touchEndX - touchStartX > 50) moveSlide(-1); // 右滑
+        });
     </script>
 </body>
 </html>
