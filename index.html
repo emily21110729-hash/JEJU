@@ -9,21 +9,21 @@
         :root { 
             --orange: #FF8C00; 
             --paper: #ffffff; 
-            --text: #333; 
-            --bg-cream: #FFFDD0; 
+            --text-main: #333; 
+            --bg-grey: #d7ccc8; /* 背景恢復灰褐色 */
         }
         
         body { 
-            margin: 0; padding: 0; background-color: var(--bg-cream); 
+            margin: 0; padding: 0; background-color: var(--bg-grey); 
             font-family: 'Shippori Mincho', serif; 
-            height: 100vh; overflow: hidden; color: var(--text);
+            height: 100vh; overflow: hidden; color: var(--text-main);
         }
         
         #slider { width: 100vw; height: 100vh; position: relative; overflow: hidden; background: #333; }
         .slides-wrapper { display: flex; width: 1100%; height: 100%; transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
-        .slide { width: 9.09%; height: 100%; flex-shrink: 0; position: relative; background-color: var(--bg-cream); }
+        .slide { width: 9.09%; height: 100%; flex-shrink: 0; position: relative; background-color: var(--bg-grey); }
         
-        /* 🖼️ 封面圖片：圓角化 */
+        /* 🖼️ 封面與封底：25px 圓角 */
         .cover-img { 
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
             width: 88%; height: 75%; object-fit: cover; 
@@ -32,7 +32,7 @@
             background-color: #fff;
         }
 
-        /* 📋 白色圓角主方框 */
+        /* 📋 白色主方框 */
         .content-overlay { 
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
             width: 88%; height: 75%; z-index: 10; 
@@ -43,34 +43,40 @@
             display: flex; flex-direction: column;
         }
 
-        /* 🌅 頁眉區塊：改成圖片背景 + 50% 透明度 */
+        /* 🌅 頁眉區塊：無邊框，使用橘子圖背景 */
         .day-header {
             position: relative;
-            height: 85px; /* 固定高度，確保每一頁都一樣大 */
+            height: 85px; 
             margin: 12px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 0 20px;
             border-radius: 18px; 
-            overflow: hidden; /* 確保背景圖不超出圓角 */
+            overflow: hidden; 
             z-index: 1;
-            border: 1px solid #ffe0b2;
+            border: none; /* 移除框線 */
         }
 
-        /* 圖片背景層 */
         .day-header::before {
             content: "";
             position: absolute;
             top: 0; left: 0; right: 0; bottom: 0;
-            background-image: url('orange.jpg'); /* 你的圖片名稱 */
+            background-image: url('orange.jpg'); 
             background-size: cover;
             background-position: center;
-            opacity: 0.5; /* 透明度 50% */
+            opacity: 0.5; /* 圖片透明度 50% */
             z-index: -1;
         }
 
-        .day-label { font-size: 26px; font-weight: 700; color: var(--orange); letter-spacing: -0.5px; text-shadow: 1px 1px 2px rgba(255,255,255,0.8); }
+        /* 🎨 Day123456 標題：改為白色並加陰影確保辨識度 */
+        .day-label { 
+            font-size: 26px; 
+            font-weight: 700; 
+            color: #ffffff; /* 標題改為白色 */
+            letter-spacing: -0.5px; 
+            text-shadow: 1px 2px 4px rgba(0,0,0,0.3); /* 加入微弱陰影防止在亮處消失 */
+        }
 
         .header-tags { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
         .nav-tag { 
@@ -83,13 +89,13 @@
         .check-item { display: flex; align-items: center; padding: 13px 5px; border-bottom: 1px solid #f5f5f5; font-size: 15px; }
         .check-item input[type="checkbox"] { width: 22px; height: 22px; margin-right: 12px; accent-color: var(--orange); }
         ul { list-style: none; padding: 0; margin: 0; }
-        li { padding: 13px 0; border-bottom: 1px solid #f5f5f5; font-size: 14px; line-height: 1.6; }
-        li b { color: #000; font-weight: 700; margin-right: 8px; }
+        li { padding: 13px 0; border-bottom: 1px solid #f5f5f5; font-size: 14px; line-height: 1.6; color: #444; }
+        li b { color: var(--orange); font-weight: 700; margin-right: 8px; }
         
-        .flight-card { background: #fff; border: 2px dashed #ffcc80; padding: 15px; border-radius: 15px; margin: 5px 0 15px 0; font-size: 14px; text-align: center; }
+        .flight-card { background: #fff; border: 2px dashed #ffcc80; padding: 15px; border-radius: 15px; margin: 5px 0 15px 0; font-size: 14px; text-align: center; color: #333; }
 
         .dots { position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); display: flex; gap: 5px; z-index: 101; }
-        .dot { width: 6px; height: 6px; background: rgba(0,0,0,0.1); border-radius: 50%; }
+        .dot { width: 6px; height: 6px; background: rgba(255,255,255,0.4); border-radius: 50%; }
         .dot.active { background: var(--orange); width: 16px; border-radius: 10px; }
         .nav-btn { position: absolute; top: 0; width: 12%; height: 100%; z-index: 100; cursor: pointer; }
         .next-btn { right: 0; } .prev-btn { left: 0; }
@@ -128,9 +134,10 @@
                 </div>
                 <div class="scroll-content">
                     <ul>
-                        <li><b>11:00</b> 東門市場午餐 ➔ 買布丁</li>
+                        <li><b>09:00</b> 落地寄存 ➔ 東門市場午餐</li>
+                        <li><b>13:00</b> 蓮洞 Olive Young 掃貨</li>
                         <li><b>15:30</b> <b>海景麥當勞</b> ➔ <b>umu 布丁</b></li>
-                        <li><b>20:00</b> <b>熟成到</b>黑豬肉晚餐 🐷</li>
+                        <li><b>20:00</b> <b>熟成到</b>黑豬肉 (咸德店)</li>
                     </ul>
                     <div class="stay-info">🏨 住宿：咸德飯店</div>
                 </div>
@@ -143,9 +150,9 @@
                 </div>
                 <div class="scroll-content">
                     <ul>
-                        <li><b>11:30</b> 海女飯卷鮑魚餐</li>
-                        <li><b>15:30</b> <b>倫敦貝果</b> ➔ 逛 Object</li>
-                        <li><b>18:00</b> <b>Hugely Jeju</b> 3D 橘子 🍊</li>
+                        <li><b>11:30</b> <b>海女飯卷</b> (鮑魚飯卷/拉麵)</li>
+                        <li><b>15:30</b> <b>倫敦貝果</b> ➔ 逛 Object 客製店</li>
+                        <li><b>18:00</b> <b>Hugely Jeju</b> 拍 3D 橘子 🍊</li>
                     </ul>
                     <div class="stay-info">🏨 住宿：咸德飯店</div>
                 </div>
@@ -158,9 +165,9 @@
                 </div>
                 <div class="scroll-content">
                     <ul>
-                        <li><b>11:00</b> 牛島環島 🚲</li>
-                        <li><b>12:30</b> Meohamen 海鮮拉麵</li>
-                        <li><b>15:00</b> 涉地可支絕美燈塔</li>
+                        <li><b>早餐</b> 咸德 <b>鮑魚粥</b></li>
+                        <li><b>11:00</b> 牛島 🚲 ➔ <b>Meohamen</b> 拉麵</li>
+                        <li><b>15:00</b> <b>涉地可支</b> 看絕美燈塔</li>
                     </ul>
                     <div class="stay-info">🏨 住宿：西歸浦飯店</div>
                 </div>
@@ -173,8 +180,8 @@
                 </div>
                 <div class="scroll-content">
                     <ul>
-                        <li><b>下午</b> <b>三麗鷗主題樂園</b></li>
-                        <li><b>20:30</b> <b>亂打秀 (Nanta)</b> 🎭</li>
+                        <li><b>下午</b> <b>三麗鷗主題樂園</b> (Hello Kitty)</li>
+                        <li><b>晚上</b> 偶來市場 ➔ <b>亂打秀</b> 🎭</li>
                     </ul>
                     <div class="stay-info">🏨 住宿：西歸浦飯店</div>
                 </div>
@@ -187,9 +194,9 @@
                 </div>
                 <div class="scroll-content">
                     <ul>
-                        <li><b>上午</b> 尋找野生海豚 🐬</li>
-                        <li><b>下午</b> 涯月 Merci Jeju 買香水</li>
-                        <li><b>晚上</b> 樂天超市最後爆買 🛒</li>
+                        <li><b>上午</b> 大靜邑海岸路尋野生海豚 🐬</li>
+                        <li><b>下午</b> 涯月 <b>Merci Jeju</b> 買香水 🍊</li>
+                        <li><b>終極爆買</b> 樂天超市 / E-Mart</li>
                     </ul>
                     <div class="stay-info">🏨 住宿：濟州市區飯店</div>
                 </div>
@@ -199,7 +206,7 @@
                 <div class="day-header"><div class="day-label">Day 6</div></div>
                 <div class="scroll-content">
                     <ul>
-                        <li><b>10:30</b> 機場退稅 ➔ 登機</li>
+                        <li><b>10:30</b> 機場退稅 ➔ 辦理登機</li>
                         <li><b>11:45</b> IT 655 起飛回家 ✈️</li>
                     </ul>
                 </div>
@@ -210,7 +217,7 @@
                 <div class="scroll-content">
                     <ul>
                         <li>Naver Map / Papago 必備</li>
-                        <li>帽子要戴好，海風很大 🧢</li>
+                        <li>濟州海風大，帽子要戴好 🧢</li>
                     </ul>
                 </div>
             </div></div>
