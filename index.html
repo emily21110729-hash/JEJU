@@ -10,34 +10,37 @@
         body { margin: 0; padding: 0; background-color: #d7ccc8; font-family: 'Noto Sans TC', sans-serif; height: 100vh; overflow: hidden; }
         
         #slider { width: 100vw; height: 100vh; position: relative; overflow: hidden; background: #333; }
-        .slides-wrapper { display: flex; width: 600%; height: 100%; transition: transform 0.4s ease-out; }
-        .slide { width: 16.66%; height: 100%; flex-shrink: 0; position: relative; background-color: var(--paper); }
-        .bg-img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-size: cover; background-position: center; z-index: 1; }
+        /* 總共 9 頁，所以寬度是 900% */
+        .slides-wrapper { display: flex; width: 900%; height: 100%; transition: transform 0.4s ease-out; }
+        .slide { width: 11.11%; height: 100%; flex-shrink: 0; position: relative; background-color: var(--paper); }
         
-        /* 📱 內容框極大化優化 */
+        /* 📱 封面比例調小優化 */
+        .cover-img { 
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 80%; height: auto; max-height: 70%;
+            object-fit: contain; border-radius: 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+
         .content-overlay { 
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 82%; max-height: 75%; 
+            width: 88%; max-height: 85%; 
             z-index: 2; background: rgba(255, 255, 255, 0.95); 
-            padding: 15px; box-sizing: border-box; overflow-y: auto; border-radius: 12px; 
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15); 
+            padding: 20px; box-sizing: border-box; overflow-y: auto; border-radius: 15px; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
         }
-        .no-overlay .content-overlay { display: none; }
         
-        /* 📱 字體與間距極小化 */
-        h2 { color: var(--orange); border-bottom: 1px solid var(--orange); padding-bottom: 5px; margin: 0 0 10px 0; font-size: 18px; text-align: center; }
-        .nav-tag { text-decoration: none; background: #fff9c4; color: #f57f17; padding: 6px 10px; border-radius: 15px; font-weight: bold; border: 1px solid #fff176; display: inline-block; margin: 2px; font-size: 12px; }
+        h2 { color: var(--orange); border-bottom: 2px solid var(--orange); padding-bottom: 5px; margin: 0 0 10px 0; font-size: 20px; }
+        .nav-tag { text-decoration: none; background: #fff9c4; color: #f57f17; padding: 6px 12px; border-radius: 15px; font-weight: bold; border: 1px solid #fff176; display: inline-block; margin: 3px 0; font-size: 13px; }
         ul { list-style: none; padding: 0; margin: 0; }
-        li { padding: 6px 0; border-bottom: 1px solid #eee; font-size: 13px; line-height: 1.3; color: var(--text); }
-        li::before { content: "🍊 "; font-size: 10px; }
-        .flight-card { background: #fffef0; border: 1.5px dashed var(--orange); padding: 8px; border-radius: 8px; margin-bottom: 8px; font-size: 13px; text-align: center; }
-        
-        /* 指示點與按鈕 */
+        li { padding: 8px 0; border-bottom: 1px solid #eee; font-size: 14px; line-height: 1.5; color: var(--text); }
+        li b { color: #000; }
+        .flight-card { background: #fffef0; border: 1.5px dashed var(--orange); padding: 10px; border-radius: 10px; margin-bottom: 10px; font-size: 14px; text-align: center; }
+
         .nav-btn { position: absolute; top: 0; width: 20%; height: 100%; z-index: 100; }
         .next-btn { right: 0; } .prev-btn { left: 0; }
-        .dots { position: absolute; bottom: 15px; left: 50%; transform: translateX(-50%); display: flex; gap: 6px; z-index: 101; }
-        .dot { width: 6px; height: 6px; background: rgba(255,255,255,0.5); border-radius: 50%; }
-        .dot.active { background: var(--orange); width: 14px; border-radius: 10px; }
+        .dots { position: absolute; bottom: 15px; left: 50%; transform: translateX(-50%); display: flex; gap: 5px; z-index: 101; }
+        .dot { width: 6px; height: 6px; background: rgba(255,255,255,0.4); border-radius: 50%; }
+        .dot.active { background: var(--orange); width: 15px; border-radius: 10px; }
     </style>
 </head>
 <body>
@@ -45,36 +48,121 @@
         <div class="nav-btn prev-btn" onclick="moveSlide(-1)"></div>
         <div class="nav-btn next-btn" onclick="moveSlide(1)"></div>
         <div class="slides-wrapper" id="wrapper">
-            <div class="slide no-overlay"><div class="bg-img" style="background-image: url('JEJU.png');"></div></div>
-            <div class="slide"><div class="content-overlay"><h2>✈️ 航班資訊</h2><div class="flight-card">去程 IT 654<br><b>06:40 - 09:50</b></div><div class="flight-card">回程 IT 655<br><b>11:45 - 12:55</b></div></div></div>
-            <div class="slide"><div class="content-overlay"><h2>📋 行李清單</h2><ul><li>護照 / K-ETA / WOWPASS</li><li>韓國轉接頭 / 網卡</li><li>空行李箱 (爆買用)</li><li>個人藥品 / 行動電源</li></ul></div></div>
-            <div class="slide"><div class="content-overlay"><h2>Day 1 北區</h2>
+            
+            <div class="slide"><img src="JEJU.png" class="cover-img"></div>
+
+            <div class="slide"><div class="content-overlay">
+                <h2>✈️ 航班 & 準備</h2>
+                <div class="flight-card">去程 IT 654 | <b>06:40 - 09:50</b></div>
+                <div class="flight-card">回程 IT 655 | <b>11:45 - 12:55</b></div>
+                <ul>
+                    <li>✅ 護照 / 簽證 K-ETA</li>
+                    <li>✅ WOWPASS 卡 / 韓國轉接頭</li>
+                    <li>✅ 網卡確認 / 換匯</li>
+                </ul>
+            </div></div>
+
+            <div class="slide"><div class="content-overlay">
+                <h2>Day 1 北區網美</h2>
                 <a href="https://naver.me/G8tU3GqI" class="nav-tag" target="_blank">📍 海景麥當勞</a>
                 <a href="https://naver.me/9UP_Je_j" class="nav-tag" target="_blank">📍 umu 布丁</a>
-                <a href="https://naver.me/MdmvQxbl" class="nav-tag" target="_blank">📍 Hugely Jeju</a>
-                <ul><li>機場寄物 ➔ 麥當勞吃漢堡</li><li>umu 買布丁 ➔ 掃貨 Olive Young</li><li>Hugely 拍 3D 橘子</li><li>熟成到黑豬肉</li></ul>
+                <ul>
+                    <li><b>10:30</b> 機場寄行李 ➔ 蓮洞商圈</li>
+                    <li><b>12:00</b> 海景麥當勞吃限定漢堡 🍔</li>
+                    <li><b>14:00</b> umu 布丁 & Hugely Jeju 橘子</li>
+                    <li><b>18:00</b> 熟成到黑豬肉 (需提早排隊)</li>
+                </ul>
             </div></div>
-            <div class="slide"><div class="content-overlay"><h2>更多亮點</h2>
+
+            <div class="slide"><div class="content-overlay">
+                <h2>Day 2 東北區</h2>
                 <a href="https://naver.me/FvWqXqXq" class="nav-tag" target="_blank">📍 倫敦貝果</a>
-                <a href="https://naver.me/5LANKOqH" class="nav-tag" target="_blank">📍 亂打秀</a>
-                <ul><li>牛島環島 ➔ 海鮮拉麵</li><li>三麗鷗樂園 ➔ 每日偶來市場</li><li>亂打秀 ➔ 樂天超市</li></ul>
+                <ul>
+                    <li><b>09:00</b> 倫敦貝果 (先抽號碼牌)</li>
+                    <li><b>11:00</b> 逛 Object 文創 & 咸德商圈</li>
+                    <li><b>13:00</b> 海女飯卷海景午餐 🍙</li>
+                    <li><b>15:00</b> 咸德海域散步拍美照</li>
+                </ul>
             </div></div>
-            <div class="slide no-overlay"><div class="bg-img" style="background-image: url('JEJU B.png');"></div></div>
+
+            <div class="slide"><div class="content-overlay">
+                <h2>Day 3 東區牛島</h2>
+                <a href="https://naver.me/5fP8P8P8" class="nav-tag" target="_blank">📍 牛島碼頭</a>
+                <ul>
+                    <li><b>09:30</b> 城山港搭船 ➔ 牛島</li>
+                    <li><b>11:00</b> 環島電動車 ➔ 拍燈塔</li>
+                    <li><b>12:30</b> Meohamen 章魚海鮮拉麵 🐙</li>
+                    <li><b>15:30</b> 涉地可支絕美海景步行</li>
+                </ul>
+            </div></div>
+
+            <div class="slide"><div class="content-overlay">
+                <h2>Day 4 南區三麗鷗</h2>
+                <a href="https://naver.me/x6f6f6f6" class="nav-tag" target="_blank">📍 三麗鷗樂園</a>
+                <ul>
+                    <li><b>10:00</b> Hello Kitty 樂園 🎀</li>
+                    <li><b>13:00</b> 橘子咖啡廳 Ein Bat 🍊</li>
+                    <li><b>16:00</b> 每日偶來市場搜括美食</li>
+                    <li><b>18:00</b> 西歸浦排骨湯飯</li>
+                </ul>
+            </div></div>
+
+            <div class="slide"><div class="content-overlay">
+                <h2>Day 5 西北區</h2>
+                <a href="https://naver.me/5LANKOqH" class="nav-tag" target="_blank">📍 亂打秀</a>
+                <ul>
+                    <li><b>10:00</b> 大靜邑尋找野生海豚 🐬</li>
+                    <li><b>14:00</b> 涯月邑海景咖啡廳</li>
+                    <li><b>17:00</b> 濟州亂打秀精彩觀賞 🎭</li>
+                    <li><b>20:00</b> 樂天超市最後採購 🛒</li>
+                </ul>
+            </div></div>
+
+            <div class="slide"><div class="content-overlay">
+                <h2>Day 6 歸途</h2>
+                <ul>
+                    <li><b>08:30</b> 最後打包清點</li>
+                    <li><b>09:30</b> 前往濟州機場</li>
+                    <li><b>11:45</b> IT 655 起飛回家 ✈️</li>
+                    <li>記得在機場領取退稅！</li>
+                </ul>
+            </div></div>
+
+            <div class="slide"><img src="JEJU B.png" class="cover-img"></div>
+
         </div>
         <div class="dots" id="dots"></div>
     </div>
+
     <script>
-        let currentIdx = 0; const totalSlides = 6; const wrapper = document.getElementById('wrapper');
+        let currentIdx = 0; const totalSlides = 9; 
+        const wrapper = document.getElementById('wrapper');
         const dotsContainer = document.getElementById('dots');
+
         for (let i = 0; i < totalSlides; i++) {
             const dot = document.createElement('div'); dot.classList.add('dot');
             if (i === 0) dot.classList.add('active'); dotsContainer.appendChild(dot);
         }
+
         function moveSlide(dir) {
-            currentIdx += dir; if (currentIdx < 0) currentIdx = 0; if (currentIdx >= totalSlides) currentIdx = totalSlides - 1;
+            currentIdx += dir;
+            if (currentIdx < 0) currentIdx = 0;
+            if (currentIdx >= totalSlides) currentIdx = totalSlides - 1;
             wrapper.style.transform = `translateX(-${currentIdx * (100 / totalSlides)}%)`;
-            document.querySelectorAll('.dot').forEach((dot, i) => { dot.classList.toggle('active', i === currentIdx); });
+            document.querySelectorAll('.dot').forEach((dot, i) => { 
+                dot.classList.toggle('active', i === currentIdx); 
+            });
         }
+
+        let touchStartX = 0;
+        document.getElementById('slider').addEventListener('touchstart', e => { 
+            touchStartX = e.changedTouches[0].screenX; 
+        });
+        document.getElementById('slider').addEventListener('touchend', e => {
+            let touchEndX = e.changedTouches[0].screenX;
+            if (touchStartX - touchEndX > 50) moveSlide(1);
+            if (touchEndX - touchStartX > 50) moveSlide(-1);
+        });
     </script>
 </body>
 </html>
