@@ -17,64 +17,70 @@
             display: flex; justify-content: center; align-items: center;
             height: 100vh; overflow: hidden;
         }
-        /* 主容器 */
         #slider {
             width: 100vw; height: 100vh;
-            max-width: 500px; /* 電腦看也不會過寬 */
+            max-width: 500px;
             position: relative; overflow: hidden;
-            box-shadow: 0 0 30px rgba(0,0,0,0.2);
-            background: var(--paper);
+            background: #fff;
         }
-        /* 每一頁的容器 */
         .slides-wrapper {
-            display: flex; width: 800%; /* 8頁 */
-            height: 100%; transition: transform 0.4s ease-out;
+            display: flex; width: 800%; /* 總共8頁 */
+            height: 100%; transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
         .slide {
-            width: 12.5%; height: 100%; /* 100/8 */
+            width: 12.5%; height: 100%;
             flex-shrink: 0; position: relative;
-            box-sizing: border-box;
+            background-color: var(--paper);
         }
-        /* 背景圖設定 */
+        /* 封面與背景圖美化 */
         .bg-img {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background-size: cover; background-position: center; z-index: 1;
         }
         .content-overlay {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            z-index: 2; background: rgba(255, 255, 255, 0.85); /* 半透明遮罩 */
-            padding: 30px; box-sizing: border-box; overflow-y: auto;
-            display: flex; flex-direction: column;
+            position: absolute; top: 10%; left: 7%; width: 86%; height: 80%;
+            z-index: 2; 
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(5px);
+            padding: 25px; box-sizing: border-box; 
+            overflow-y: auto; border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border: 1px solid rgba(255,255,255,0.3);
         }
-        /* 封面與封底不需要遮罩 */
-        .no-overlay .content-overlay { background: transparent; }
+        /* 封面與封底全滿版 */
+        .no-overlay .content-overlay { display: none; }
 
-        /* 內容美化 */
-        h2 { color: var(--orange); border-bottom: 2px dashed var(--orange); padding-bottom: 10px; margin-top: 10px; }
+        h2 { color: var(--orange); border-bottom: 2px dashed var(--orange); padding-bottom: 10px; margin-top: 0; font-size: 24px; }
         .tag-box { display: flex; flex-wrap: wrap; gap: 8px; margin: 15px 0; }
         .nav-tag { 
-            text-decoration: none; background: #fff9c4; color: #f57f17; padding: 10px 18px; 
-            border-radius: 25px; font-size: 14px; font-weight: bold; border: 1px solid #fff176;
+            text-decoration: none; background: #fff9c4; color: #f57f17; padding: 12px 20px; 
+            border-radius: 25px; font-size: 15px; font-weight: bold; border: 1px solid #fff176;
+            box-shadow: 0 4px 0 #ffe082;
         }
+        .nav-tag:active { transform: translateY(2px); box-shadow: none; }
+        
         ul { list-style: none; padding: 0; }
-        li { padding: 12px 0; border-bottom: 1px solid #eee; line-height: 1.6; }
-        .flight-card { background: #fff; border: 2px dashed var(--orange); padding: 15px; border-radius: 15px; margin-bottom: 15px; }
+        li { padding: 15px 0; border-bottom: 1px solid #eee; line-height: 1.6; font-size: 16px; }
+        li::before { content: "🍊 "; }
 
-        /* 左右點擊區域 */
-        .nav-btn {
-            position: absolute; top: 0; width: 15%; height: 100%;
-            z-index: 100; cursor: pointer;
+        .flight-card { 
+            background: #fffef0; border: 2px dashed var(--orange); padding: 20px; 
+            border-radius: 15px; margin-bottom: 15px; text-align: center;
         }
+        .flight-card b { font-size: 20px; color: var(--orange); }
+
+        /* 導航按鈕 */
+        .nav-btn { position: absolute; top: 0; width: 20%; height: 100%; z-index: 100; cursor: pointer; }
         .prev-btn { left: 0; }
         .next-btn { right: 0; }
         
-        /* 頁碼指示器 */
+        /* 指示點 */
         .dots {
-            position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
-            display: flex; gap: 8px; z-index: 101;
+            position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%);
+            display: flex; gap: 10px; z-index: 101;
         }
-        .dot { width: 8px; height: 8px; background: #ccc; border-radius: 50%; }
-        .dot.active { background: var(--orange); width: 20px; border-radius: 10px; transition: 0.3s; }
+        .dot { width: 10px; height: 10px; background: rgba(0,0,0,0.1); border-radius: 50%; transition: 0.3s; }
+        .dot.active { background: var(--orange); width: 25px; border-radius: 10px; }
     </style>
 </head>
 <body>
@@ -86,40 +92,44 @@
         <div class="slides-wrapper" id="wrapper">
             <div class="slide no-overlay">
                 <div class="bg-img" style="background-image: url('JEJU.png');"></div>
-                <div class="content-overlay"></div>
             </div>
 
             <div class="slide">
+                <div class="bg-img" style="background-image: url('https://picsum.photos/500/800?random=1'); opacity: 0.3;"></div>
                 <div class="content-overlay">
                     <h2>✈️ 航班資訊</h2>
                     <div class="flight-card">去程 IT 654<br><b>06:40 - 09:50</b></div>
                     <div class="flight-card">回程 IT 655<br><b>11:45 - 12:55</b></div>
-                    <p style="color:#888; font-size:12px;">點擊右側邊緣看下一頁 ➔</p>
+                    <p style="text-align:center; color:#999; font-style:italic;">向左滑或點右邊翻頁 ➔</p>
                 </div>
             </div>
 
             <div class="slide">
+                <div class="bg-img" style="background-image: url('https://picsum.photos/500/800?random=2'); opacity: 0.3;"></div>
                 <div class="content-overlay">
                     <h2>📋 行李清單</h2>
                     <ul>
-                        <li>護照 / K-ETA</li>
-                        <li>WOWPASS / 轉接頭</li>
-                        <li>空行李箱 (爆買用)</li>
+                        <li>護照 / 簽證 K-ETA</li>
+                        <li>WOWPASS / 韓國轉接頭</li>
+                        <li>行動電源 / 網卡</li>
+                        <li>爆買用大空行李箱</li>
                     </ul>
                 </div>
             </div>
 
             <div class="slide">
                 <div class="content-overlay">
-                    <h2>Day 1 北區</h2>
+                    <h2>Day 1 北區行程</h2>
                     <div class="tag-box">
                         <a href="https://naver.me/G8tU3GqI" class="nav-tag" target="_blank">📍 海景麥當勞</a>
                         <a href="https://naver.me/9UP_Je_j" class="nav-tag" target="_blank">📍 umu 布丁</a>
+                        <a href="https://naver.me/MdmvQxbl" class="nav-tag" target="_blank">📍 Hugely Jeju</a>
                     </div>
                     <ul>
-                        <li>麥當勞看海吃漢堡</li>
-                        <li>umu & Hugely Jeju 掃店</li>
-                        <li>熟成到黑豬肉慶祝</li>
+                        <li>麥當勞看海吃漢堡 🍔</li>
+                        <li>umu 打卡買布丁 🍰</li>
+                        <li>Hugely 拍 3D 橘子 🍊</li>
+                        <li>熟成到黑豬肉排隊</li>
                     </ul>
                 </div>
             </div>
@@ -129,10 +139,12 @@
                     <h2>Day 2 & 3 東區</h2>
                     <div class="tag-box">
                         <a href="https://naver.me/FvWqXqXq" class="nav-tag" target="_blank">📍 倫敦貝果</a>
+                        <a href="https://naver.me/5fP8P8P8" class="nav-tag" target="_blank">📍 牛島碼頭</a>
                     </div>
                     <ul>
-                        <li>倫敦貝果、文創店巡禮</li>
-                        <li>牛島環島、章魚拉麵</li>
+                        <li>倫敦貝果、逛 Object 文創</li>
+                        <li>牛島環島、吃章魚拉麵 🐙</li>
+                        <li>涉地可支絕美海景</li>
                     </ul>
                 </div>
             </div>
@@ -141,11 +153,13 @@
                 <div class="content-overlay">
                     <h2>Day 4 南區</h2>
                     <div class="tag-box">
+                        <a href="https://naver.me/x6f6f6f6" class="nav-tag" target="_blank">📍 三麗鷗樂園</a>
                         <a href="https://naver.me/xG6f0Xf0" class="nav-tag" target="_blank">📍 每日偶來市場</a>
                     </div>
                     <ul>
-                        <li>三麗鷗樂園 🎀</li>
-                        <li>市場美食搜括</li>
+                        <li>橘子園咖啡廳 Ein Bat</li>
+                        <li>Hello Kitty 三麗鷗樂園 🎀</li>
+                        <li>市場美食搜括 (買伴手禮)</li>
                     </ul>
                 </div>
             </div>
@@ -157,15 +171,16 @@
                         <a href="https://naver.me/5LANKOqH" class="nav-tag" target="_blank">📍 亂打秀</a>
                     </div>
                     <ul>
-                        <li>追海豚 & 亂打秀 🎭</li>
-                        <li>樂天超市最後採購</li>
+                        <li>大靜邑追野生海豚 🐬</li>
+                        <li>亂打秀精彩觀賞 🎭</li>
+                        <li>樂天超市最後採購 🛒</li>
+                        <li>11:45 準時飛回家 ✈️</li>
                     </ul>
                 </div>
             </div>
 
             <div class="slide no-overlay">
                 <div class="bg-img" style="background-image: url('JEJU B.png');"></div>
-                <div class="content-overlay"></div>
             </div>
         </div>
 
@@ -178,7 +193,6 @@
         const wrapper = document.getElementById('wrapper');
         const dotsContainer = document.getElementById('dots');
 
-        // 初始化指示點
         for (let i = 0; i < totalSlides; i++) {
             const dot = document.createElement('div');
             dot.classList.add('dot');
@@ -190,26 +204,17 @@
             currentIdx += dir;
             if (currentIdx < 0) currentIdx = 0;
             if (currentIdx >= totalSlides) currentIdx = totalSlides - 1;
-            
             wrapper.style.transform = `translateX(-${currentIdx * (100 / totalSlides)}%)`;
-            
-            // 更新指示點
             const dots = document.querySelectorAll('.dot');
-            dots.forEach((dot, i) => {
-                dot.classList.toggle('active', i === currentIdx);
-            });
+            dots.forEach((dot, i) => { dot.classList.toggle('active', i === currentIdx); });
         }
 
-        // 支援手機滑動 (Swipe)
         let touchStartX = 0;
-        let touchEndX = 0;
-        document.getElementById('slider').addEventListener('touchstart', e => {
-            touchStartX = e.changedTouches[0].screenX;
-        });
+        document.getElementById('slider').addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; });
         document.getElementById('slider').addEventListener('touchend', e => {
-            touchEndX = e.changedTouches[0].screenX;
-            if (touchStartX - touchEndX > 50) moveSlide(1); // 左滑
-            if (touchEndX - touchStartX > 50) moveSlide(-1); // 右滑
+            let touchEndX = e.changedTouches[0].screenX;
+            if (touchStartX - touchEndX > 50) moveSlide(1);
+            if (touchEndX - touchStartX > 50) moveSlide(-1);
         });
     </script>
 </body>
