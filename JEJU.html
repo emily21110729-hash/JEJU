@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>濟州島 3D 旅遊手帳</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --orange: #FF8C00;
+            --paper: #fdfaf6;
+            --text: #4a4a4a;
+            --book-width: 420px;
+            --book-height: 580px;
+            --click-zone: 50px; 
+        }
+
+        @media screen and (max-width: 768px) {
+            :root {
+                --book-width: 90vw;
+                --book-height: 75vh;
+                --click-zone: 60px;
+            }
+        }
+
+        body {
+            background-color: #d7ccc8;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            perspective: 2000px;
+            font-family: 'Noto Sans TC', sans-serif;
+            color: var(--text);
+            overflow: hidden;
+            touch-action: manipulation;
+        }
+
+        .book {
+            position: relative;
+            width: var(--book-width);
+            height: var(--book-height);
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+
+        .page {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            transform-origin: left;
+            transform-style: preserve-3d;
+            transition: transform 0.8s cubic-bezier(0.645, 0.045, 0.355, 1);
+        }
+
+        .front, .back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            box-sizing: border-box;
+            box-shadow: inset 4px 0 15px rgba(0,0,0,0.05);
+            border-radius: 15px;
+            background-color: var(--paper);
+            border: 1px solid #e0e0e0;
+            overflow: hidden;
+        }
+
+        .back { transform: rotateY(180deg); }
+        .page.flipped { transform: rotateY(-180deg); }
+
+        /* 內容區：確保標籤層級最高 */
+        .content-scroll {
+            width: 100%;
+            height: 100%;
+            padding: 30px;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            box-sizing: border-box;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* 標籤容器：z-index 設為 999 確保在感應區上方 */
+        .map-tags-container { 
+            display: flex; 
+            flex-wrap: wrap; 
+            gap: 10px; 
+            margin-bottom: 15px; 
+            position: relative; 
+            z-index: 999; 
+        }
+        
+        .nav-tag { 
+            text-decoration: none; 
+            background: #fff9c4; 
+            color: #f57f17; 
+            padding: 10px 16px; 
+            border-radius: 20px; 
+            font-size: 14px; 
+            font-weight: bold; 
+            border: 1px solid #fff176; 
+            display: inline-block;
+            pointer-events: auto; /* 強制標籤接受點擊 */
+        }
+
+        /* 透明翻頁感應區：z-index 低於標籤 */
+        .click-layer {
+            position: absolute;
+            top: 0;
+            width: var(--click-zone);
+            height: 100%;
+            z-index: 100; 
+            cursor: pointer;
+            background: transparent;
+        }
+        .right-zone { right: 0; }
+        .left-zone { left: 0; }
+
+        .cover-front { background-image: url('JEJU.png'); background-size: cover; background-position: center; border: none !important; }
+        .back-cover-img { background-image: url('JEJU B.png'); background-size: cover; background-position: center; border: none !important; }
+        .photo-side { width: 100%; height: 100%; background-size: cover; background-position: center; }
+
+        h2 { color: var(--orange); margin-top: 0; border-bottom: 2px dashed var(--orange); padding-bottom: 5px; font-size: 22px; }
+        ul { list-style: none; padding: 0; border-top: 1px dashed #ddd; padding-top: 10px; }
+        li { padding: 10px 0; border-bottom: 1px solid #eee; font-size: 15px; line-height: 1.5; }
+        li::before { content: "🍊 "; }
+
+        .flight-card { background: #fff; border: 2px dashed var(--orange); padding: 12px; border-radius: 12px; margin-bottom: 10px; }
+        .check-item { display: flex; align-items: center; cursor: pointer; padding: 8px 0; position: relative; z-index: 999; }
+        .check-item input { width: 20px; height: 20px; margin-right: 12px; accent-color: var(--orange); }
+
+    </style>
+</head>
+<body>
+
+    <div class="book" id="book">
+        
+        <div class="page" id="p1">
+            <div class="front cover-front">
+                <div class="click-layer right-zone" onclick="flip(1)"></div>
+            </div>
+            <div class="back">
+                <div class="click-layer left-zone" onclick="flip(1)"></div>
+                <div class="content-scroll">
+                    <h2>✈️ 航班資訊</h2>
+                    <div class="flight-card">去程 IT 654 | TPE ➔ CJU<br><b>06:40 - 09:50</b></div>
+                    <div class="flight-card">回程 IT 655 | CJU ➔ TPE<br><b>11:45 - 12:55</b></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="page" id="p2">
+            <div class="front">
+                <div class="click-layer right-zone" onclick="flip(2)"></div>
+                <div class="content-scroll">
+                    <h2>📋 行李清單</h2>
+                    <label class="check-item"><input type="checkbox"> 護照 / 簽證 K-ETA</label>
+                    <label class="check-item"><input type="checkbox"> WOWPASS / 轉接頭</label>
+                    <label class="check-item"><input type="checkbox"> 網卡 / 空行李箱</label>
+                </div>
+            </div>
+            <div class="back">
+                <div class="click-layer left-zone" onclick="flip(2)"></div>
+                <div class="content-scroll">
+                    <h2>Day 1 北區網美行</h2>
+                    <div class="map-tags-container">
+                        <a href="https://naver.me/G8tU3GqI" class="nav-tag" target="_blank">📍 海景麥當勞</a>
+                        <a href="https://naver.me/9UP_Je_j" class="nav-tag" target="_blank">📍 umu 布丁</a>
+                        <a href="https://naver.me/MdmvQxbl" class="nav-tag" target="_blank">📍 Hugely Jeju</a>
+                    </div>
+                    <ul>
+                        <li>機場寄物 ➔ 海景麥當勞吃限定漢堡 🍔</li>
+                        <li>蓮洞商圈掃貨 ➔ umu 買布丁 🍰</li>
+                        <li>Hugely Jeju 拍 3D 橘子 🍊</li>
+                        <li>咸德飯店 Check-in ➔ 熟成到黑豬肉</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="page" id="p3">
+            <div class="front">
+                <div class="click-layer right-zone" onclick="flip(3)"></div>
+                <div class="photo-side" style="background-image: url('https://picsum.photos/400/600?random=11');"></div>
+            </div>
+            <div class="back">
+                <div class="click-layer left-zone" onclick="flip(3)"></div>
+                <div class="content-scroll">
+                    <h2>Day 2 東北區</h2>
+                    <div class="map-tags-container">
+                        <a href="https://naver.me/63resCAc" class="nav-tag" target="_blank">📍 海女飯卷</a>
+                        <a href="https://naver.me/FvWqXqXq" class="nav-tag" target="_blank">📍 倫敦貝果</a>
+                    </div>
+                    <ul>
+                        <li>海女飯卷海景午餐 ➔ 咸德文創街</li>
+                        <li>倫敦貝果抽號碼牌 ➔ 逛 Object 文創</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="page" id="p4">
+            <div class="front">
+                <div class="click-layer right-zone" onclick="flip(4)"></div>
+                <div class="photo-side" style="background-image: url('https://picsum.photos/400/600?random=12');"></div>
+            </div>
+            <div class="back">
+                <div class="click-layer left-zone" onclick="flip(4)"></div>
+                <div class="content-scroll">
+                    <h2>Day 3 東區</h2>
+                    <div class="map-tags-container">
+                        <a href="https://naver.me/5fP8P8P8" class="nav-tag" target="_blank">📍 牛島碼頭</a>
+                    </div>
+                    <ul>
+                        <li>牛島環島之旅 ➔ Meohamen 章魚拉麵</li>
+                        <li>涉地可支絕美海景 ➔ 前往西歸浦</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="page" id="p5">
+            <div class="front">
+                <div class="click-layer right-zone" onclick="flip(5)"></div>
+                <div class="photo-side" style="background-image: url('https://picsum.photos/400/600?random=13');"></div>
+            </div>
+            <div class="back">
+                <div class="click-layer left-zone" onclick="flip(5)"></div>
+                <div class="content-scroll">
+                    <h2>Day 4 南區</h2>
+                    <div class="map-tags-container">
+                        <a href="https://naver.me/x6f6f6f6" class="nav-tag" target="_blank">📍 三麗鷗樂園</a>
+                        <a href="https://naver.me/xG6f0Xf0" class="nav-tag" target="_blank">📍 偶來市場</a>
+                    </div>
+                    <ul>
+                        <li>橘子咖啡廳 ➔ Hello Kitty 樂園 🎀</li>
+                        <li>每日偶來市場搜括美食伴手禮</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="page" id="p6">
+            <div class="front">
+                <div class="click-layer right-zone" onclick="flip(6)"></div>
+                <div class="photo-side" style="background-image: url('https://picsum.photos/400/600?random=14');"></div>
+            </div>
+            <div class="back">
+                <div class="click-layer left-zone" onclick="flip(6)"></div>
+                <div class="content-scroll">
+                    <h2>Day 5 西區 ➔ 北區</h2>
+                    <div class="map-tags-container">
+                        <a href="https://naver.me/x8f8f8f8" class="nav-tag" target="_blank">📍 Merci Jeju</a>
+                        <a href="https://naver.me/5LANKOqH" class="nav-tag" target="_blank">📍 亂打秀</a>
+                    </div>
+                    <ul>
+                        <li>追野生海豚 🐬 ➔ 涯月買限定香水</li>
+                        <li>亂打秀精彩表演 🎭 ➔ 樂天超市爆買</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="page" id="p7">
+            <div class="front">
+                <div class="click-layer right-zone" onclick="flip(7)"></div>
+                <div class="photo-side" style="background-image: url('https://picsum.photos/400/600?random=15');"></div>
+            </div>
+            <div class="back">
+                <div class="click-layer left-zone" onclick="flip(7)"></div>
+                <div class="content-scroll">
+                    <h2>Day 6 返程</h2>
+                    <ul>
+                        <li>最後打包清點 ➔ 準備前往機場</li>
+                        <li>11:45 飛機起飛 (IT 655) ✈️</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="page" id="p8">
+            <div class="front">
+                <div class="click-layer right-zone" onclick="flip(8)"></div>
+                <div style="display:flex; justify-content:center; align-items:center; height:100%; background:#4a4a4a; color:white;"><h1>SEE YOU!</h1></div>
+            </div>
+            <div class="back back-cover-img">
+                <div class="click-layer left-zone" onclick="flip(8)"></div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        let flippedPages = 0;
+        const totalPages = 8;
+        const pages = [];
+        for(let i=1; i<=totalPages; i++) { pages.push(document.getElementById('p' + i)); }
+
+        function flip(pageId) {
+            const index = pageId - 1;
+            const page = pages[index];
+            const book = document.getElementById('book');
+            if (!page.classList.contains('flipped')) {
+                page.classList.add('flipped');
+                flippedPages++;
+                setTimeout(() => { page.style.zIndex = pageId; }, 500);
+            } else {
+                page.classList.remove('flipped');
+                flippedPages--;
+                setTimeout(() => { page.style.zIndex = totalPages + 1 - index; }, 500);
+            }
+            if (window.innerWidth > 850) {
+                book.style.transform = flippedPages > 0 ? "translateX(50%)" : "translateX(0%)";
+            }
+        }
+        window.onload = () => { pages.forEach((p, idx) => { p.style.zIndex = totalPages + 1 - idx; }); };
+    </script>
+</body>
+</html>
