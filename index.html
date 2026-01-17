@@ -6,16 +6,14 @@
     <title>濟州島旅遊手帳</title>
     <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        /* 匯入岳門天工體 (UoqMunThenKhung) */
-        @import url('https://cdn.jsdelivr.net/gh/jason820610/UoqMunThenKhung@master/fonts.css');
-
         :root { --orange: #FF8C00; --paper: #fdfaf6; --text: #333; }
         
         body { 
             margin: 0; padding: 0; background-color: #d7ccc8; 
-            /* 內文類預設使用 Shippori Mincho */
+            /* 全站統一使用 Shippori Mincho */
             font-family: 'Shippori Mincho', serif; 
             height: 100vh; overflow: hidden; 
+            color: var(--text);
         }
         
         #slider { width: 100vw; height: 100vh; position: relative; overflow: hidden; background: #333; }
@@ -37,12 +35,11 @@
             box-shadow: 0 8px 20px rgba(0,0,0,0.1); 
         }
         
-        /* 🎨 標題類使用岳門天工體 */
+        /* 🎨 標題改為粗體加重 */
         h2 { 
             color: var(--orange); border-bottom: 2px solid var(--orange); padding-bottom: 8px; 
-            margin: 0 0 12px 0; font-size: 24px; text-align: center;
-            font-family: 'UoqMunThenKhung', sans-serif;
-            font-weight: normal;
+            margin: 0 0 12px 0; font-size: 22px; text-align: center;
+            font-weight: 700; /* 強制粗體 */
         }
         
         .check-item { display: flex; align-items: center; padding: 12px 5px; border-bottom: 1px solid #eee; font-size: 15px; cursor: pointer; position: relative; z-index: 20; }
@@ -50,19 +47,17 @@
 
         .nav-tag { 
             text-decoration: none; background: #fff9c4; color: #f57f17; padding: 6px 10px; 
-            border-radius: 15px; font-weight: bold; border: 1px solid #fff176; 
+            border-radius: 15px; font-weight: 700; border: 1px solid #fff176; 
             display: inline-block; margin: 2px 0; font-size: 12px; 
-            font-family: 'Shippori Mincho', serif;
         }
         
         ul { list-style: none; padding: 0; margin: 5px 0 0 0; }
-        li { padding: 9px 0; border-bottom: 1px solid #eee; font-size: 14px; line-height: 1.6; color: var(--text); }
+        li { padding: 9px 0; border-bottom: 1px solid #eee; font-size: 14px; line-height: 1.6; }
         li b { color: #000; font-weight: 700; }
         
         .flight-card { 
             background: #fffef0; border: 1.5px dashed var(--orange); padding: 10px; 
             border-radius: 10px; margin-bottom: 10px; font-size: 14px; text-align: center;
-            font-family: 'Shippori Mincho', serif;
         }
 
         .nav-btn { position: absolute; top: 0; width: 10%; height: 100%; z-index: 100; cursor: pointer; }
@@ -165,8 +160,8 @@
                 <h2>小提醒</h2>
                 <ul>
                     <li>記得帶帽子擋海風 🧢</li>
-                    <li>下載 Naver Map 並存景點</li>
-                    <li>祝你旅途愉快，玩得開心！🍊</li>
+                    <li>下載 Naver Map 並存好景點</li>
+                    <li>祝你濟州島旅程愉快！🍊</li>
                 </ul>
             </div></div>
 
