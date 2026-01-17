@@ -6,65 +6,68 @@
     <title>濟州島旅遊手帳</title>
     <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        :root { --orange: #FF8C00; --paper: #fdfaf6; --text: #333; }
+        :root { --orange: #FF8C00; --paper: #fdfaf6; --text: #333; --bg-grey: #d7ccc8; }
         
         body { 
-            margin: 0; padding: 0; background-color: #d7ccc8; 
-            /* 全站統一使用 Shippori Mincho */
+            margin: 0; padding: 0; background-color: var(--bg-grey); 
             font-family: 'Shippori Mincho', serif; 
-            height: 100vh; overflow: hidden; 
-            color: var(--text);
+            height: 100vh; overflow: hidden; color: var(--text);
         }
         
         #slider { width: 100vw; height: 100vh; position: relative; overflow: hidden; background: #333; }
         .slides-wrapper { display: flex; width: 1100%; height: 100%; transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
-        .slide { width: 9.09%; height: 100%; flex-shrink: 0; position: relative; background-color: var(--paper); }
+        .slide { width: 9.09%; height: 100%; flex-shrink: 0; position: relative; background-color: var(--bg-grey); }
         
-        /* 🖼️ 封面比例鎖定 85% x 75% */
+        /* 🖼️ 封面與封底：維持直角 (0圓角) */
         .cover-img { 
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 85%; height: 75%; object-fit: contain; border-radius: 15px; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3); background-color: #fff;
+            width: 85%; height: 75%; object-fit: contain; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2); 
+            background-color: #fff;
         }
 
-        /* 📋 方框比例固定 */
+        /* 📋 卡片式內容框：圓角、無框線、背景色 */
         .content-overlay { 
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 85%; height: 75%; z-index: 10; background: rgba(255, 255, 255, 0.98); 
-            padding: 22px; box-sizing: border-box; overflow-y: auto; border-radius: 15px; 
-            box-shadow: 0 8px 20px rgba(0,0,0,0.1); 
+            width: 85%; height: 75%; z-index: 10; 
+            background: var(--paper); /* 方框背景色 */
+            padding: 25px; box-sizing: border-box; overflow-y: auto; 
+            border-radius: 20px; /* 內容框圓角 */
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1); 
+            border: none; /* 移除所有框線 */
         }
         
-        /* 🎨 標題改為粗體加重 */
         h2 { 
-            color: var(--orange); border-bottom: 2px solid var(--orange); padding-bottom: 8px; 
-            margin: 0 0 12px 0; font-size: 22px; text-align: center;
-            font-weight: 700; /* 強制粗體 */
+            color: var(--orange); border-bottom: 2px solid #eee; padding-bottom: 10px; 
+            margin: 0 0 15px 0; font-size: 22px; text-align: center; font-weight: 700;
         }
         
-        .check-item { display: flex; align-items: center; padding: 12px 5px; border-bottom: 1px solid #eee; font-size: 15px; cursor: pointer; position: relative; z-index: 20; }
+        .check-item { display: flex; align-items: center; padding: 12px 5px; border-bottom: 1px solid #f0f0f0; font-size: 15px; cursor: pointer; }
         .check-item input[type="checkbox"] { width: 22px; height: 22px; margin-right: 12px; accent-color: var(--orange); }
 
         .nav-tag { 
-            text-decoration: none; background: #fff9c4; color: #f57f17; padding: 6px 10px; 
-            border-radius: 15px; font-weight: 700; border: 1px solid #fff176; 
-            display: inline-block; margin: 2px 0; font-size: 12px; 
+            text-decoration: none; background: #fff9c4; color: #f57f17; padding: 6px 12px; 
+            border-radius: 15px; font-weight: 700; border: none; 
+            display: inline-block; margin: 3px 0; font-size: 12px; 
         }
         
         ul { list-style: none; padding: 0; margin: 5px 0 0 0; }
-        li { padding: 9px 0; border-bottom: 1px solid #eee; font-size: 14px; line-height: 1.6; }
+        li { padding: 10px 0; border-bottom: 1px solid #f0f0f0; font-size: 14px; line-height: 1.6; }
         li b { color: #000; font-weight: 700; }
         
         .flight-card { 
-            background: #fffef0; border: 1.5px dashed var(--orange); padding: 10px; 
-            border-radius: 10px; margin-bottom: 10px; font-size: 14px; text-align: center;
+            background: #fff; border: 1.5px dashed #e0e0e0; padding: 12px; 
+            border-radius: 12px; margin-bottom: 15px; font-size: 14px; text-align: center;
         }
 
-        .nav-btn { position: absolute; top: 0; width: 10%; height: 100%; z-index: 100; cursor: pointer; }
+        /* 導航點 */
+        .dots { position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); display: flex; gap: 5px; z-index: 101; }
+        .dot { width: 6px; height: 6px; background: rgba(255,255,255,0.3); border-radius: 50%; }
+        .dot.active { background: var(--orange); width: 16px; border-radius: 10px; }
+
+        /* 隱形點擊區 */
+        .nav-btn { position: absolute; top: 0; width: 12%; height: 100%; z-index: 100; cursor: pointer; }
         .next-btn { right: 0; } .prev-btn { left: 0; }
-        .dots { position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); display: flex; gap: 4px; z-index: 101; }
-        .dot { width: 5px; height: 5px; background: rgba(255,255,255,0.3); border-radius: 50%; }
-        .dot.active { background: var(--orange); width: 12px; border-radius: 10px; }
     </style>
 </head>
 <body>
@@ -77,12 +80,11 @@
 
             <div class="slide"><div class="content-overlay">
                 <h2>航班資訊</h2>
-                <div class="flight-card">去程 IT 654 | <b>06:40 - 09:50</b></div>
-                <div class="flight-card">回程 IT 655 | <b>11:45 - 12:55</b></div>
+                <div class="flight-card">去程 IT 654 | <b>06:40 - 09:50</b><br>回程 IT 655 | <b>11:45 - 12:55</b></div>
             </div></div>
 
             <div class="slide"><div class="content-overlay">
-                <h2>行李必備</h2>
+                <h2>行李清單</h2>
                 <label class="check-item"><input type="checkbox"> 護照 / K-ETA 簽證</label>
                 <label class="check-item"><input type="checkbox"> WOWPASS / 韓幣現金</label>
                 <label class="check-item"><input type="checkbox"> 轉接頭 / 網卡 / 行動電源</label>
@@ -109,14 +111,13 @@
                 <ul>
                     <li><b>11:30</b> 海女飯卷 (鮑魚飯卷/拉麵)</li>
                     <li><b>13:30</b> 咸德文創街 ➔ 橘子紀念品店</li>
-                    <li><b>15:30</b> 倫敦貝果 (抽號) ➔ 逛 Object</li>
+                    <li><b>15:30</b> 倫敦貝果抽號 ➔ 逛 Object</li>
                     <li><b>17:30</b> <b>Hugely Jeju</b> 拍 3D 橘子 🍊</li>
                 </ul>
             </div></div>
 
             <div class="slide"><div class="content-overlay">
                 <h2>Day 3 牛島環島</h2>
-                <a href="https://naver.me/5fP8P8P8" class="nav-tag" target="_blank">📍 Meohamen 拉麵</a>
                 <ul>
                     <li><b>09:00</b> 咸德鮑魚粥 ➔ 城山港</li>
                     <li><b>11:00</b> 牛島租電動車環島 🚲</li>
@@ -127,7 +128,6 @@
 
             <div class="slide"><div class="content-overlay">
                 <h2>Day 4 三麗鷗</h2>
-                <a href="https://naver.me/x6f6f6f6" class="nav-tag" target="_blank">📍 三麗鷗樂園</a>
                 <ul>
                     <li><b>10:30</b> Ein 濟州 Bat 橘子咖啡廳</li>
                     <li><b>14:00</b> 三麗鷗 Hello Kitty Island</li>
@@ -138,7 +138,6 @@
 
             <div class="slide"><div class="content-overlay">
                 <h2>Day 5 追海豚</h2>
-                <a href="https://naver.me/5LANKOqH" class="nav-tag" target="_blank">📍 Merci 濟州香水</a>
                 <ul>
                     <li><b>11:00</b> 大靜邑海岸路尋野生海豚 🐬</li>
                     <li><b>14:30</b> 涯月 Merci Jeju 買香水 🍊</li>
@@ -157,11 +156,11 @@
             </div></div>
 
             <div class="slide"><div class="content-overlay">
-                <h2>小提醒</h2>
+                <h2>旅途小提醒</h2>
                 <ul>
                     <li>記得帶帽子擋海風 🧢</li>
-                    <li>下載 Naver Map 並存好景點</li>
-                    <li>祝你濟州島旅程愉快！🍊</li>
+                    <li>下載 Naver Map 並存景點</li>
+                    <li>祝你旅途平安愉快！🍊</li>
                 </ul>
             </div></div>
 
