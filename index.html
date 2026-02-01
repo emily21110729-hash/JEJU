@@ -15,7 +15,6 @@
             display: flex; justify-content: center; align-items: center;
         }
 
-        /* 容器總寬度控管 */
         .main-container {
             position: relative;
             width: 100vw; height: 100vh;
@@ -26,7 +25,7 @@
         #slider { 
             width: 100%; height: 100%; 
             position: relative; overflow: hidden; 
-            z-index: 100; /* 確保整本書都在書籤上方 */
+            z-index: 100; /* 整本書壓在標籤上 */
         }
         
         .slides-wrapper { 
@@ -41,7 +40,6 @@
         }
         .slide.active { visibility: visible; }
 
-        /* 📋 書本主體 (內容框) */
         .content-overlay, .cover-container { 
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); 
             width: 85%; height: 80%; 
@@ -52,22 +50,36 @@
         .cover-container { display: flex; align-items: center; justify-content: center; background: #fff; }
         .cover-img { width: 90%; height: 90%; object-fit: contain; }
 
-        /* 🔖 書籤容器：徹底獨立於 Slider 之外，放在 main-container 底層 */
+        /* 🔖 書籤層 */
         .tabs-layer {
             position: absolute;
-            right: 7.5%; /* 預設藏在書邊緣內 */
+            right: 8%; /* 預設藏得更深 */
             top: 50%;
             transform: translateY(-50%);
-            z-index: 10; /* 低於 #slider 的 100 */
+            z-index: 10; 
             display: flex;
             flex-direction: column;
             gap: 8px;
             transition: right 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
         }
 
-        /* 🖱️ 觸發區域：改為偵測 main-container 右側 */
-        .main-container:hover .tabs-layer {
-            right: -40px; /* 抽屜滑出 */
+        /* 🖱️ 精準感應帶：只放在書本右側邊緣 (寬度 40px) */
+        .edge-trigger {
+            position: absolute;
+            right: 7.5%; /* 對齊內容框右緣 */
+            top: 50%;
+            transform: translateY(-50%);
+            width: 40px; /* 縮小感應寬度 */
+            height: 80%; /* 跟書本高度一致 */
+            z-index: 150; /* 高於書本，確保滑鼠能偵測到 */
+            cursor: pointer;
+            /* background: rgba(0,0,0,0.1); */ /* 除錯用：可解除註解看感應區位置 */
+        }
+
+        /* 只有滑鼠進入 edge-trigger 或 tabs-layer 時才展開 */
+        .edge-trigger:hover ~ .tabs-layer,
+        .tabs-layer:hover {
+            right: -40px; 
         }
 
         .tab {
@@ -76,7 +88,6 @@
             display: flex; align-items: center; justify-content: flex-end; 
             font-size: 13px; font-weight: 700; color: white;
             border-radius: 0 12px 12px 0;
-            cursor: pointer;
             box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
         }
 
@@ -87,7 +98,7 @@
         .tab-d4 { background: #b5838d; } .tab-d5 { background: #6d6875; }
         .tab-d6 { background: #83c5be; }
 
-        /* 內文 */
+        /* 頁面標題與內文 */
         .day-header { position: relative; height: 80px; margin: 12px; border-radius: 15px; overflow: hidden; display: flex; align-items: center; padding: 0 20px; }
         .day-header::before { content: ""; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: url('orange.jpg') center/cover; opacity: 0.5; z-index: -1; }
         .day-label { font-size: 24px; font-weight: 700; color: #fff; text-shadow: 1px 2px 4px rgba(0,0,0,0.3); }
@@ -100,6 +111,8 @@
 </head>
 <body>
     <div class="main-container">
+        <div class="edge-trigger"></div>
+
         <div class="tabs-layer">
             <div class="tab tab-cover" onclick="moveSlideTo(0)">封面</div>
             <div class="tab tab-flight" onclick="moveSlideTo(1)">航班</div>
@@ -115,9 +128,9 @@
         <div id="slider">
             <div class="slides-wrapper" id="wrapper">
                 <div class="slide active"><div class="cover-container"><img src="JEJU.png" class="cover-img"></div></div>
-                <div class="slide"><div class="content-overlay"><div class="day-header"><div class="day-label">航班資訊</div></div><div class="scroll-content">行程內容...</div></div></div>
-                <div class="slide"><div class="content-overlay"><div class="day-header"><div class="day-label">行李清單</div></div><div class="scroll-content">行程內容...</div></div></div>
-                <div class="slide"><div class="content-overlay"><div class="day-header"><div class="day-label">Day 1</div></div><div class="scroll-content">行程內容...</div></div></div>
+                <div class="slide"><div class="content-overlay"><div class="day-header"><div class="day-label">航班資訊</div></div><div class="scroll-content">航班細節在此...</div></div></div>
+                <div class="slide"><div class="content-overlay"><div class="day-header"><div class="day-label">行李清單</div></div><div class="scroll-content">行李清單在此...</div></div></div>
+                <div class="slide"><div class="content-overlay"><div class="day-header"><div class="day-label">Day 1</div></div><div class="scroll-content">第一天行程...</div></div></div>
                 <div class="slide"><div class="content-overlay"><div class="day-header"><div class="day-label">Day 2</div></div></div></div>
                 <div class="slide"><div class="content-overlay"><div class="day-header"><div class="day-label">Day 3</div></div></div></div>
                 <div class="slide"><div class="content-overlay"><div class="day-header"><div class="day-label">Day 4</div></div></div></div>
@@ -142,13 +155,12 @@
             document.querySelectorAll('.dot').forEach((dot, i) => dot.classList.toggle('active', i === currentIdx));
         }
 
-        // 觸控滑動
         let touchStartX = 0;
         document.getElementById('slider').addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; }, {passive: true});
         document.getElementById('slider').addEventListener('touchend', e => {
             let touchEndX = e.changedTouches[0].screenX;
             if (touchStartX - touchEndX > 50) moveSlideTo(currentIdx + 1 >= totalSlides ? totalSlides-1 : currentIdx + 1);
-            if (touchEndX - touchStartX > 50) moveSlideTo(currentIdx - 1 < 0 ? 0 : currentIdx - 1);
+            if (touchEndX - touchStartX > 70) moveSlideTo(currentIdx - 1 < 0 ? 0 : currentIdx - 1);
         }, {passive: true});
     </script>
 </body>
