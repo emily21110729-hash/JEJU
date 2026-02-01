@@ -7,75 +7,94 @@
     <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root { --orange: #FF8C00; --paper: #ffffff; --text-main: #333; --bg-grey: #d7ccc8; }
-        body { margin: 0; padding: 0; background-color: var(--bg-grey); font-family: 'Shippori Mincho', serif; height: 100vh; width: 100vw; overflow: hidden; display: flex; justify-content: center; align-items: center; }
         
-        /* 放大書本容器 */
-        #slider { width: 100%; height: 100%; max-width: 550px; max-height: 95vh; position: relative; overflow: visible; }
+        body { 
+            margin: 0; padding: 0; background-color: var(--bg-grey); 
+            font-family: 'Shippori Mincho', serif; 
+            height: 100vh; width: 100vw; overflow: hidden; 
+            display: flex; justify-content: center; align-items: center;
+        }
         
-        .slides-wrapper { display: flex; width: 1100%; height: 100%; transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
-        .slide { width: 9.09%; height: 100%; flex-shrink: 0; position: relative; overflow: hidden; } /* 確保 slide 內不溢出 */
+        /* 1. 放大書本容器並確保溢出隱藏 */
+        #slider { 
+            width: 100vw; height: 100vh; 
+            max-width: 600px; max-height: 90vh; 
+            position: relative; overflow: hidden; /* 這是防止多頁重疊的關鍵 */
+        }
         
-        /* 📋 內容方框 (蓋子) - 放大尺寸 */
+        /* 2. 嚴格寬度計算 */
+        .slides-wrapper { 
+            display: flex; width: 1100%; height: 100%; 
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
+        }
+        
+        .slide { 
+            width: 9.0909%; height: 100%; flex-shrink: 0; 
+            position: relative; overflow: hidden;
+            visibility: hidden; /* 預設隱藏所有頁面內容 */
+        }
+        
+        .slide.active { visibility: visible; } /* 只顯示當前頁面，徹底解決多頁重疊 */
+
+        /* 3. 封面圖片：改為 contain 並微調比例防止裁切 */
+        .cover-img { 
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 92%; height: 82%; 
+            object-fit: contain; /* 確保圖片不被裁切 */
+            border-radius: 20px; 
+            z-index: 25; pointer-events: none;
+        }
+
+        /* 📋 內容方框 (蓋子) */
         .content-overlay { 
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); 
-            width: 95%; height: 85%; 
+            width: 92%; height: 82%; 
             z-index: 20; background: var(--paper); border-radius: 25px; 
             box-shadow: 0 10px 40px rgba(0,0,0,0.15); 
             display: flex; flex-direction: column; overflow: hidden; 
         }
 
-        /* 🖼️ 封面圖 - 放大尺寸 */
-        .cover-img { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 95%; height: 85%; object-fit: cover; border-radius: 25px; z-index: 25; pointer-events: none; }
-
-        /* 🔖 書籤容器 (藏在底下) */
+        /* 🔖 書籤索引：確保層級低於內容框但大於背景 */
         .tabs-container {
             position: absolute;
-            right: 5%; 
+            right: 4%; 
             top: 50%;
             transform: translateY(-50%);
             z-index: 10; 
             display: flex;
             flex-direction: column;
             gap: 8px;
-            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            transition: all 0.4s ease;
         }
 
         .tab {
-            width: 75px; /* 增加寬度讓字不被遮住 */
-            height: 35px;
-            padding-left: 18px; /* 增加文字左邊距 */
+            width: 80px; /* 增加寬度確保字體完整 */
+            height: 36px;
+            padding-left: 20px; 
             display: flex;
             align-items: center;
             justify-content: flex-start;
-            font-size: 13px; /* 字體稍微放大 */
+            font-size: 14px;
             font-weight: 700;
             color: white;
             border-radius: 0 12px 12px 0;
             cursor: pointer;
-            transition: transform 0.3s ease;
-            transform: translateX(-60px); /* 藏得更深 */
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transform: translateX(-65px); /* 平時藏得更深 */
         }
 
-        /* 滑鼠移到 slider 範圍時標籤抽出來 */
-        #slider:hover .tabs-container {
-            right: -25px; /* 讓容器滑出書頁更遠一點 */
-        }
-        #slider:hover .tab {
-            transform: translateX(0); 
-        }
+        /* 滑出時確保字體完全出來 */
+        #slider:hover .tabs-container { right: -28px; }
+        #slider:hover .tab { transform: translateX(0); }
 
         /* 莫蘭迪色系 */
-        .tab-cover { background: #a8b6bf; }
-        .tab-flight { background: #c9ada7; }
-        .tab-pack { background: #9a8c98; }
-        .tab-d1 { background: #b8af9d; }
-        .tab-d2 { background: #8da491; }
-        .tab-d3 { background: #d4a373; }
-        .tab-d4 { background: #b5838d; }
-        .tab-d5 { background: #6d6875; }
+        .tab-cover { background: #a8b6bf; } .tab-flight { background: #c9ada7; }
+        .tab-pack { background: #9a8c98; } .tab-d1 { background: #b8af9d; }
+        .tab-d2 { background: #8da491; } .tab-d3 { background: #d4a373; }
+        .tab-d4 { background: #b5838d; } .tab-d5 { background: #6d6875; }
         .tab-d6 { background: #83c5be; }
 
-        /* 內容區 */
+        /* 內文設計 */
         .day-header { position: relative; height: 90px; margin: 12px; border-radius: 18px; overflow: hidden; display: flex; align-items: center; padding: 0 20px; }
         .day-header::before { content: ""; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: url('orange.jpg') center/cover; opacity: 0.5; z-index: -1; }
         .day-label { font-size: 26px; font-weight: 700; color: #fff; text-shadow: 1px 2px 4px rgba(0,0,0,0.3); }
@@ -84,8 +103,9 @@
         li { padding: 12px 0; border-bottom: 1px solid #f0f0f0; font-size: 15px; color: #444; }
         li b { color: var(--orange); margin-right: 8px; }
 
+        /* 指示點 */
         .dots { position: absolute; bottom: 25px; left: 50%; transform: translateX(-50%); display: flex; gap: 6px; z-index: 30; }
-        .dot { width: 7px; height: 7px; background: rgba(255,255,255,0.5); border-radius: 50%; }
+        .dot { width: 7px; height: 7px; background: rgba(255,255,255,0.5); border-radius: 50%; transition: 0.3s; }
         .dot.active { background: var(--orange); width: 18px; border-radius: 10px; }
     </style>
 </head>
@@ -104,13 +124,15 @@
         </div>
         
         <div class="slides-wrapper" id="wrapper">
-            <div class="slide"><img src="JEJU.png" class="cover-img"></div>
+            <div class="slide active"><img src="JEJU.png" class="cover-img"></div>
             <div class="slide"><div class="content-overlay"><div class="day-header"><div class="day-label">航班資訊</div></div><div class="scroll-content"><ul><li>去程 06:40 - 09:50</li><li>回程 11:45 - 12:55</li></ul></div></div></div>
             <div class="slide"><div class="content-overlay"><div class="day-header"><div class="day-label">行李清單</div></div><div class="scroll-content"><ul><li>✅ 護照 / K-ETA</li><li>✅ 行動電源 / 網卡</li></ul></div></div></div>
+            
             <div class="slide"><div class="content-overlay">
                 <div class="day-header"><div class="day-label">Day 1</div></div>
                 <div class="scroll-content"><ul><li><b>11:30</b> 鹹德海水浴場</li><li><b>15:30</b> 倫敦貝果博物館</li></ul></div>
             </div></div>
+
             <div class="slide"><div class="content-overlay"><div class="day-header"><div class="day-label">Day 2</div></div></div></div>
             <div class="slide"><div class="content-overlay"><div class="day-header"><div class="day-label">Day 3</div></div></div></div>
             <div class="slide"><div class="content-overlay"><div class="day-header"><div class="day-label">Day 4</div></div></div></div>
@@ -125,15 +147,43 @@
     <script>
         let currentIdx = 0; const totalSlides = 11;
         const wrapper = document.getElementById('wrapper');
+        const slides = document.querySelectorAll('.slide');
+
         function moveSlideTo(idx) {
             currentIdx = idx;
+            // 更新平移位置
             wrapper.style.transform = `translateX(-${currentIdx * (100 / totalSlides)}%)`;
+            
+            // 更新 active 狀態與 visibility，確保不重疊
+            slides.forEach((slide, i) => {
+                if(i === currentIdx) {
+                    slide.classList.add('active');
+                } else {
+                    slide.classList.remove('active');
+                }
+            });
+
+            // 更新指示點
             document.querySelectorAll('.dot').forEach((dot, i) => {
                 dot.classList.toggle('active', i === currentIdx);
             });
         }
+
+        // 初始化指示點
+        const dotsContainer = document.getElementById('dots');
+        for (let i = 0; i < totalSlides; i++) {
+            const dot = document.createElement('div');
+            dot.classList.add('dot');
+            if (i === 0) dot.classList.add('active');
+            dotsContainer.appendChild(dot);
+        }
+
+        // 觸控滑動
         let touchStartX = 0;
-        document.getElementById('slider').addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; }, {passive: true});
+        document.getElementById('slider').addEventListener('touchstart', e => { 
+            touchStartX = e.changedTouches[0].screenX; 
+        }, {passive: true});
+        
         document.getElementById('slider').addEventListener('touchend', e => {
             let touchEndX = e.changedTouches[0].screenX;
             if (touchStartX - touchEndX > 50) moveSlideTo(currentIdx + 1 >= totalSlides ? totalSlides-1 : currentIdx + 1);
