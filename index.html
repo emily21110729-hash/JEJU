@@ -12,7 +12,6 @@
 
         .main-container { position: relative; width: 480px; height: 82vh; display: flex; justify-content: center; align-items: center; }
         
-        /* 📚 書本容器 */
         #slider { 
             width: 100%; height: 100%; 
             position: relative; overflow: hidden; 
@@ -23,12 +22,8 @@
         .slide { width: 9.0909%; height: 100%; flex-shrink: 0; position: relative; visibility: hidden; display: flex; flex-direction: column; }
         .slide.active { visibility: visible; }
 
-        /* 🖼️ 封面圖片置中優化 */
-        .cover-page { 
-            width: 100%; height: 100%; 
-            display: flex; justify-content: center; align-items: center; 
-            background: #ffffff; 
-        }
+        /* 🖼️ 封面圖片置中 */
+        .cover-page { width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; background: #ffffff; }
         .cover-img { width: 85%; height: auto; object-fit: contain; }
 
         /* 🌅 橘子頁眉 */
@@ -45,21 +40,22 @@
         ul { list-style: none; padding: 0; margin: 0; }
         li { padding: 8px 0; border-bottom: 1px solid #f9f9f9; font-size: 14px; line-height: 1.4; }
         li b { color: var(--orange); font-weight: 700; }
+        .time-tag { font-weight: bold; color: #888; font-size: 12px; margin-right: 5px; }
 
-        /* 🔖 電腦版標籤：側邊抽屜 */
+        /* 🔖 電腦版標籤 (側邊 70px) */
         .tabs-pc { position: absolute; left: 100%; top: 50%; display: flex; flex-direction: column; gap: 8px; z-index: 50; transform: translate(-100%, -50%); transition: transform 0.4s ease; }
         .edge-trigger-pc { position: absolute; right: -30px; top: 10%; width: 60px; height: 80%; z-index: 150; cursor: pointer; }
         .edge-trigger-pc:hover ~ .tabs-pc, .tabs-pc:hover { transform: translate(-10px, -50%); }
-        .tab-pc { width: 70px; height: 38px; padding-right: 12px; display: flex; align-items: center; justify-content: flex-end; font-size: 12px; font-weight: 700; color: white; border-radius: 0 15px 15px 0; box-shadow: 2px 2px 5px rgba(0,0,0,0.1); cursor: pointer; }
+        .tab-pc { width: 70px; height: 38px; padding-right: 12px; display: flex; align-items: center; justify-content: flex-end; font-size: 11px; font-weight: 700; color: white; border-radius: 0 15px 15px 0; box-shadow: 2px 2px 5px rgba(0,0,0,0.1); cursor: pointer; }
 
-        /* 🔖 手機版標籤：底部內嵌 (絕對貼底) */
+        /* 🔖 手機版標籤 (底部內嵌、字體改小) */
         .tabs-mobile { display: none; }
 
         @media (max-width: 600px) {
             .main-container { width: 92vw; height: 82vh; }
             .edge-trigger-pc, .tabs-pc { display: none; }
             .tabs-mobile { display: flex; position: absolute; bottom: 0; left: 0; width: 100%; height: 50px; z-index: 200; gap: 2px; padding: 0 5px; box-sizing: border-box; align-items: flex-end; }
-            .tab-m { flex: 1; height: 40px; display: flex; align-items: center; justify-content: center; font-size: 18px; color: white; border-radius: 10px 10px 0 0; cursor: pointer; }
+            .tab-m { flex: 1; height: 40px; display: flex; align-items: center; justify-content: center; font-size: 13px; color: white; border-radius: 10px 10px 0 0; cursor: pointer; }
         }
 
         .bg-cover { background: #a8b6bf; } .bg-flight { background: #c9ada7; } .bg-pack { background: #9a8c98; }
@@ -95,34 +91,56 @@
                     <ul><li>✅ 護照、K-ETA、WOWPASS</li><li>✅ 轉接頭、網卡、行動電源</li><li>✅ 韓幣、雨具、空行李箱</li></ul>
                 </div></div>
 
-                <div class="slide"><div class="day-header"><div class="day-label">Day 1</div></div><div class="scroll-content">
-                    <div class="section-title">11:30 - 15:00 鹹德</div>
-                    <ul><li>🔹機場 2 號出口搭 101路 急行巴士 ➔ 鹹德</li><li>🔹Hogg (小物店)、海女包飯、鹹德浴場</li><li>🔹Cafe delmoondo、Audrant 大蒜麵包</li><li>🔹943studio、Daily Stitch、Olive Young</li></ul>
-                    <div class="section-title">15:00 - 16:30 東福里</div>
-                    <ul><li>🔹201路公車 ➔ 倫敦貝果博物館、Cafe Layered</li></ul>
-                    <div class="section-title">16:45 - 20:00 月汀里/細花</div>
-                    <ul><li>🔹月汀里海岸散步 ➔ 細花排骨 (Sehwa)</li></ul>
+                <div class="slide"><div class="content-overlay">
+                    <div class="day-header"><div class="day-label">Day 1</div></div>
+                    <div class="scroll-content">
+                        <div class="section-title">1. 機場 ➔ 鹹德 (11:30 - 15:00)</div>
+                        <ul>
+                            <li>🚌 機場 2 號出口搭 <b>101路</b> 急行巴士 ➔「鹹德換乘站」</li>
+                            <li>🔹 Hogg (小物店)</li>
+                            <li>🔹 海女包飯 (買去海邊吃 🍱)</li>
+                            <li>🔹 鹹德海水浴場 / Cafe delmoondo</li>
+                            <li>🔹 Audrant Bakery (大蒜麵包)</li>
+                            <li>🔹 943studio、Daily Stitch、Olive Young</li>
+                        </ul>
+                        <div class="section-title">2. 鹹德 ➔ 東福里 (15:00 - 16:30)</div>
+                        <ul>
+                            <li>🚌 <b>201路</b> ➔「東福里 (Dongbok-ri)」站</li>
+                            <li>🔹 倫敦貝果博物館 (18:00關)、Cafe Layered</li>
+                        </ul>
+                        <div class="section-title">3. 東福里 ➔ 月汀里 ➔ 細花</div>
+                        <ul>
+                            <li>🚌 <b>201路</b> (約 10 min) ➔ 月汀里海岸散步</li>
+                            <li>🍽️ <b>18:15</b> SEhwa 細花排骨 (最後點餐 20:00)</li>
+                        </ul>
+                    </div>
                 </div></div>
 
                 <div class="slide"><div class="day-header"><div class="day-label">Day 2</div></div><div class="scroll-content">
-                    <div class="section-title">牛島 & 城山</div>
-                    <ul><li>🔹牛島環島 (租電動車 / 花生冰淇淋)</li><li>🔹海鮮拉麵 (Meohamen)、城山日出峰</li></ul>
+                    <ul><li>⛴️ 牛島環島、花生冰淇淋、城山日出峰壯闊海景</li></ul>
                 </div></div>
 
-                <div class="slide"><div class="day-header"><div class="day-label">Day 3</div></div><div class="scroll-content">
-                    <ul>
-                        <li><b>08:30</b> 第一 70 酒店 ➔ 步行至正房瀑布</li>
-                        <li><b>09:30</b> 🚌 往柱狀節理帶 ➔ <b>11:20</b> 中文海邊</li>
-                        <li><b>14:30</b> 🚌 往山茶花之丘 (Camellia Hill)</li>
-                        <li><b>16:20</b> 偶來市場 & 李仲線逛街</li>
-                    </ul>
+                <div class="slide"><div class="content-overlay">
+                    <div class="day-header"><div class="day-label">Day 3</div></div>
+                    <div class="scroll-content">
+                        <ul>
+                            <li><span class="time-tag">08:30-09:00</span> 步行：第一 70 酒店 ➔ 正房瀑布 (₩2000)</li>
+                            <li><span class="time-tag">09:00-09:30</span> 正房瀑布巡禮</li>
+                            <li><span class="time-tag">09:30-10:30</span> 🚌 往柱狀節理帶</li>
+                            <li><span class="time-tag">10:30-11:00</span> 🗿 柱狀節理帶看海</li>
+                            <li><span class="time-tag">11:00-11:20</span> 🚌 往中文海水浴場</li>
+                            <li><span class="time-tag">11:20-14:30</span> 海邊 + Olive Young + 星巴克 + 咖啡廳</li>
+                            <li><span class="time-tag">14:30-15:30</span> 🚌 往山茶花之丘</li>
+                            <li><span class="time-tag">15:30-16:20</span> 🌺 山茶花之丘 (Camellia Hill)</li>
+                            <li><span class="time-tag">16:20-17:30</span> 偶來市場 & 李仲線逛街</li>
+                        </ul>
+                    </div>
                 </div></div>
 
-                <div class="slide"><div class="day-header"><div class="day-label">Day 4</div></div><div class="scroll-content"><ul><li>🔹三麗鷗樂園、史努比花園、亂打秀 🎭</li></ul></div></div>
-                <div class="slide"><div class="day-header"><div class="day-label">Day 5</div></div><div class="scroll-content"><ul><li>🔹尋找野生海豚 🐬、涯月香水體驗、樂天超市</li></ul></div></div>
-                <div class="slide"><div class="day-header"><div class="day-label">Day 6</div></div><div class="scroll-content"><ul><li>🔹09:30 機場退稅 ➔ 11:45 飛機回家 ✈️</li></ul></div></div>
-                
-                <div class="slide"><div class="day-header"><div class="day-label">提醒</div></div><div class="scroll-content"><ul><li>Naver Map / Papago 必備，祝旅程愉快！🍊</li></ul></div></div>
+                <div class="slide"><div class="day-header"><div class="day-label">Day 4</div></div><div class="scroll-content">...</div></div>
+                <div class="slide"><div class="day-header"><div class="day-label">Day 5</div></div><div class="scroll-content">...</div></div>
+                <div class="slide"><div class="day-header"><div class="day-label">Day 6</div></div><div class="scroll-content">...</div></div>
+                <div class="slide"><div class="day-header"><div class="day-label">提醒</div></div><div class="scroll-content">...</div></div>
                 <div class="slide"><div class="cover-page"><img src="JEJU B.png" class="cover-img"></div></div>
             </div>
 
