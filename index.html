@@ -15,12 +15,10 @@
             display: flex; justify-content: center; align-items: center;
         }
         
-        /* 核心調整：讓容器寬於書本，提供書籤滑出的空間 */
         #slider { 
             width: 100vw; height: 100vh; 
-            max-width: 750px; /* 這裡加寬，給書籤「住」的空間 */
-            max-height: 90vh; 
-            position: relative; overflow: visible; /* 允許書籤滑出邊界 */
+            max-width: 800px; max-height: 90vh; 
+            position: relative; overflow: visible; 
         }
         
         .slides-wrapper { 
@@ -35,39 +33,54 @@
         }
         .slide.active { visibility: visible; }
 
-        /* 📋 內容方框 (蓋子) - 固定寬度，不隨容器加寬而變大 */
+        /* 📋 內容方框 (包含封面與內頁) */
         .content-overlay { 
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); 
-            width: 480px; height: 82%; /* 使用固定寬度，讓它看起來像一本書 */
+            width: 480px; height: 82%; 
             z-index: 20; background: var(--paper); border-radius: 25px; 
             box-shadow: 0 10px 40px rgba(0,0,0,0.15); 
             display: flex; flex-direction: column; overflow: hidden; 
         }
 
-        /* 🖼️ 封面圖片 */
-        .cover-img { 
+        /* 🖼️ 封面圖片：強制與內容方框尺寸完全一致並內縮圖片 */
+        .cover-container {
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
             width: 480px; height: 82%; 
-            object-fit: contain;
-            border-radius: 25px; 
-            z-index: 25; pointer-events: none;
+            background: #fff; border-radius: 25px; 
+            z-index: 25; display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+        }
+        .cover-img { 
+            width: 90%; height: 90%; /* 圖片在方框內稍微縮小，不被切到 */
+            object-fit: contain; 
+            pointer-events: none;
         }
 
-        /* 🔖 書籤容器：藏在內容框正下方 */
+        /* 🔖 書籤容器 (抽屜式) */
         .tabs-container {
             position: absolute;
-            left: 50%; /* 以螢幕中心定位 */
+            left: 50%; 
             top: 50%;
-            transform: translate(160px, -50%); /* 平時縮在書本中心點往右一點，剛好被蓋住 */
-            z-index: 10; /* 層級低於內容框 20 */
+            transform: translate(140px, -50%); /* 縮得比之前更進去一點 */
+            z-index: 10; 
             display: flex;
             flex-direction: column;
             gap: 10px;
             transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
         }
 
+        /* 🖱️ 精準感應區：只在書本右側邊緣設定一個透明帶 */
+        .trigger-zone {
+            position: absolute;
+            right: calc(50% - 240px); /* 剛好在書頁右緣 */
+            top: 50%; transform: translateY(-50%);
+            width: 80px; height: 82%; /* 只有這個區域會觸發書籤 */
+            z-index: 30; /* 高於書頁，確保摸得到 */
+            /* background: rgba(255,0,0,0.1); */ /* 除錯用，確認範圍後可註解掉 */
+        }
+
         .tab {
-            width: 100px; /* 足夠寬度讓字不被裁切 */
+            width: 110px; 
             height: 38px;
             padding-left: 25px; 
             display: flex;
@@ -78,13 +91,13 @@
             color: white;
             border-radius: 0 15px 15px 0;
             cursor: pointer;
-            transition: 0.3s;
             box-shadow: 2px 2px 10px rgba(0,0,0,0.1);
         }
 
-        /* ✨ 滑鼠移到書本右側時，書籤從底下滑出來 */
-        #slider:hover .tabs-container {
-            transform: translate(240px, -50%); /* 往右推開，完全露出書本邊緣 */
+        /* 當滑鼠進入感應區，標籤才滑出 */
+        .trigger-zone:hover + .tabs-container,
+        .tabs-container:hover {
+            transform: translate(240px, -50%);
         }
 
         /* 莫蘭迪色系 */
@@ -94,7 +107,6 @@
         .tab-d4 { background: #b5838d; } .tab-d5 { background: #6d6875; }
         .tab-d6 { background: #83c5be; }
 
-        /* 內容樣式 */
         .day-header { position: relative; height: 90px; margin: 12px; border-radius: 18px; overflow: hidden; display: flex; align-items: center; padding: 0 20px; }
         .day-header::before { content: ""; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: url('orange.jpg') center/cover; opacity: 0.5; z-index: -1; }
         .day-label { font-size: 26px; font-weight: 700; color: #fff; text-shadow: 1px 2px 4px rgba(0,0,0,0.3); }
@@ -104,16 +116,18 @@
         .dot { width: 7px; height: 7px; background: rgba(255,255,255,0.5); border-radius: 50%; }
         .dot.active { background: var(--orange); width: 18px; border-radius: 10px; }
 
-        /* 手機適配：如果螢幕太小，書本寬度改為百分比 */
         @media (max-width: 600px) {
-            .content-overlay, .cover-img { width: 85vw; }
-            #slider:hover .tabs-container { transform: translate(40vw, -50%); }
+            .content-overlay, .cover-container { width: 85vw; }
+            .trigger-zone { right: calc(50% - 42.5vw); width: 60px; }
+            .trigger-zone:hover + .tabs-container, .tabs-container:hover { transform: translate(42.5vw, -50%); }
             .tabs-container { transform: translate(25vw, -50%); }
         }
     </style>
 </head>
 <body>
     <div id="slider">
+        <div class="trigger-zone"></div>
+
         <div class="tabs-container">
             <div class="tab tab-cover" onclick="moveSlideTo(0)">封面頁</div>
             <div class="tab tab-flight" onclick="moveSlideTo(1)">航班資訊</div>
@@ -127,17 +141,27 @@
         </div>
         
         <div class="slides-wrapper" id="wrapper">
-            <div class="slide active"><img src="JEJU.png" class="cover-img"></div>
+            <div class="slide active">
+                <div class="cover-container">
+                    <img src="JEJU.png" class="cover-img">
+                </div>
+            </div>
+
             <div class="slide"><div class="content-overlay"><div class="day-header"><div class="day-label">航班資訊</div></div><div class="scroll-content">去程 06:40 / 回程 11:45</div></div></div>
-            <div class="slide"><div class="content-overlay"><div class="day-header"><div class="day-label">行李清單</div></div><div class="scroll-content">護照、K-ETA、網卡、爆買空箱</div></div></div>
+            <div class="slide"><div class="content-overlay"><div class="day-header"><div class="day-label">行李清單</div></div><div class="scroll-content">護照、網卡、行動電源</div></div></div>
             <div class="slide"><div class="content-overlay"><div class="day-header"><div class="day-label">Day 1</div></div><div class="scroll-content">鹹德、東福里、月汀里</div></div></div>
             <div class="slide"><div class="content-overlay"><div class="day-header"><div class="day-label">Day 2</div></div><div class="scroll-content">牛島 & 城山日出峰</div></div></div>
-            <div class="slide"><div class="content-overlay"><div class="day-header"><div class="day-label">Day 3</div></div><div class="scroll-content">正房瀑布、柱狀節理、星巴克</div></div></div>
-            <div class="slide"><div class="content-overlay"><div class="day-header"><div class="day-label">Day 4</div></div></div></div>
-            <div class="slide"><div class="content-overlay"><div class="day-header"><div class="day-label">Day 5</div></div></div></div>
-            <div class="slide"><div class="content-overlay"><div class="day-header"><div class="day-label">Day 6</div></div></div></div>
-            <div class="slide"><div class="content-overlay"><div class="day-header"><div class="day-label">小提醒</div></div></div></div>
-            <div class="slide"><img src="JEJU B.png" class="cover-img" style="z-index: 5;"></div>
+            <div class="slide"><div class="content-overlay"><div class="day-header"><div class="day-label">Day 3</div></div><div class="scroll-content">正房瀑布、柱狀節理</div></div></div>
+            <div class="slide"><div class="content-overlay"><div class="day-header"><div class="day-label">Day 4</div></div><div class="scroll-content">三麗鷗、亂打秀</div></div></div>
+            <div class="slide"><div class="content-overlay"><div class="day-header"><div class="day-label">Day 5</div></div><div class="scroll-content">尋找海豚、涯月</div></div></div>
+            <div class="slide"><div class="content-overlay"><div class="day-header"><div class="day-label">Day 6</div></div><div class="scroll-content">機場退稅、回家</div></div></div>
+            <div class="slide"><div class="content-overlay"><div class="day-header"><div class="day-label">小提醒</div></div><div class="scroll-content">旅途愉快！🍊</div></div></div>
+            
+            <div class="slide">
+                <div class="cover-container" style="z-index: 5;">
+                    <img src="JEJU B.png" class="cover-img">
+                </div>
+            </div>
         </div>
         <div class="dots" id="dots"></div>
     </div>
@@ -159,10 +183,7 @@
         }
 
         let touchStartX = 0;
-        document.getElementById('slider').addEventListener('touchstart', e => { 
-            touchStartX = e.changedTouches[0].screenX; 
-        }, {passive: true});
-        
+        document.getElementById('slider').addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; }, {passive: true});
         document.getElementById('slider').addEventListener('touchend', e => {
             let touchEndX = e.changedTouches[0].screenX;
             if (touchStartX - touchEndX > 50) moveSlideTo(currentIdx + 1 >= totalSlides ? totalSlides-1 : currentIdx + 1);
