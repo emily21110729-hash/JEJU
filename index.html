@@ -17,15 +17,19 @@
 
         .main-container {
             position: relative;
-            width: 480px; /* 固定與書本同寬，方便計算 */
+            width: 480px; 
             height: 82vh;
             display: flex; justify-content: center; align-items: center;
         }
         
+        /* 📚 書本主體：層級設為 100，確保壓住標籤 */
         #slider { 
             width: 100%; height: 100%; 
-            position: relative; overflow: hidden; 
-            z-index: 50; border-radius: 25px;
+            position: relative; 
+            overflow: hidden; 
+            z-index: 100; 
+            border-radius: 25px;
+            background: var(--bg-grey); /* 防止透明穿透 */
         }
         
         .slides-wrapper { display: flex; width: 1100%; height: 100%; transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
@@ -38,36 +42,36 @@
             box-shadow: 0 10px 40px rgba(0,0,0,0.1); 
             display: flex; flex-direction: column; overflow: hidden; 
         }
-        .cover-container { display: flex; align-items: center; justify-content: center; background: #fff; z-index: 60; }
+        .cover-container { display: flex; align-items: center; justify-content: center; background: #fff; z-index: 110; }
         .cover-img { width: 90%; height: 90%; object-fit: contain; }
 
-        /* 🔖 書籤層：放在最前面 (z-index: 200)，但平常點擊穿透 */
+        /* 🔖 書籤層：層級設為 50，永遠在書本 (100) 下方 */
         .tabs-layer {
             position: absolute;
-            left: 100%; /* 從書本右側開始算 */
+            left: 100%; /* 起點在書本右緣 */
             top: 50%;
-            transform: translate(-100%, -50%); /* 平時完全縮在書本內 */
-            z-index: 200; 
             display: flex;
             flex-direction: column;
             gap: 8px;
-            pointer-events: none; /* 平時穿透，不擋住書本 */
+            z-index: 50; 
+            /* 平時完全縮進去：向左位移自己的寬度 */
+            transform: translate(-100%, -50%); 
             transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
         }
 
-        /* 🖱️ 感應帶：書本右緣 80px */
+        /* 🖱️ 觸發區域：放在書本邊緣，層級最高 (150) 以便偵測 */
         .edge-trigger {
             position: absolute;
-            right: -40px; top: 0; width: 80px; height: 100%; 
-            z-index: 210; 
+            right: -30px; top: 10%; width: 60px; height: 80%; 
+            z-index: 150; 
             cursor: pointer;
         }
 
-        /* ✨ 觸發：標籤往右平移出來，並恢復點擊 */
+        /* ✨ 展開：向右滑出，但 z-index 依然保持在書本下方 */
         .edge-trigger:hover ~ .tabs-layer,
         .tabs-layer:hover {
-            transform: translate(-15px, -50%); /* 露出 85px 左右 (100px寬 - 15px) */
-            pointer-events: auto; /* 展開後可以點擊 */
+            /* 只向左位移一點點，讓標籤大部分露在書外 */
+            transform: translate(-10px, -50%); 
         }
 
         .tab {
@@ -76,7 +80,7 @@
             display: flex; align-items: center; justify-content: flex-end; 
             font-size: 13px; font-weight: 700; color: white;
             border-radius: 0 15px 15px 0;
-            box-shadow: 2px 2px 8px rgba(0,0,0,0.1);
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
             cursor: pointer;
         }
 
@@ -96,17 +100,16 @@
         .dot { width: 7px; height: 7px; background: rgba(0,0,0,0.1); border-radius: 50%; }
         .dot.active { background: var(--orange); width: 18px; border-radius: 10px; }
 
-        /* 手機 RWD */
         @media (max-width: 500px) {
-            .main-container { width: 90vw; }
-            .tab { width: 80px; }
-            .edge-trigger:hover ~ .tabs-layer, .tabs-layer:hover { transform: translate(-10px, -50%); }
+            .main-container { width: 85vw; }
+            .edge-trigger:hover ~ .tabs-layer, .tabs-layer:hover { transform: translate(-5px, -50%); }
         }
     </style>
 </head>
 <body>
     <div class="main-container">
         <div class="edge-trigger"></div>
+
         <div class="tabs-layer">
             <div class="tab tab-cover" onclick="moveSlideTo(0)">封面</div>
             <div class="tab tab-flight" onclick="moveSlideTo(1)">航班</div>
@@ -123,8 +126,8 @@
             <div class="slides-wrapper" id="wrapper">
                 <div class="slide active"><div class="cover-container"><img src="JEJU.png" class="cover-img"></div></div>
                 <div class="slide"><div class="content-overlay"><div class="day-header"><div class="day-label">航班資訊</div></div><div class="scroll-content">去程 06:40 / 回程 11:45</div></div></div>
-                <div class="slide"><div class="content-overlay"><div class="day-header"><div class="day-label">行李清單</div></div><div class="scroll-content">行李清單...</div></div></div>
-                <div class="slide"><div class="content-overlay"><div class="day-header"><div class="day-label">Day 1</div></div><div class="scroll-content">行程內容...</div></div></div>
+                <div class="slide"><div class="content-overlay"><div class="day-header"><div class="day-label">行李清單</div></div><div class="scroll-content">行李細節...</div></div></div>
+                <div class="slide"><div class="content-overlay"><div class="day-header"><div class="day-label">Day 1</div></div><div class="scroll-content">行程細節...</div></div></div>
                 <div class="slide"><div class="content-overlay"><div class="day-header"><div class="day-label">Day 2</div></div></div></div>
                 <div class="slide"><div class="content-overlay"><div class="day-header"><div class="day-label">Day 3</div></div></div></div>
                 <div class="slide"><div class="content-overlay"><div class="day-header"><div class="day-label">Day 4</div></div></div></div>
