@@ -13,6 +13,7 @@
         .slides-wrapper { display: flex; width: 1100%; height: 100%; transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
         .slide { width: 9.09%; height: 100%; flex-shrink: 0; position: relative; }
         
+        /* 封面與內容方框 */
         .cover-img { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 90%; height: 80%; object-fit: cover; border-radius: 25px; box-shadow: 0 8px 30px rgba(0,0,0,0.15); }
         .content-overlay { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 90%; height: 80%; z-index: 10; background: var(--paper); border-radius: 25px; box-shadow: 0 8px 30px rgba(0,0,0,0.1); display: flex; flex-direction: column; overflow: hidden; }
         
@@ -20,58 +21,70 @@
         .day-header::before { content: ""; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-image: url('orange.jpg'); background-size: cover; background-position: center; opacity: 0.5; z-index: -1; }
         .day-label { font-size: 26px; font-weight: 700; color: #ffffff; text-shadow: 1px 2px 4px rgba(0,0,0,0.3); }
 
-        .scroll-content { flex: 1; overflow-y: auto; padding: 0 20px 20px 20px; position: relative; }
-        
-        /* 🔖 書籤索引：從方框邊緣伸出 */
+        /* 🔖 全新收合式書籤：層級設為最高 z-index: 200 */
         .tabs-container {
             position: absolute;
-            right: 0%; /* 貼齊 slider 的右邊 */
-            top: 50%;
+            right: 0;
+            top: 52%;
             transform: translateY(-50%);
-            z-index: 50;
+            z-index: 200; 
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 6px;
+            pointer-events: auto; /* 確保可以被點擊 */
         }
 
         .tab {
-            width: 45px;
-            height: 35px;
-            padding-left: 10px;
+            width: 55px;
+            height: 32px;
+            padding-left: 12px;
             display: flex;
             align-items: center;
             justify-content: flex-start;
             font-size: 11px;
             font-weight: 700;
             color: white;
-            border-radius: 8px 0 0 8px; /* 圓角在左邊 */
+            border-radius: 10px 0 0 10px;
             cursor: pointer;
-            transition: all 0.3s ease;
-            transform: translateX(30px); /* 平時縮進去，只露出一點邊 */
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            /* 預設收合：只露出一點邊緣 */
+            transform: translateX(47px); 
         }
 
-        /* 滑鼠移入或點擊展開 */
-        .tabs-container:hover .tab { transform: translateX(0px); width: 60px; }
+        /* 滑鼠移入容器時展開所有標籤 */
+        .tabs-container:hover .tab {
+            transform: translateX(0px);
+            box-shadow: -3px 2px 10px rgba(0,0,0,0.1);
+        }
 
-        /* 低飽和度彩色索引 (莫蘭迪色系) */
-        .tab-cover { background-color: #a8b6bf; } /* 灰藍 */
-        .tab-flight { background-color: #c9ada7; } /* 可可粉 */
-        .tab-pack { background-color: #9a8c98; } /* 藕紫 */
-        .tab-d1 { background-color: #b8af9d; } /* 亞麻色 */
-        .tab-d2 { background-color: #8da491; } /* 鼠尾草綠 */
-        .tab-d3 { background-color: #d4a373; } /* 楓葉色 */
-        .tab-d4 { background-color: #b5838d; } /* 豆沙紅 */
-        .tab-d5 { background-color: #6d6875; } /* 暗灰紫 */
-        .tab-d6 { background-color: #83c5be; } /* 薄荷灰 */
+        /* 莫蘭迪低飽和色 */
+        .tab-cover { background: #a8b6bf; }
+        .tab-flight { background: #c9ada7; }
+        .tab-pack { background: #9a8c98; }
+        .tab-d1 { background: #b8af9d; }
+        .tab-d2 { background: #8da491; }
+        .tab-d3 { background: #d4a373; }
+        .tab-d4 { background: #b5838d; }
+        .tab-d5 { background: #6d6875; }
+        .tab-d6 { background: #83c5be; }
 
+        /* 隱形導航按鈕：寬度縮小到 10% 避免與書籤重疊 */
+        .nav-btn { position: absolute; top: 0; width: 10%; height: 100%; z-index: 100; cursor: pointer; }
+        .next-btn { right: 0; } 
+        .prev-btn { left: 0; }
+
+        /* 內容區 */
+        .scroll-content { flex: 1; overflow-y: auto; padding: 0 20px 20px 20px; position: relative; }
         .transport-icon-btn { position: absolute; right: 15px; top: 5px; width: 36px; height: 36px; background: #fff3e0; border: 1.5px solid #ffcc80; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; cursor: pointer; z-index: 20; }
         .transport-info { max-height: 0; overflow: hidden; transition: all 0.3s ease; background: #fffdf7; border-radius: 12px; font-size: 13px; color: #666; }
         .transport-info.open { max-height: 250px; padding: 12px; margin: 10px 0; border: 1px solid #ffe0b2; }
+        ul { list-style: none; padding: 0; margin: 10px 0 0 0; }
+        li { padding: 12px 0; border-bottom: 1px solid #f5f5f5; font-size: 14px; line-height: 1.5; color: #444; }
+        li b { color: var(--orange); font-weight: 700; }
+        
         .dots { position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); display: flex; gap: 5px; z-index: 101; }
         .dot { width: 6px; height: 6px; background: rgba(255,255,255,0.5); border-radius: 50%; }
         .dot.active { background: var(--orange); width: 16px; border-radius: 10px; }
-        .nav-btn { position: absolute; top: 0; width: 15%; height: 100%; z-index: 100; cursor: pointer; }
-        .next-btn { right: 0; } .prev-btn { left: 0; }
     </style>
 </head>
 <body>
@@ -80,15 +93,15 @@
         <div class="nav-btn next-btn" onclick="moveSlide(1)"></div>
 
         <div class="tabs-container">
-            <div class="tab tab-cover" onclick="moveSlideTo(0)">封面</div>
-            <div class="tab tab-flight" onclick="moveSlideTo(1)">航班</div>
-            <div class="tab tab-pack" onclick="moveSlideTo(2)">清單</div>
-            <div class="tab tab-d1" onclick="moveSlideTo(3)">D 1</div>
-            <div class="tab tab-d2" onclick="moveSlideTo(4)">D 2</div>
-            <div class="tab tab-d3" onclick="moveSlideTo(5)">D 3</div>
-            <div class="tab tab-d4" onclick="moveSlideTo(6)">D 4</div>
-            <div class="tab tab-d5" onclick="moveSlideTo(7)">D 5</div>
-            <div class="tab tab-d6" onclick="moveSlideTo(8)">D 6</div>
+            <div class="tab tab-cover" onclick="event.stopPropagation(); moveSlideTo(0)">封面</div>
+            <div class="tab tab-flight" onclick="event.stopPropagation(); moveSlideTo(1)">航班</div>
+            <div class="tab tab-pack" onclick="event.stopPropagation(); moveSlideTo(2)">清單</div>
+            <div class="tab tab-d1" onclick="event.stopPropagation(); moveSlideTo(3)">D 1</div>
+            <div class="tab tab-d2" onclick="event.stopPropagation(); moveSlideTo(4)">D 2</div>
+            <div class="tab tab-d3" onclick="event.stopPropagation(); moveSlideTo(5)">D 3</div>
+            <div class="tab tab-d4" onclick="event.stopPropagation(); moveSlideTo(6)">D 4</div>
+            <div class="tab tab-d5" onclick="event.stopPropagation(); moveSlideTo(7)">D 5</div>
+            <div class="tab tab-d6" onclick="event.stopPropagation(); moveSlideTo(8)">D 6</div>
         </div>
         
         <div class="slides-wrapper" id="wrapper">
@@ -104,9 +117,8 @@
                     <ul><li><b>11:30</b> 鹹德海水浴場</li></ul>
                 </div>
             </div></div>
-            
-             <div class="slide"><div class="content-overlay"><div class="day-header"><div class="day-label">Day 2</div></div></div></div>
-             <div class="slide"><div class="content-overlay">
+            <div class="slide"><div class="content-overlay"><div class="day-header"><div class="day-label">Day 2</div></div></div></div>
+            <div class="slide"><div class="content-overlay">
                 <div class="day-header"><div class="day-label">Day 3</div></div>
                 <div class="scroll-content">
                     <div class="transport-icon-btn" onclick="toggleInfo(this)">🚌</div>
@@ -114,11 +126,11 @@
                     <ul><li><b>09:00</b> 正房瀑布</li></ul>
                 </div>
             </div></div>
-             <div class="slide"><div class="content-overlay"><div class="day-header"><div class="day-label">Day 4</div></div></div></div>
-             <div class="slide"><div class="content-overlay"><div class="day-header"><div class="day-label">Day 5</div></div></div></div>
-             <div class="slide"><div class="content-overlay"><div class="day-header"><div class="day-label">Day 6</div></div></div></div>
-             <div class="slide"><div class="content-overlay"><div class="day-header"><div class="day-label">提醒</div></div></div></div>
-             <div class="slide"><img src="JEJU B.png" class="cover-img"></div>
+            <div class="slide"><div class="content-overlay"><div class="day-header"><div class="day-label">Day 4</div></div></div></div>
+            <div class="slide"><div class="content-overlay"><div class="day-header"><div class="day-label">Day 5</div></div></div></div>
+            <div class="slide"><div class="content-overlay"><div class="day-header"><div class="day-label">Day 6</div></div></div></div>
+            <div class="slide"><div class="content-overlay"><div class="day-header"><div class="day-label">提醒</div></div></div></div>
+            <div class="slide"><img src="JEJU B.png" class="cover-img"></div>
         </div>
         <div class="dots" id="dots"></div>
     </div>
@@ -155,9 +167,16 @@
         document.getElementById('slider').addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; }, {passive: true});
         document.getElementById('slider').addEventListener('touchend', e => {
             let touchEndX = e.changedTouches[0].screenX;
-            if (touchStartX - touchEndX > 70) moveSlide(1);
-            if (touchEndX - touchStartX > 70) moveSlide(-1);
+            if (Math.abs(touchStartX - touchEndX) > 70) {
+                if (touchStartX - touchEndX > 70) moveSlide(1);
+                else moveSlide(-1);
+            }
         }, {passive: true});
+
+        window.addEventListener('keydown', e => {
+            if (e.key === 'ArrowRight') moveSlide(1);
+            if (e.key === 'ArrowLeft') moveSlide(-1);
+        });
     </script>
 </body>
 </html>
