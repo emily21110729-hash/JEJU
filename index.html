@@ -22,37 +22,51 @@
 
         .scroll-content { flex: 1; overflow-y: auto; padding: 0 20px 20px 20px; position: relative; }
         
-        /* 🔖 側邊索引標籤 (書籤) */
-        .sidebar-tabs {
-            position: absolute; right: 0; top: 50%; transform: translateY(-50%);
-            z-index: 200; display: flex; flex-direction: column; gap: 8px;
-            padding: 15px 0 15px 10px;
-            /* 關鍵收合設定 */
-            width: 15px; overflow: hidden; 
-            background: rgba(215, 204, 200, 0.8);
-            border-radius: 20px 0 0 20px;
-            transition: width 0.3s ease, background 0.3s ease;
+        /* 🔖 書籤索引：從方框邊緣伸出 */
+        .tabs-container {
+            position: absolute;
+            right: 0%; /* 貼齊 slider 的右邊 */
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 50;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .tab {
+            width: 45px;
+            height: 35px;
+            padding-left: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            font-size: 11px;
+            font-weight: 700;
+            color: white;
+            border-radius: 8px 0 0 8px; /* 圓角在左邊 */
             cursor: pointer;
+            transition: all 0.3s ease;
+            transform: translateX(30px); /* 平時縮進去，只露出一點邊 */
         }
-        /* 滑鼠移入展開 */
-        .sidebar-tabs:hover { width: 70px; background: rgba(255, 255, 255, 0.9); box-shadow: -5px 0 15px rgba(0,0,0,0.1); }
 
-        .tab-item {
-            font-size: 12px; font-weight: 700; color: var(--orange);
-            background: #fff3e0; border: 1px solid #ffcc80;
-            padding: 8px 5px; border-radius: 8px 0 0 8px;
-            white-space: nowrap; text-align: center;
-            transition: transform 0.2s;
-        }
-        .tab-item:hover { background: var(--orange); color: #fff; transform: translateX(-5px); }
+        /* 滑鼠移入或點擊展開 */
+        .tabs-container:hover .tab { transform: translateX(0px); width: 60px; }
 
-        /* 其餘樣式維持 */
+        /* 低飽和度彩色索引 (莫蘭迪色系) */
+        .tab-cover { background-color: #a8b6bf; } /* 灰藍 */
+        .tab-flight { background-color: #c9ada7; } /* 可可粉 */
+        .tab-pack { background-color: #9a8c98; } /* 藕紫 */
+        .tab-d1 { background-color: #b8af9d; } /* 亞麻色 */
+        .tab-d2 { background-color: #8da491; } /* 鼠尾草綠 */
+        .tab-d3 { background-color: #d4a373; } /* 楓葉色 */
+        .tab-d4 { background-color: #b5838d; } /* 豆沙紅 */
+        .tab-d5 { background-color: #6d6875; } /* 暗灰紫 */
+        .tab-d6 { background-color: #83c5be; } /* 薄荷灰 */
+
         .transport-icon-btn { position: absolute; right: 15px; top: 5px; width: 36px; height: 36px; background: #fff3e0; border: 1.5px solid #ffcc80; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; cursor: pointer; z-index: 20; }
         .transport-info { max-height: 0; overflow: hidden; transition: all 0.3s ease; background: #fffdf7; border-radius: 12px; font-size: 13px; color: #666; }
         .transport-info.open { max-height: 250px; padding: 12px; margin: 10px 0; border: 1px solid #ffe0b2; }
-        ul { list-style: none; padding: 0; margin: 10px 0 0 0; }
-        li { padding: 12px 0; border-bottom: 1px solid #f5f5f5; font-size: 14px; line-height: 1.5; color: #444; }
-        li b { color: var(--orange); font-weight: 700; }
         .dots { position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); display: flex; gap: 5px; z-index: 101; }
         .dot { width: 6px; height: 6px; background: rgba(255,255,255,0.5); border-radius: 50%; }
         .dot.active { background: var(--orange); width: 16px; border-radius: 10px; }
@@ -65,17 +79,16 @@
         <div class="nav-btn prev-btn" onclick="moveSlide(-1)"></div>
         <div class="nav-btn next-btn" onclick="moveSlide(1)"></div>
 
-        <div class="sidebar-tabs">
-            <div class="tab-item" onclick="moveSlideTo(0)">封面</div>
-            <div class="tab-item" onclick="moveSlideTo(1)">航班</div>
-            <div class="tab-item" onclick="moveSlideTo(2)">清單</div>
-            <div class="tab-item" onclick="moveSlideTo(3)">D 1</div>
-            <div class="tab-item" onclick="moveSlideTo(4)">D 2</div>
-            <div class="tab-item" onclick="moveSlideTo(5)">D 3</div>
-            <div class="tab-item" onclick="moveSlideTo(6)">D 4</div>
-            <div class="tab-item" onclick="moveSlideTo(7)">D 5</div>
-            <div class="tab-item" onclick="moveSlideTo(8)">D 6</div>
-            <div class="tab-item" onclick="moveSlideTo(10)">封底</div>
+        <div class="tabs-container">
+            <div class="tab tab-cover" onclick="moveSlideTo(0)">封面</div>
+            <div class="tab tab-flight" onclick="moveSlideTo(1)">航班</div>
+            <div class="tab tab-pack" onclick="moveSlideTo(2)">清單</div>
+            <div class="tab tab-d1" onclick="moveSlideTo(3)">D 1</div>
+            <div class="tab tab-d2" onclick="moveSlideTo(4)">D 2</div>
+            <div class="tab tab-d3" onclick="moveSlideTo(5)">D 3</div>
+            <div class="tab tab-d4" onclick="moveSlideTo(6)">D 4</div>
+            <div class="tab tab-d5" onclick="moveSlideTo(7)">D 5</div>
+            <div class="tab tab-d6" onclick="moveSlideTo(8)">D 6</div>
         </div>
         
         <div class="slides-wrapper" id="wrapper">
@@ -91,7 +104,8 @@
                     <ul><li><b>11:30</b> 鹹德海水浴場</li></ul>
                 </div>
             </div></div>
-            <div class="slide"><div class="content-overlay"><div class="day-header"><div class="day-label">Day 2</div></div></div></div>
+            
+             <div class="slide"><div class="content-overlay"><div class="day-header"><div class="day-label">Day 2</div></div></div></div>
              <div class="slide"><div class="content-overlay">
                 <div class="day-header"><div class="day-label">Day 3</div></div>
                 <div class="scroll-content">
@@ -120,7 +134,6 @@
             updateSlider();
         }
 
-        // 新增：直接跳轉到指定頁面
         function moveSlideTo(idx) {
             currentIdx = idx;
             updateSlider();
@@ -138,7 +151,6 @@
             info.classList.toggle('open');
         }
 
-        // 滑動與鍵盤事件
         let touchStartX = 0;
         document.getElementById('slider').addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; }, {passive: true});
         document.getElementById('slider').addEventListener('touchend', e => {
