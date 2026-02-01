@@ -40,7 +40,7 @@
         .tabs-pc { position: absolute; left: 100%; top: 50%; display: flex; flex-direction: column; gap: 8px; z-index: 50; transform: translate(-100%, -50%); transition: transform 0.4s ease; }
         .edge-trigger-pc { position: absolute; right: -30px; top: 10%; width: 60px; height: 80%; z-index: 150; cursor: pointer; }
         .edge-trigger-pc:hover ~ .tabs-pc, .tabs-pc:hover { transform: translate(-10px, -50%); }
-        .tab-pc { width: 100px; height: 38px; padding-right: 15px; display: flex; align-items: center; justify-content: flex-end; font-size: 13px; font-weight: 700; color: white; border-radius: 0 15px 15px 0; box-shadow: 2px 2px 5px rgba(0,0,0,0.1); cursor: pointer; }
+        .tab-pc { width: 70px; height: 38px; padding-right: 15px; display: flex; align-items: center; justify-content: flex-end; font-size: 13px; font-weight: 700; color: white; border-radius: 0 15px 15px 0; box-shadow: 2px 2px 5px rgba(0,0,0,0.1); cursor: pointer; }
 
         /* 🔖 手機版：底部對齊標籤 */
         .tabs-mobile { display: none; }
@@ -142,9 +142,9 @@
             </div>
             
             <div class="tabs-mobile">
-                <div class="tab-m bg-cover" onclick="moveSlideTo(0)">封</div>
-                <div class="tab-m bg-flight" onclick="moveSlideTo(1)">航</div>
-                <div class="tab-m bg-pack" onclick="moveSlideTo(2)">清</div>
+                <div class="tab-m bg-cover" onclick="moveSlideTo(0)">🏠</div>
+                <div class="tab-m bg-flight" onclick="moveSlideTo(1)">✈️</div>
+                <div class="tab-m bg-pack" onclick="moveSlideTo(2)">🧳</div>
                 <div class="tab-m bg-d1" onclick="moveSlideTo(3)">D1</div>
                 <div class="tab-m bg-d2" onclick="moveSlideTo(4)">D2</div>
                 <div class="tab-m bg-d3" onclick="moveSlideTo(5)">D3</div>
