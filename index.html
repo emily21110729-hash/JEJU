@@ -12,8 +12,13 @@
 
         .main-container { position: relative; width: 480px; height: 82vh; display: flex; justify-content: center; align-items: center; }
         
-        /* 📚 書本容器 */
-        #slider { width: 100%; height: 100%; position: relative; overflow: hidden; z-index: 100; border-radius: 25px; background: var(--paper); box-shadow: 0 10px 40px rgba(0,0,0,0.1); }
+        /* 📚 書本容器 - 溢出隱藏確保圓角切齊 */
+        #slider { 
+            width: 100%; height: 100%; 
+            position: relative; overflow: hidden; 
+            z-index: 100; border-radius: 25px; 
+            background: var(--paper); box-shadow: 0 10px 40px rgba(0,0,0,0.1); 
+        }
         .slides-wrapper { display: flex; width: 1100%; height: 100%; transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
         .slide { width: 9.0909%; height: 100%; flex-shrink: 0; position: relative; visibility: hidden; display: flex; flex-direction: column; }
         .slide.active { visibility: visible; }
@@ -23,26 +28,17 @@
         .day-header::before { content: ""; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: url('orange.jpg') center/cover; opacity: 0.6; z-index: -1; }
         .day-label { font-size: 24px; font-weight: 700; color: #fff; text-shadow: 1px 2px 4px rgba(0,0,0,0.3); }
 
-        /* 行程內容：底部留白確保不被標籤遮擋 */
+        /* 行程內容 */
         .scroll-content { flex: 1; overflow-y: auto; padding: 0 22px 20px 22px; color: #444; }
-        /* 電腦版不需要額外 padding，手機版才需要 */
-        @media (max-width: 600px) {
-            .scroll-content { padding-bottom: 70px; } 
-        }
+        @media (max-width: 600px) { .scroll-content { padding-bottom: 60px; } }
 
-        .section-title { font-size: 13px; color: var(--orange); font-weight: bold; margin: 15px 0 5px 0; display: flex; align-items: center; }
-        .section-title::after { content: ""; flex: 1; height: 1px; background: #eee; margin-left: 10px; }
-        ul { list-style: none; padding: 0; margin: 0; }
-        li { padding: 8px 0; border-bottom: 1px solid #f9f9f9; font-size: 14px; line-height: 1.4; }
-        li b { color: var(--orange); font-weight: 700; }
-
-        /* 🔖 電腦版：右側標籤 (維持 70px 抽屜式) */
+        /* 🔖 電腦版：右側標籤 (維持不變) */
         .tabs-pc { position: absolute; left: 100%; top: 50%; display: flex; flex-direction: column; gap: 8px; z-index: 50; transform: translate(-100%, -50%); transition: transform 0.4s ease; }
         .edge-trigger-pc { position: absolute; right: -30px; top: 10%; width: 60px; height: 80%; z-index: 150; cursor: pointer; }
         .edge-trigger-pc:hover ~ .tabs-pc, .tabs-pc:hover { transform: translate(-10px, -50%); }
         .tab-pc { width: 70px; height: 38px; padding-right: 12px; display: flex; align-items: center; justify-content: flex-end; font-size: 12px; font-weight: 700; color: white; border-radius: 0 15px 15px 0; box-shadow: 2px 2px 5px rgba(0,0,0,0.1); cursor: pointer; }
 
-        /* 🔖 手機版：內嵌底部標籤 (永遠顯示在書本內) */
+        /* 🔖 手機版：底部標籤 (絕對對齊底邊) */
         .tabs-mobile { display: none; }
 
         @media (max-width: 600px) {
@@ -50,25 +46,30 @@
             .edge-trigger-pc, .tabs-pc { display: none; }
             
             .tabs-mobile { 
-                display: flex; position: absolute; 
-                bottom: 0; left: 0; width: 100%; height: 55px; 
-                z-index: 200; /* 放在書內的最上層 */
-                gap: 2px; justify-content: center; align-items: flex-end;
-                background: linear-gradient(to top, rgba(255,255,255,1) 70%, rgba(255,255,255,0) 100%);
-                padding-bottom: 5px;
+                display: flex; 
+                position: absolute; 
+                bottom: 0; /* 鎖死在最底 */
+                left: 0; 
+                width: 100%; 
+                height: 50px; 
+                z-index: 200; 
+                gap: 2px; 
+                padding: 0 5px; /* 稍微縮進去一點點讓視覺平衡 */
+                box-sizing: border-box;
+                align-items: flex-end;
             }
 
             .tab-m {
-                flex: 1; height: 45px; display: flex; align-items: center; justify-content: center;
+                flex: 1; 
+                height: 40px; /* 標籤高度 */
+                display: flex; align-items: center; justify-content: center;
                 font-size: 18px; color: white;
-                border-radius: 10px 10px 0 0; 
+                border-radius: 10px 10px 0 0; /* 只有上方圓角 */
                 cursor: pointer;
-                transition: transform 0.2s;
+                margin-bottom: 0; /* 確保貼底 */
             }
-            .tab-m:active { transform: translateY(-3px); }
         }
 
-        /* 顏色定義 */
         .bg-cover { background: #a8b6bf; } .bg-flight { background: #c9ada7; } .bg-pack { background: #9a8c98; }
         .bg-d1 { background: #b8af9d; } .bg-d2 { background: #8da491; } .bg-d3 { background: #d4a373; }
         .bg-d4 { background: #b5838d; } .bg-d5 { background: #6d6875; } .bg-d6 { background: #83c5be; }
@@ -78,7 +79,7 @@
     <div class="main-container">
         <div class="edge-trigger-pc"></div>
         <div class="tabs-pc">
-            <div class="tab-pc bg-cover" onclick="moveSlideTo(0)">封面</div>
+            <div class="tab-pc bg-cover" onclick="moveSlideTo(0)">🏠</div>
             <div class="tab-pc bg-flight" onclick="moveSlideTo(1)">航班</div>
             <div class="tab-pc bg-pack" onclick="moveSlideTo(2)">清單</div>
             <div class="tab-pc bg-d1" onclick="moveSlideTo(3)">D 1</div>
@@ -91,45 +92,17 @@
 
         <div id="slider">
             <div class="slides-wrapper" id="wrapper">
-                <div class="slide active">
-                    <div class="cover-container" style="background: white; height: 100%; display: flex; align-items: center; justify-content: center;">
-                        <img src="JEJU.png" style="width: 85%; object-fit: contain;">
-                    </div>
-                </div>
-
-                <div class="slide"><div class="day-header"><div class="day-label">航班資訊</div></div><div class="scroll-content">
-                    <div class="section-title">去程 ✈️ IT 654</div><ul><li>06:40 TPE ➔ 09:50 CJU</li></ul>
-                    <div class="section-title">回程 ✈️ IT 655</div><ul><li>11:45 CJU ➔ 12:55 TPE</li></ul>
-                </div></div>
-
-                <div class="slide"><div class="day-header"><div class="day-label">行李清單</div></div><div class="scroll-content">
-                    <ul><li>✅ 護照、K-ETA、WOWPASS</li><li>✅ 轉接頭、網卡、行動電源</li></ul>
-                </div></div>
-
-                <div class="slide"><div class="day-header"><div class="day-label">Day 1</div></div><div class="scroll-content">
-                    <div class="section-title">11:30 鹹德海岸</div><ul><li>海女包飯、Cafe delmoondo</li><li>Audrant Bakery 大蒜麵包</li><li>逛文創店與 Olive Young</li></ul>
-                    <div class="section-title">15:00 東福里</div><ul><li>倫敦貝果博物館、Cafe Layered</li></ul>
-                    <div class="section-title">18:15 細花</div><ul><li>🍽️ 細花排骨 (Sehwa)</li></ul>
-                </div></div>
-                
-                <div class="slide"><div class="day-header"><div class="day-label">Day 2</div></div><div class="scroll-content">
-                    <div class="section-title">牛島 & 城山</div><ul><li>⛴️ 牛島環島、花生冰淇淋</li><li>⛰️ 城山日出峰壯闊海景</li></ul>
-                </div></div>
-
-                <div class="slide"><div class="day-header"><div class="day-label">Day 3</div></div><div class="scroll-content">
-                    <ul><li><b>08:30</b> 正房瀑布 ➔ <b>10:30</b> 柱狀節理</li><li><b>15:30</b> 山茶花之丘 ➔ <b>17:00</b> 偶來市場</li></ul>
-                </div></div>
-
-                <div class="slide"><div class="day-header"><div class="day-label">Day 4</div></div><div class="scroll-content"><ul><li>三麗鷗主題樂園、史努比花園、亂打秀</li></ul></div></div>
-                <div class="slide"><div class="day-header"><div class="day-label">Day 5</div></div><div class="scroll-content"><ul><li>尋找野生海豚、涯月香水體驗、樂天超市</li></ul></div></div>
-                <div class="slide"><div class="day-header"><div class="day-label">Day 6</div></div><div class="scroll-content"><ul><li>機場退稅、起飛回家 ✈️</li></ul></div></div>
-                <div class="slide"><div class="day-header"><div class="day-label">提醒</div></div><div class="scroll-content"><ul><li>Naver Map / Papago 必備</li></ul></div></div>
-
-                <div class="slide">
-                    <div class="cover-container" style="background: white; height: 100%; display: flex; align-items: center; justify-content: center;">
-                        <img src="JEJU B.png" style="width: 85%; object-fit: contain;">
-                    </div>
-                </div>
+                <div class="slide active"><div class="content-overlay" style="display:flex; align-items:center; justify-content:center;"><img src="JEJU.png" style="width:85%; object-fit:contain;"></div></div>
+                <div class="slide"><div class="day-header"><div class="day-label">航班資訊</div></div><div class="scroll-content"><ul><li>IT 654 / IT 655</li></ul></div></div>
+                <div class="slide"><div class="day-header"><div class="day-label">行李清單</div></div><div class="scroll-content"><ul><li>護照、網卡、現金</li></ul></div></div>
+                <div class="slide"><div class="day-header"><div class="day-label">Day 1</div></div><div class="scroll-content"><ul><li>鹹德、東福、細花</li></ul></div></div>
+                <div class="slide"><div class="day-header"><div class="day-label">Day 2</div></div><div class="scroll-content"><ul><li>牛島、城山日出峰</li></ul></div></div>
+                <div class="slide"><div class="day-header"><div class="day-label">Day 3</div></div><div class="scroll-content"><ul><li>正房瀑布、柱狀節理、山茶花</li></ul></div></div>
+                <div class="slide"><div class="day-header"><div class="day-label">Day 4</div></div><div class="scroll-content"><ul><li>三麗鷗樂園、亂打秀</li></ul></div></div>
+                <div class="slide"><div class="day-header"><div class="day-label">Day 5</div></div><div class="scroll-content"><ul><li>尋找海豚、涯月香水</li></ul></div></div>
+                <div class="slide"><div class="day-header"><div class="day-label">Day 6</div></div><div class="scroll-content"><ul><li>機場退稅、回家</li></ul></div></div>
+                <div class="slide"><div class="day-header"><div class="day-label">提醒</div></div><div class="scroll-content"><ul><li>Naver Map / Papago</li></ul></div></div>
+                <div class="slide"><div class="content-overlay" style="display:flex; align-items:center; justify-content:center;"><img src="JEJU B.png" style="width:85%; object-fit:contain;"></div></div>
             </div>
 
             <div class="tabs-mobile">
