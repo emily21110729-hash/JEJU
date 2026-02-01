@@ -7,34 +7,40 @@
     <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root { --orange: #FF8C00; --paper: #ffffff; --text-main: #333; --bg-grey: #d7ccc8; }
-        body { margin: 0; padding: 0; background-color: var(--bg-grey); font-family: 'Shippori Mincho', serif; height: 100vh; width: 100vw; overflow: hidden; color: var(--text-main); display: flex; justify-content: center; align-items: center; }
+        body { margin: 0; padding: 0; background-color: var(--bg-grey); font-family: 'Shippori Mincho', serif; height: 100vh; width: 100vw; overflow: hidden; display: flex; justify-content: center; align-items: center; }
         
-        #slider { width: 100%; height: 100%; max-width: 500px; max-height: 900px; position: relative; overflow: hidden; }
+        #slider { width: 100%; height: 100%; max-width: 500px; max-height: 900px; position: relative; overflow: visible; }
         .slides-wrapper { display: flex; width: 1100%; height: 100%; transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
         .slide { width: 9.09%; height: 100%; flex-shrink: 0; position: relative; }
         
-        /* 🖼️ 封面與內容方框 */
-        .cover-img { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 90%; height: 80%; object-fit: cover; border-radius: 25px; box-shadow: 0 8px 30px rgba(0,0,0,0.15); z-index: 10; }
-        .content-overlay { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 90%; height: 80%; z-index: 20; background: var(--paper); border-radius: 25px; box-shadow: 0 8px 30px rgba(0,0,0,0.1); display: flex; flex-direction: column; overflow: hidden; }
-        
-        .day-header { position: relative; height: 90px; margin: 12px; display: flex; justify-content: space-between; align-items: center; padding: 0 20px; border-radius: 18px; overflow: hidden; z-index: 1; }
-        .day-header::before { content: ""; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-image: url('orange.jpg'); background-size: cover; background-position: center; opacity: 0.5; z-index: -1; }
-        .day-label { font-size: 26px; font-weight: 700; color: #ffffff; text-shadow: 1px 2px 4px rgba(0,0,0,0.3); }
+        /* 📋 白色內容方框 (蓋子) */
+        .content-overlay { 
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); 
+            width: 88%; height: 78%; 
+            z-index: 20; /* 最高的層級，用來壓住標籤 */
+            background: var(--paper); border-radius: 25px; 
+            box-shadow: 0 8px 30px rgba(0,0,0,0.1); 
+            display: flex; flex-direction: column; overflow: hidden; 
+        }
 
-        /* 🔖 書籤索引：藏在白色書頁 (z-index: 5) 之下 */
+        /* 🖼️ 封面圖 (也要跟書頁一樣高) */
+        .cover-img { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 88%; height: 78%; object-fit: cover; border-radius: 25px; z-index: 25; box-shadow: 0 8px 30px rgba(0,0,0,0.15); pointer-events: none; }
+
+        /* 🔖 書籤容器 (藏在底下) */
         .tabs-container {
             position: absolute;
-            right: 5%; /* 對齊白色方框的右側位置 */
-            top: 55%;
+            right: 6%; /* 剛好縮在書頁邊緣裡面一點點 */
+            top: 50%;
             transform: translateY(-50%);
-            z-index: 15; /* 高於 slider 背景，但低於 content-overlay (20) */
+            z-index: 10; /* 比 content-overlay 低，所以會被蓋住 */
             display: flex;
             flex-direction: column;
-            gap: 6px;
+            gap: 5px;
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
         }
 
         .tab {
-            width: 55px;
+            width: 60px;
             height: 32px;
             padding-left: 15px;
             display: flex;
@@ -45,15 +51,16 @@
             color: white;
             border-radius: 0 10px 10px 0;
             cursor: pointer;
-            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            /* 關鍵：平常完全藏在書頁下面 */
-            transform: translateX(-40px); 
+            transition: transform 0.3s ease;
+            transform: translateX(-40px); /* 平時往左縮，完全躲在書頁下 */
         }
 
-        /* 當滑鼠移近書本右側邊緣區域時，標籤滑出 */
+        /* ✨ 關鍵互動：滑鼠移到 slider 範圍時，標籤從右邊抽出來 */
+        #slider:hover .tabs-container {
+            right: -15px; /* 整個容器往外移 */
+        }
         #slider:hover .tab {
-            transform: translateX(18px); /* 往外滑出，露出書本外 */
-            box-shadow: 2px 2px 10px rgba(0,0,0,0.1);
+            transform: translateX(0); /* 標籤展開 */
         }
 
         /* 莫蘭迪低飽和色 */
@@ -67,16 +74,16 @@
         .tab-d5 { background: #6d6875; }
         .tab-d6 { background: #83c5be; }
 
-        /* 內容區與其他 */
-        .scroll-content { flex: 1; overflow-y: auto; padding: 0 20px 20px 20px; position: relative; }
-        .transport-icon-btn { position: absolute; right: 15px; top: 5px; width: 36px; height: 36px; background: #fff3e0; border: 1.5px solid #ffcc80; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; cursor: pointer; z-index: 20; }
-        .transport-info { max-height: 0; overflow: hidden; transition: all 0.3s ease; background: #fffdf7; border-radius: 12px; font-size: 13px; color: #666; }
-        .transport-info.open { max-height: 250px; padding: 12px; margin: 10px 0; border: 1px solid #ffe0b2; }
-        ul { list-style: none; padding: 0; margin: 10px 0 0 0; }
-        li { padding: 12px 0; border-bottom: 1px solid #f5f5f5; font-size: 14px; line-height: 1.5; color: #444; }
-        li b { color: var(--orange); font-weight: 700; }
-        
-        .dots { position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); display: flex; gap: 5px; z-index: 101; }
+        /* 內容區 */
+        .day-header { position: relative; height: 80px; margin: 10px; border-radius: 15px; overflow: hidden; display: flex; align-items: center; padding: 0 20px; }
+        .day-header::before { content: ""; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: url('orange.jpg') center/cover; opacity: 0.5; z-index: -1; }
+        .day-label { font-size: 24px; font-weight: 700; color: #fff; text-shadow: 1px 2px 4px rgba(0,0,0,0.3); }
+        .scroll-content { flex: 1; overflow-y: auto; padding: 10px 20px; }
+        ul { list-style: none; padding: 0; }
+        li { padding: 10px 0; border-bottom: 1px solid #f5f5f5; font-size: 14px; color: #444; }
+        li b { color: var(--orange); }
+
+        .dots { position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); display: flex; gap: 5px; z-index: 30; }
         .dot { width: 6px; height: 6px; background: rgba(255,255,255,0.5); border-radius: 50%; }
         .dot.active { background: var(--orange); width: 16px; border-radius: 10px; }
     </style>
@@ -97,31 +104,19 @@
         
         <div class="slides-wrapper" id="wrapper">
             <div class="slide"><img src="JEJU.png" class="cover-img"></div>
-            <div class="slide"><div class="content-overlay"><div class="day-header"><div class="day-label">航班資訊</div></div><div class="scroll-content">...</div></div></div>
-            <div class="slide"><div class="content-overlay"><div class="day-header"><div class="day-label">行李清單</div></div><div class="scroll-content">...</div></div></div>
-
+            <div class="slide"><div class="content-overlay"><div class="day-header"><div class="day-label">航班資訊</div></div></div></div>
+            <div class="slide"><div class="content-overlay"><div class="day-header"><div class="day-label">行李清單</div></div></div></div>
             <div class="slide"><div class="content-overlay">
                 <div class="day-header"><div class="day-label">Day 1</div></div>
-                <div class="scroll-content">
-                    <div class="transport-icon-btn" onclick="toggleInfo(this)">🚌</div>
-                    <div class="transport-info"><b>101路</b>：機場 ➔ 鹹德</div>
-                    <ul><li><b>11:30</b> 鹹德海水浴場</li></ul>
-                </div>
+                <div class="scroll-content"><ul><li><b>11:30</b> 鹹德海水浴場</li></ul></div>
             </div></div>
             <div class="slide"><div class="content-overlay"><div class="day-header"><div class="day-label">Day 2</div></div></div></div>
-             <div class="slide"><div class="content-overlay">
-                <div class="day-header"><div class="day-label">Day 3</div></div>
-                <div class="scroll-content">
-                    <div class="transport-icon-btn" onclick="toggleInfo(this)">🚌</div>
-                    <div class="transport-info"><b>正房瀑布</b>：步行</div>
-                    <ul><li><b>09:00</b> 正房瀑布</li></ul>
-                </div>
-            </div></div>
+             <div class="slide"><div class="content-overlay"><div class="day-header"><div class="day-label">Day 3</div></div></div></div>
              <div class="slide"><div class="content-overlay"><div class="day-header"><div class="day-label">Day 4</div></div></div></div>
              <div class="slide"><div class="content-overlay"><div class="day-header"><div class="day-label">Day 5</div></div></div></div>
              <div class="slide"><div class="content-overlay"><div class="day-header"><div class="day-label">Day 6</div></div></div></div>
              <div class="slide"><div class="content-overlay"><div class="day-header"><div class="day-label">提醒</div></div></div></div>
-             <div class="slide"><img src="JEJU B.png" class="cover-img"></div>
+             <div class="slide"><img src="JEJU B.png" class="cover-img" style="z-index: 5;"></div>
         </div>
         <div class="dots" id="dots"></div>
     </div>
@@ -129,29 +124,18 @@
     <script>
         let currentIdx = 0; const totalSlides = 11;
         const wrapper = document.getElementById('wrapper');
-
         function moveSlideTo(idx) {
             currentIdx = idx;
-            updateSlider();
-        }
-
-        function updateSlider() {
             wrapper.style.transform = `translateX(-${currentIdx * (100 / totalSlides)}%)`;
             document.querySelectorAll('.dot').forEach((dot, i) => {
                 dot.classList.toggle('active', i === currentIdx);
             });
         }
-
-        function toggleInfo(btn) {
-            const info = btn.nextElementSibling;
-            info.classList.toggle('open');
-        }
-
         let touchStartX = 0;
         document.getElementById('slider').addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; }, {passive: true});
         document.getElementById('slider').addEventListener('touchend', e => {
             let touchEndX = e.changedTouches[0].screenX;
-            if (touchStartX - touchEndX > 70) moveSlideTo(currentIdx + 1 > totalSlides - 1 ? totalSlides - 1 : currentIdx + 1);
+            if (touchStartX - touchEndX > 70) moveSlideTo(currentIdx + 1 >= totalSlides ? totalSlides-1 : currentIdx + 1);
             if (touchEndX - touchStartX > 70) moveSlideTo(currentIdx - 1 < 0 ? 0 : currentIdx - 1);
         }, {passive: true});
     </script>
