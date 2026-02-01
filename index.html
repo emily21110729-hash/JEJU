@@ -21,7 +21,7 @@
         .cover-container { display: flex; align-items: center; justify-content: center; background: #fff; z-index: 110; }
         .cover-img { width: 90%; height: 90%; object-fit: contain; }
 
-        /* 🔖 書籤層：夾縫生存版 */
+        /* 🔖 書籤層 */
         .tabs-layer { position: absolute; left: 100%; top: 50%; display: flex; flex-direction: column; gap: 8px; z-index: 50; transform: translate(-100%, -50%); transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1); }
         .edge-trigger { position: absolute; right: -30px; top: 10%; width: 60px; height: 80%; z-index: 150; cursor: pointer; }
         .edge-trigger:hover ~ .tabs-layer, .tabs-layer:hover { transform: translate(-10px, -50%); }
@@ -31,27 +31,54 @@
         .tab-d1 { background: #b8af9d; } .tab-d2 { background: #8da491; } .tab-d3 { background: #d4a373; }
         .tab-d4 { background: #b5838d; } .tab-d5 { background: #6d6875; } .tab-d6 { background: #83c5be; }
 
-        /* 內容元件樣式 */
-        .day-header { position: relative; height: 85px; margin: 12px; border-radius: 18px; overflow: hidden; display: flex; align-items: center; padding: 0 20px; flex-shrink: 0; }
-        .day-header::before { content: ""; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: url('orange.jpg') center/cover; opacity: 0.5; z-index: -1; }
-        .day-label { font-size: 24px; font-weight: 700; color: #fff; text-shadow: 1px 2px 4px rgba(0,0,0,0.3); }
-        .scroll-content { flex: 1; overflow-y: auto; padding: 10px 22px; color: #444; }
+        /* 🌅 圓角橘子頁眉 (Header) */
+        .day-header { 
+            position: relative; 
+            height: 100px; /* 稍微拉高一點，視覺比例更美 */
+            margin: 15px; 
+            border-radius: 20px; 
+            overflow: hidden; 
+            display: flex; 
+            align-items: center; 
+            padding: 0 25px; 
+            flex-shrink: 0;
+            z-index: 1;
+        }
+        .day-header::before { 
+            content: ""; 
+            position: absolute; top: 0; left: 0; right: 0; bottom: 0; 
+            background: url('orange.jpg') center/cover; 
+            opacity: 0.6; /* 50-60% 透明度 */
+            z-index: -1; 
+        }
+        .day-label { font-size: 28px; font-weight: 700; color: #fff; text-shadow: 1px 2px 4px rgba(0,0,0,0.3); }
 
-        /* 🚌 交通 Icon 與摺疊區 */
-        .transport-icon-btn { position: absolute; right: 15px; top: 25px; width: 34px; height: 34px; background: #fff3e0; border: 1.5px solid #ffcc80; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; cursor: pointer; z-index: 20; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-        .transport-info { max-height: 0; overflow: hidden; transition: all 0.3s ease; background: #fffdf7; border-radius: 12px; font-size: 12.5px; color: #666; }
-        .transport-info.open { max-height: 250px; padding: 12px; margin: 10px 0; border: 1.2px solid #ffe0b2; }
-        .bus-badge { background: #e3f2fd; color: #1976d2; padding: 1px 5px; border-radius: 4px; font-weight: bold; font-size: 11px; }
+        /* 🚌 交通 Icon */
+        .transport-icon-btn { 
+            position: absolute; right: 20px; top: 50%; transform: translateY(-50%); 
+            width: 38px; height: 38px; 
+            background: rgba(255, 255, 255, 0.9); 
+            border: 1.5px solid var(--orange); 
+            border-radius: 50%; 
+            display: flex; align-items: center; justify-content: center; 
+            font-size: 20px; cursor: pointer; 
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1); 
+        }
+
+        .scroll-content { flex: 1; overflow-y: auto; padding: 5px 25px 25px 25px; color: #444; }
+        .transport-info { max-height: 0; overflow: hidden; transition: all 0.3s ease; background: #fffdf7; border-radius: 12px; font-size: 13px; }
+        .transport-info.open { max-height: 300px; padding: 15px; margin-bottom: 15px; border: 1.5px solid #ffe0b2; }
+        .bus-badge { background: #e3f2fd; color: #1976d2; padding: 2px 6px; border-radius: 5px; font-weight: bold; font-size: 11px; }
 
         ul { list-style: none; padding: 0; margin: 0; }
-        li { padding: 12px 0; border-bottom: 1px solid #f2f2f2; font-size: 14px; line-height: 1.5; }
-        li b { color: var(--orange); font-weight: 700; margin-right: 5px; }
+        li { padding: 13px 0; border-bottom: 1px solid #f2f2f2; font-size: 14.5px; line-height: 1.6; }
+        li b { color: var(--orange); font-weight: 700; margin-right: 8px; font-size: 13px; }
         
-        .check-item { display: flex; align-items: center; padding: 12px 0; border-bottom: 1px solid #f2f2f2; font-size: 14.5px; }
-        .check-item input { width: 18px; height: 18px; margin-right: 12px; accent-color: var(--orange); }
-        
-        .flight-card { background: #fff; border: 2px dashed #ffcc80; padding: 15px; border-radius: 15px; margin-bottom: 15px; text-align: center; font-size: 14px; }
-        .dots { position: absolute; bottom: 25px; left: 50%; transform: translateX(-50%); display: flex; gap: 6px; z-index: 150; }
+        .check-item { display: flex; align-items: center; padding: 13px 0; border-bottom: 1px solid #f2f2f2; font-size: 15px; }
+        .check-item input { width: 20px; height: 20px; margin-right: 12px; accent-color: var(--orange); }
+        .flight-card { background: #fff; border: 2.5px dashed #ffcc80; padding: 18px; border-radius: 18px; margin-bottom: 15px; text-align: center; }
+
+        .dots { position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); display: flex; gap: 6px; z-index: 150; }
         .dot { width: 7px; height: 7px; background: rgba(0,0,0,0.1); border-radius: 50%; }
         .dot.active { background: var(--orange); width: 18px; border-radius: 10px; }
     </style>
@@ -86,25 +113,26 @@
                 <div class="slide"><div class="content-overlay">
                     <div class="day-header"><div class="day-label">行李清單</div></div>
                     <div class="scroll-content">
-                        <label class="check-item"><input type="checkbox"> 護照 / K-ETA 簽證</label>
-                        <label class="check-item"><input type="checkbox"> WOWPASS / 韓幣現金</label>
-                        <label class="check-item"><input type="checkbox"> 轉接頭 / 網卡 / 行動電源</label>
-                        <label class="check-item"><input type="checkbox"> 空行李箱 (爆買用)</label>
+                        <label class="check-item"><input type="checkbox"> 護照 / K-ETA / WOWPASS</label>
+                        <label class="check-item"><input type="checkbox"> 轉接頭 / 行動電源 / 網卡</label>
+                        <label class="check-item"><input type="checkbox"> 爆買用空行李箱</label>
                     </div>
                 </div></div>
 
                 <div class="slide"><div class="content-overlay">
-                    <div class="day-header"><div class="day-label">Day 1</div></div>
-                    <div class="scroll-content">
+                    <div class="day-header">
+                        <div class="day-label">Day 1</div>
                         <div class="transport-icon-btn" onclick="toggleInfo(this)">🚌</div>
+                    </div>
+                    <div class="scroll-content">
                         <div class="transport-info">
-                            📍 <b>機場 ➔ 鹹德</b>：2號出口搭 <span class="bus-badge">101路</span>，於「鹹德換乘站」下車。<br>
-                            📍 <b>其餘路段</b>：皆可搭乘 <span class="bus-badge">201路</span>。
+                            📍 <b>機場 ➔ 鹹德</b>：2號出口搭 <span class="bus-badge">101路</span>。<br>
+                            📍 <b>其餘</b>：搭乘 <span class="bus-badge">201路</span>。
                         </div>
                         <ul>
                             <li><b>11:30</b> 機場 ➔ 鹹德 / 海女包飯</li>
-                            <li><b>14:00</b> Cafe delmoondo / 鹹德海水浴場</li>
-                            <li><b>15:30</b> 東福里：倫敦貝果博物館 (18:00關)</li>
+                            <li><b>14:00</b> Cafe delmoondo / 鹹德浴場</li>
+                            <li><b>15:30</b> 東福里：倫敦貝果博物館</li>
                             <li><b>17:00</b> 月汀里海岸線散步</li>
                         </ul>
                     </div>
@@ -114,74 +142,38 @@
                     <div class="day-header"><div class="day-label">Day 2</div></div>
                     <div class="scroll-content">
                         <ul>
-                            <li>⛴️ <b>牛島 Udo</b> 環島行程</li>
-                            <li>🚲 租借電動車 / 花生冰淇淋</li>
+                            <li>⛴️ <b>牛島 Udo</b> 環島冒險</li>
+                            <li>🚲 租電動車 / 花生冰淇淋</li>
                             <li>🐙 <b>Meohamen</b> 海鮮拉麵</li>
-                            <li>⛰️ <b>城山日出峰</b> 壯闊海景</li>
+                            <li>⛰️ <b>城山日出峰</b></li>
                         </ul>
                     </div>
                 </div></div>
 
                 <div class="slide"><div class="content-overlay">
-                    <div class="day-header"><div class="day-label">Day 3</div></div>
-                    <div class="scroll-content">
+                    <div class="day-header">
+                        <div class="day-label">Day 3</div>
                         <div class="transport-icon-btn" onclick="toggleInfo(this)">🚌</div>
+                    </div>
+                    <div class="scroll-content">
                         <div class="transport-info">
                             📍 <b>正房 ➔ 柱狀節理</b>：搭 <span class="bus-badge">510 / 600路</span>。<br>
-                            📍 <b>柱狀節理 ➔ 中文</b>：搭 <span class="bus-badge">202 / 510路</span>。
+                            📍 <b>節理 ➔ 中文</b>：搭 <span class="bus-badge">202 / 510路</span>。
                         </div>
                         <ul>
-                            <li><b>08:30</b> 第一 70 ➔ 正房瀑布 (₩2000)</li>
-                            <li><b>10:30</b> 柱狀節理帶 🗿</li>
-                            <li><b>11:20</b> 中文海水浴場 + OY + 星巴克</li>
-                            <li><b>15:30</b> 山茶花之丘 🌺</li>
-                            <li><b>16:20</b> 偶來市場 & 李仲線逛街</li>
+                            <li><b>08:30-09:00</b> 步行 ➔ 正房瀑布</li>
+                            <li><b>10:30-11:00</b> 🗿 柱狀節理帶</li>
+                            <li><b>11:20-14:30</b> 海邊 + OY + 星巴克</li>
+                            <li><b>15:30-16:20</b> 🌺 山茶花之丘</li>
+                            <li><b>16:20-17:30</b> 偶來市場逛街</li>
                         </ul>
                     </div>
                 </div></div>
 
-                <div class="slide"><div class="content-overlay">
-                    <div class="day-header"><div class="day-label">Day 4</div></div>
-                    <div class="scroll-content">
-                        <ul>
-                            <li><b>下午</b> <b>三麗鷗主題樂園</b></li>
-                            <li><b>20:30</b> <b>亂打秀 (Nanta)</b> 🎭</li>
-                        </ul>
-                    </div>
-                </div></div>
-
-                <div class="slide"><div class="content-overlay">
-                    <div class="day-header"><div class="day-label">Day 5</div></div>
-                    <div class="scroll-content">
-                        <ul>
-                            <li><b>上午</b> 大靜邑海岸路尋野生海豚 🐬</li>
-                            <li><b>下午</b> 涯月 <b>Merci Jeju</b> 買香水</li>
-                            <li><b>晚上</b> 樂天超市最後爆買 🛒</li>
-                        </ul>
-                    </div>
-                </div></div>
-
-                <div class="slide"><div class="content-overlay">
-                    <div class="day-header"><div class="day-label">Day 6</div></div>
-                    <div class="scroll-content">
-                        <ul>
-                            <li><b>10:30</b> 機場退稅 ➔ 登機</li>
-                            <li><b>11:45</b> IT 655 起飛回家 ✈️</li>
-                        </ul>
-                    </div>
-                </div></div>
-
-                <div class="slide"><div class="content-overlay">
-                    <div class="day-header"><div class="day-label">小提醒</div></div>
-                    <div class="scroll-content">
-                        <ul>
-                            <li>Naver Map / Papago 必備</li>
-                            <li>濟州海風大，帽子要戴好 🧢</li>
-                            <li>預留託運行李重量</li>
-                        </ul>
-                    </div>
-                </div></div>
-
+                <div class="slide"><div class="content-overlay"><div class="day-header"><div class="day-label">Day 4</div></div><div class="scroll-content"><ul><li><b>下午</b> 三麗鷗主題樂園</li><li><b>20:30</b> 亂打秀 🎭</li></ul></div></div></div>
+                <div class="slide"><div class="content-overlay"><div class="day-header"><div class="day-label">Day 5</div></div><div class="scroll-content"><ul><li><b>上午</b> 尋找野生海豚 🐬</li><li><b>下午</b> 涯月 Merci Jeju 香水</li><li><b>晚上</b> 樂天超市爆買 🛒</li></ul></div></div></div>
+                <div class="slide"><div class="content-overlay"><div class="day-header"><div class="day-label">Day 6</div></div><div class="scroll-content"><ul><li><b>10:30</b> 機場退稅</li><li><b>11:45</b> 飛機回家 ✈️</li></ul></div></div></div>
+                <div class="slide"><div class="content-overlay"><div class="day-header"><div class="day-label">小提醒</div></div><div class="scroll-content"><ul><li>Naver Map / Papago</li><li>祝你有個完美的旅程！🍊</li></ul></div></div></div>
                 <div class="slide"><div class="cover-container" style="z-index: 5;"><img src="JEJU B.png" class="cover-img"></div></div>
             </div>
             <div class="dots" id="dots"></div>
@@ -201,9 +193,9 @@
         }
 
         function toggleInfo(btn) {
-            const info = btn.nextElementSibling;
+            const info = btn.parentElement.nextElementSibling.querySelector('.transport-info');
             info.classList.toggle('open');
-            btn.style.background = info.classList.contains('open') ? "#ffcc80" : "#fff3e0";
+            btn.style.background = info.classList.contains('open') ? "#ffcc80" : "rgba(255, 255, 255, 0.9)";
         }
 
         let touchStartX = 0;
