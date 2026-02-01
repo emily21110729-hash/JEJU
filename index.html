@@ -8,175 +8,143 @@
     <style>
         :root { --orange: #FF8C00; --paper: #ffffff; --text-main: #333; --bg-grey: #d7ccc8; }
         
-        body { margin: 0; padding: 0; background-color: var(--bg-grey); font-family: 'Shippori Mincho', serif; height: 100vh; width: 100vw; overflow: hidden; display: flex; justify-content: center; align-items: center; }
+        /* 1. 基礎設定：允許捲動，解決手機版擠壓問題 */
+        body { 
+            margin: 0; padding: 0; background-color: var(--bg-grey); 
+            font-family: 'Shippori Mincho', serif; 
+            min-height: 100vh; width: 100vw; 
+            overflow-x: hidden; overflow-y: auto; 
+            display: flex; flex-direction: column; align-items: center; 
+        }
 
-        /* 外部容器：控制整體垂直佈局 */
-        .page-wrapper { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; height: 100%; }
+        /* 2. 主容器：垂直排列 */
+        .page-wrapper { 
+            display: flex; flex-direction: column; align-items: center; 
+            padding: 40px 0; width: 100%; max-width: 600px; 
+        }
 
-        /* 電腦版主容器 */
-        .main-container { position: relative; width: 480px; height: 82vh; display: flex; justify-content: center; align-items: center; }
+        /* 3. 書本容器 */
+        .book-container { 
+            position: relative; width: 480px; height: 75vh; 
+            max-height: 800px; margin-bottom: 25px; 
+            z-index: 100; flex-shrink: 0;
+        }
         
-        #slider { width: 100%; height: 100%; position: relative; overflow: hidden; z-index: 100; border-radius: 25px; background: var(--bg-grey); }
+        #slider { width: 100%; height: 100%; position: relative; overflow: hidden; border-radius: 25px; }
         .slides-wrapper { display: flex; width: 1100%; height: 100%; transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
         .slide { width: 9.0909%; height: 100%; flex-shrink: 0; position: relative; visibility: hidden; }
         .slide.active { visibility: visible; }
 
-        .content-overlay, .cover-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--paper); border-radius: 25px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); display: flex; flex-direction: column; overflow: hidden; }
+        .content-overlay, .cover-container { 
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
+            background: var(--paper); border-radius: 25px; 
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1); 
+            display: flex; flex-direction: column; overflow: hidden; 
+        }
         .cover-container { display: flex; align-items: center; justify-content: center; background: #fff; z-index: 110; }
         .cover-img { width: 90%; height: 90%; object-fit: contain; }
 
-        /* 🌅 橘子圓角頁眉 */
-        .day-header { position: relative; height: 95px; margin: 15px; border-radius: 20px; overflow: hidden; display: flex; align-items: center; padding: 0 25px; flex-shrink: 0; z-index: 1; }
-        .day-header::before { content: ""; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: url('orange.jpg') center/cover; opacity: 0.6; z-index: -1; }
-        .day-label { font-size: 26px; font-weight: 700; color: #fff; text-shadow: 1px 2px 4px rgba(0,0,0,0.3); }
+        /* 4. 標籤區域：不再用 Absolute 死命定位，改用 Flex 靈活排列 */
+        .tabs-container {
+            display: flex; flex-wrap: wrap; justify-content: center; 
+            gap: 10px; width: 90%; padding: 20px; 
+            background: rgba(255,255,255,0.4); border-radius: 20px;
+            z-index: 200;
+        }
 
-        .transport-icon-btn { position: absolute; right: 20px; top: 50%; transform: translateY(-50%); width: 38px; height: 38px; background: rgba(255, 255, 255, 0.9); border: 1.5px solid var(--orange); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-        .scroll-content { flex: 1; overflow-y: auto; padding: 0 22px 25px 22px; color: #444; }
-        .transport-info { max-height: 0; overflow: hidden; transition: all 0.3s ease; background: #fffdf7; border-radius: 12px; font-size: 12px; line-height: 1.6; }
-        .transport-info.open { max-height: 400px; padding: 15px; margin-bottom: 15px; border: 1.5px solid #ffe0b2; }
-        .bus-badge { background: #e3f2fd; color: #1976d2; padding: 2px 5px; border-radius: 4px; font-weight: bold; font-size: 11px; }
+        .tab { 
+            width: 100px; height: 40px; 
+            display: flex; align-items: center; justify-content: center; 
+            font-size: 14px; font-weight: 700; color: white; 
+            border-radius: 12px; cursor: pointer; 
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.1); transition: 0.2s;
+        }
+        .tab:active { transform: scale(0.95); }
 
-        .section-title { font-size: 13px; color: var(--orange); font-weight: bold; margin: 15px 0 5px 0; display: flex; align-items: center; }
-        .section-title::after { content: ""; flex: 1; height: 1px; background: #eee; margin-left: 10px; }
-        ul { list-style: none; padding: 0; margin: 0; }
-        li { padding: 8px 0; border-bottom: 1px solid #f9f9f9; font-size: 14px; line-height: 1.4; }
-        li b { color: var(--orange); font-weight: 700; margin-right: 5px; }
-
-        /* 🔖 電腦版書籤：側邊隱藏抽屜 */
-        .tabs-layer { position: absolute; left: 100%; top: 50%; display: flex; flex-direction: column; gap: 8px; z-index: 50; transform: translate(-100%, -50%); transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1); }
-        .edge-trigger { position: absolute; right: -30px; top: 10%; width: 60px; height: 80%; z-index: 150; cursor: pointer; }
-        .edge-trigger:hover ~ .tabs-layer, .tabs-layer:hover { transform: translate(-10px, -50%); }
-
-        .tab { width: 100px; height: 38px; padding-right: 15px; display: flex; align-items: center; justify-content: flex-end; font-size: 13px; font-weight: 700; color: white; border-radius: 0 15px 15px 0; box-shadow: 2px 2px 5px rgba(0,0,0,0.1); cursor: pointer; }
         .tab-cover { background: #a8b6bf; } .tab-flight { background: #c9ada7; } .tab-pack { background: #9a8c98; }
         .tab-d1 { background: #b8af9d; } .tab-d2 { background: #8da491; } .tab-d3 { background: #d4a373; }
         .tab-d4 { background: #b5838d; } .tab-d5 { background: #6d6875; } .tab-d6 { background: #83c5be; }
 
-        .dots { position: absolute; bottom: 25px; left: 50%; transform: translateX(-50%); display: flex; gap: 6px; z-index: 150; }
-        .dot { width: 7px; height: 7px; background: rgba(0,0,0,0.1); border-radius: 50%; }
-        .dot.active { background: var(--orange); width: 18px; border-radius: 10px; }
+        /* 🌅 內容樣式 */
+        .day-header { position: relative; height: 90px; margin: 15px; border-radius: 20px; overflow: hidden; display: flex; align-items: center; padding: 0 20px; flex-shrink: 0; }
+        .day-header::before { content: ""; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: url('orange.jpg') center/cover; opacity: 0.6; z-index: -1; }
+        .day-label { font-size: 24px; font-weight: 700; color: #fff; text-shadow: 1px 2px 4px rgba(0,0,0,0.3); }
+        .transport-icon-btn { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); width: 36px; height: 36px; background: rgba(255,255,255,0.9); border: 1.5px solid var(--orange); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; cursor: pointer; }
+        .scroll-content { flex: 1; overflow-y: auto; padding: 0 20px 20px 20px; }
+        .transport-info { max-height: 0; overflow: hidden; transition: all 0.3s ease; background: #fffdf7; border-radius: 12px; font-size: 12px; }
+        .transport-info.open { max-height: 300px; padding: 12px; margin-bottom: 10px; border: 1px solid #ffe0b2; }
+        .section-title { font-size: 13px; color: var(--orange); font-weight: bold; margin: 15px 0 5px 0; }
+        ul { list-style: none; padding: 0; margin: 0; }
+        li { padding: 8px 0; border-bottom: 1px solid #f2f2f2; font-size: 14px; }
+        li b { color: var(--orange); }
 
-        /* 📱 手機版 RWD：徹底改為上下結構 */
-        @media (max-width: 600px) {
-            body { overflow-y: auto; }
-            .page-wrapper { padding: 15px 0; height: auto; justify-content: flex-start; }
-            .main-container { width: 90vw; height: 70vh; margin-bottom: 20px; }
-            
-            /* 手機版隱藏電腦版抽屜感應 */
-            .edge-trigger { display: none; }
-            
-            /* 書籤改為網格方塊，直接排在書本正下方 */
-            .tabs-layer { 
-                position: relative; left: 0; top: 0; transform: none; 
-                flex-direction: row; flex-wrap: wrap; justify-content: center; 
-                width: 90vw; gap: 10px; z-index: 200;
-                padding: 15px; background: rgba(255,255,255,0.6); 
-                border-radius: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-            }
-            .tab { 
-                width: calc(33% - 15px); height: 42px; 
-                border-radius: 12px; justify-content: center; 
-                padding: 0; font-size: 12px; 
-            }
-            .day-header { height: 80px; }
-            .day-label { font-size: 22px; }
+        .dots { position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); display: flex; gap: 6px; z-index: 150; }
+        .dot { width: 7px; height: 7px; background: rgba(0,0,0,0.1); border-radius: 50%; }
+        .dot.active { background: var(--orange); width: 16px; border-radius: 10px; }
+
+        /* 📱 手機版微調 */
+        @media (max-width: 500px) {
+            .page-wrapper { padding: 20px 0; }
+            .book-container { width: 90vw; height: 65vh; }
+            .tabs-container { width: 95%; gap: 8px; padding: 10px; }
+            .tab { width: calc(33.33% - 8px); font-size: 12px; }
         }
     </style>
 </head>
 <body>
     <div class="page-wrapper">
-        <div class="main-container">
-            <div class="edge-trigger"></div>
-            
+        <div class="book-container">
             <div id="slider">
                 <div class="slides-wrapper" id="wrapper">
                     <div class="slide active"><div class="cover-container"><img src="JEJU.png" class="cover-img"></div></div>
-
+                    <div class="slide"><div class="content-overlay"><div class="day-header"><div class="day-label">航班資訊</div></div><div class="scroll-content"><ul><li>IT 654: 06:40 / IT 655: 11:45</li></ul></div></div></div>
+                    <div class="slide"><div class="content-overlay"><div class="day-header"><div class="day-label">行李清單</div></div><div class="scroll-content"><ul><li>護照、K-ETA、WOWPASS</li></ul></div></div></div>
+                    
                     <div class="slide"><div class="content-overlay">
-                        <div class="day-header"><div class="day-label">航班資訊</div></div>
+                        <div class="day-header"><div class="day-label">Day 1</div><div class="transport-icon-btn" onclick="toggleInfo(this)">🚌</div></div>
                         <div class="scroll-content">
-                            <div class="section-title">去程 ✈️ IT 654</div>
-                            <ul><li><b>06:40</b> 台北 ➔ <b>09:50</b> 濟州</li></ul>
-                            <div class="section-title">回程 ✈️ IT 655</div>
-                            <ul><li><b>11:45</b> 濟州 ➔ <b>12:55</b> 台北</li></ul>
-                        </div>
-                    </div></div>
-
-                    <div class="slide"><div class="content-overlay">
-                        <div class="day-header"><div class="day-label">行李清單</div></div>
-                        <div class="scroll-content">
-                            <ul>
-                                <li>🔸 護照 / K-ETA / WOWPASS</li>
-                                <li>🔸 轉接頭 / 網卡 / 行動電源</li>
-                                <li>🔸 韓幣現金 / 空行李箱</li>
-                            </ul>
-                        </div>
-                    </div></div>
-
-                    <div class="slide"><div class="content-overlay">
-                        <div class="day-header">
-                            <div class="day-label">Day 1</div>
-                            <div class="transport-icon-btn" onclick="toggleInfo(this)">🚌</div>
-                        </div>
-                        <div class="scroll-content">
-                            <div class="transport-info">
-                                📍 <b>機場➔鹹德</b>：101路於換乘站下。<br>
-                                📍 <b>其餘</b>：均搭 201 路往東。
-                            </div>
+                            <div class="transport-info">📍 101路於鹹德換乘站下 / 其餘搭 201路</div>
                             <div class="section-title">11:30 - 15:00 鹹德</div>
-                            <ul>
-                                <li>🔹Hogg 小物 / 海女包飯</li>
-                                <li>🔹鹹德浴場 / Cafe delmoondo</li>
-                                <li>🔹Audrant Bakery 大蒜麵包</li>
-                                <li>🔹943studio / Daily Stitch</li>
-                            </ul>
+                            <ul><li>🔹海女包飯 / Cafe delmoondo</li><li>🔹Audrant Bakery 大蒜麵包</li><li>🔹Olive Young 逛街</li></ul>
                             <div class="section-title">15:00 - 16:30 東福里</div>
                             <ul><li>🔹倫敦貝果博物館 / Cafe Layered</li></ul>
                             <div class="section-title">16:45 - 20:00 月汀里 / 細花</div>
-                            <ul><li><b>16:45</b> 月汀里散步</li><li><b>18:15</b> 🍽️ 細花排骨 (最後點餐 20:00)</li></ul>
+                            <ul><li><b>18:15</b> 🍽️ 細花排骨 (Sehwa)</li></ul>
                         </div>
                     </div></div>
 
-                    <div class="slide"><div class="content-overlay"><div class="day-header"><div class="day-label">Day 2</div></div><div class="scroll-content"><ul><li>🔸 牛島環島：租電動車 / 花生冰淇淋</li><li>🔸 美食：Meohamen 海鮮拉麵</li><li>🔸 景點：城山日出峰壯闊海景</li></ul></div></div></div>
+                    <div class="slide"><div class="content-overlay"><div class="day-header"><div class="day-label">Day 2</div></div><div class="scroll-content"><ul><li>牛島環島 & 城山日出峰</li></ul></div></div></div>
 
                     <div class="slide"><div class="content-overlay">
-                        <div class="day-header">
-                            <div class="day-label">Day 3</div>
-                            <div class="transport-icon-btn" onclick="toggleInfo(this)">🚌</div>
-                        </div>
+                        <div class="day-header"><div class="day-label">Day 3</div><div class="transport-icon-btn" onclick="toggleInfo(this)">🚌</div></div>
                         <div class="scroll-content">
-                            <div class="transport-info">📍 公車：510 / 600 / 202 路</div>
+                            <div class="transport-info">📍 510 / 600 / 202 路</div>
                             <ul>
-                                <li><b>08:30</b> 步行 ➔ 正房瀑布 (₩2000)</li>
-                                <li><b>10:30</b> 🗿 柱狀節理帶看海</li>
-                                <li><b>11:20</b> 中文海邊 + OY + 星巴克</li>
-                                <li><b>14:30</b> 🚌 前往山茶花之丘</li>
-                                <li><b>15:30</b> 🌺 山茶花之丘拍照</li>
-                                <li><b>16:20</b> 偶來市場 & 李仲線逛街</li>
+                                <li><b>08:30</b> 步行 ➔ 正房瀑布</li><li><b>10:30</b> 🗿 柱狀節理帶</li><li><b>11:20</b> 中文海邊 + 星巴克</li><li><b>15:30</b> 🌺 山茶花之丘</li><li><b>16:20</b> 偶來市場 & 李仲線</li>
                             </ul>
                         </div>
                     </div></div>
 
-                    <div class="slide"><div class="content-overlay"><div class="day-header"><div class="day-label">Day 4</div></div><div class="scroll-content"><ul><li><b>下午</b> 三麗鷗主題樂園</li><li><b>20:30</b> 亂打秀 🎭</li></ul></div></div></div>
-                    <div class="slide"><div class="content-overlay"><div class="day-header"><div class="day-label">Day 5</div></div><div class="scroll-content"><ul><li><b>上午</b> 尋找野生海豚 🐬</li><li><b>下午</b> 涯月 Merci Jeju 香水</li><li><b>晚上</b> 樂天超市最後爆買 🛒</li></ul></div></div></div>
-                    <div class="slide"><div class="content-overlay"><div class="day-header"><div class="day-label">Day 6</div></div><div class="scroll-content"><ul><li><b>10:30</b> 機場退稅 / <b>11:45</b> 回家 ✈️</li></ul></div></div></div>
-                    <div class="slide"><div class="content-overlay"><div class="day-header"><div class="day-label">提醒</div></div><div class="scroll-content"><ul><li>Naver Map / Papago 必備</li><li>祝你旅途愉快！🍊</li></ul></div></div></div>
+                    <div class="slide"><div class="content-overlay"><div class="day-header"><div class="day-label">Day 4</div></div><div class="scroll-content"><ul><li>三麗鷗樂園 / 亂打秀</li></ul></div></div></div>
+                    <div class="slide"><div class="content-overlay"><div class="day-header"><div class="day-label">Day 5</div></div><div class="scroll-content"><ul><li>海豚 🐬 / 涯月香水 / 樂天超市</li></ul></div></div></div>
+                    <div class="slide"><div class="content-overlay"><div class="day-header"><div class="day-label">Day 6</div></div><div class="scroll-content"><ul><li>機場退稅 / 回家 ✈️</li></ul></div></div></div>
+                    <div class="slide"><div class="content-overlay"><div class="day-header"><div class="day-label">提醒</div></div><div class="scroll-content"><ul><li>祝旅途愉快！🍊</li></ul></div></div></div>
                     <div class="slide"><div class="cover-container" style="z-index: 5;"><img src="JEJU B.png" class="cover-img"></div></div>
                 </div>
                 <div class="dots" id="dots"></div>
             </div>
+        </div>
 
-            <div class="tabs-layer">
-                <div class="tab tab-cover" onclick="moveSlideTo(0)">封面</div>
-                <div class="tab tab-flight" onclick="moveSlideTo(1)">航班</div>
-                <div class="tab tab-pack" onclick="moveSlideTo(2)">清單</div>
-                <div class="tab tab-d1" onclick="moveSlideTo(3)">D 1</div>
-                <div class="tab tab-d2" onclick="moveSlideTo(4)">D 2</div>
-                <div class="tab tab-d3" onclick="moveSlideTo(5)">D 3</div>
-                <div class="tab tab-d4" onclick="moveSlideTo(6)">D 4</div>
-                <div class="tab tab-d5" onclick="moveSlideTo(7)">D 5</div>
-                <div class="tab tab-d6" onclick="moveSlideTo(8)">D 6</div>
-            </div>
+        <div class="tabs-container">
+            <div class="tab tab-cover" onclick="moveSlideTo(0)">封面</div>
+            <div class="tab tab-flight" onclick="moveSlideTo(1)">航班</div>
+            <div class="tab tab-pack" onclick="moveSlideTo(2)">清單</div>
+            <div class="tab tab-d1" onclick="moveSlideTo(3)">D 1</div>
+            <div class="tab tab-d2" onclick="moveSlideTo(4)">D 2</div>
+            <div class="tab tab-d3" onclick="moveSlideTo(5)">D 3</div>
+            <div class="tab tab-d4" onclick="moveSlideTo(6)">D 4</div>
+            <div class="tab tab-d5" onclick="moveSlideTo(7)">D 5</div>
+            <div class="tab tab-d6" onclick="moveSlideTo(8)">D 6</div>
         </div>
     </div>
 
@@ -190,19 +158,18 @@
             wrapper.style.transform = `translateX(-${currentIdx * (100 / totalSlides)}%)`;
             slides.forEach((slide, i) => slide.classList.toggle('active', i === currentIdx));
             document.querySelectorAll('.dot').forEach((dot, i) => dot.classList.toggle('active', i === currentIdx));
-            // 跳轉時回到頂部，避免被捲動影響
+            // 翻頁後捲動到最上方看書本
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function toggleInfo(btn) {
             const info = btn.parentElement.nextElementSibling.querySelector('.transport-info');
             info.classList.toggle('open');
-            btn.style.background = info.classList.contains('open') ? "#ffcc80" : "rgba(255, 255, 255, 0.9)";
         }
 
         let touchStartX = 0;
-        document.getElementById('slider').addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; }, {passive: true});
-        document.getElementById('slider').addEventListener('touchend', e => {
+        document.querySelector('.book-container').addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; }, {passive: true});
+        document.querySelector('.book-container').addEventListener('touchend', e => {
             let touchEndX = e.changedTouches[0].screenX;
             if (touchStartX - touchEndX > 50) moveSlideTo(currentIdx + 1 >= totalSlides ? totalSlides-1 : currentIdx + 1);
             if (touchEndX - touchStartX > 50) moveSlideTo(currentIdx - 1 < 0 ? 0 : currentIdx - 1);
