@@ -10,6 +10,7 @@
         
         body { margin: 0; padding: 0; background-color: var(--bg-grey); font-family: 'Shippori Mincho', serif; height: 100vh; width: 100vw; overflow: hidden; display: flex; justify-content: center; align-items: center; }
 
+        /* 主容器佈局 */
         .main-container { position: relative; width: 480px; height: 82vh; display: flex; justify-content: center; align-items: center; }
         
         #slider { width: 100%; height: 100%; position: relative; overflow: hidden; z-index: 100; border-radius: 25px; background: var(--paper); box-shadow: 0 10px 40px rgba(0,0,0,0.1); }
@@ -17,11 +18,11 @@
         .slide { width: 9.0909%; height: 100%; flex-shrink: 0; position: relative; visibility: hidden; }
         .slide.active { visibility: visible; }
 
+        /* 內容樣式 */
         .content-overlay, .cover-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--paper); border-radius: 25px; display: flex; flex-direction: column; overflow: hidden; }
         .cover-container { display: flex; align-items: center; justify-content: center; background: #fff; z-index: 110; }
         .cover-img { width: 90%; height: 90%; object-fit: contain; }
 
-        /* 🌅 橘子圓角頁眉 */
         .day-header { position: relative; height: 95px; margin: 15px; border-radius: 20px; overflow: hidden; display: flex; align-items: center; padding: 0 25px; flex-shrink: 0; z-index: 1; }
         .day-header::before { content: ""; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: url('orange.jpg') center/cover; opacity: 0.6; z-index: -1; }
         .day-label { font-size: 26px; font-weight: 700; color: #fff; text-shadow: 1px 2px 4px rgba(0,0,0,0.3); }
@@ -35,36 +36,38 @@
         li { padding: 8px 0; border-bottom: 1px solid #f9f9f9; font-size: 14px; }
         li b { color: var(--orange); font-weight: 700; }
 
-        /* 🔖 電腦版：右側標籤 (圓弧向右) */
+        /* 🔖 電腦版：右側標籤 (維持原樣) */
         .tabs-pc { position: absolute; left: 100%; top: 50%; display: flex; flex-direction: column; gap: 8px; z-index: 50; transform: translate(-100%, -50%); transition: transform 0.4s ease; }
         .edge-trigger-pc { position: absolute; right: -30px; top: 10%; width: 60px; height: 80%; z-index: 150; cursor: pointer; }
         .edge-trigger-pc:hover ~ .tabs-pc, .tabs-pc:hover { transform: translate(-10px, -50%); }
         .tab-pc { width: 100px; height: 38px; padding-right: 15px; display: flex; align-items: center; justify-content: flex-end; font-size: 13px; font-weight: 700; color: white; border-radius: 0 15px 15px 0; box-shadow: 2px 2px 5px rgba(0,0,0,0.1); cursor: pointer; }
 
-        /* 🔖 手機版：底部標籤 (圓弧向上) */
+        /* 🔖 手機版：底部固定標籤 */
         .tabs-mobile { display: none; }
 
         @media (max-width: 600px) {
-            .main-container { width: 90vw; height: 80vh; }
-            .edge-trigger-pc, .tabs-pc { display: none; } /* 手機版隱藏側邊 */
+            .main-container { width: 92vw; height: 75vh; } /* 縮小書本高度給書籤留空間 */
+            .edge-trigger-pc, .tabs-pc { display: none; } 
 
             .tabs-mobile { 
                 display: flex; position: absolute; 
-                bottom: 0; left: 50%; transform: translate(-50%, 80%); /* 隱藏大部分 */
-                z-index: 50; gap: 5px; width: 95%; justify-content: center;
-                transition: transform 0.4s ease;
+                bottom: -22px; /* ✨ 固定長在書本底部邊緣 */
+                left: 50%; transform: translateX(-50%); 
+                z-index: 50; gap: 4px; width: 95%; justify-content: center;
             }
-            .main-container:hover .tabs-mobile, .tabs-mobile:hover { transform: translate(-50%, 10%); } /* 向上彈出 */
 
             .tab-m {
-                flex: 1; height: 50px; display: flex; align-items: flex-start; justify-content: center;
-                padding-top: 8px; font-size: 11px; font-weight: 700; color: white;
+                flex: 1; height: 40px; display: flex; align-items: center; justify-content: center;
+                font-size: 11px; font-weight: 700; color: white;
                 border-radius: 12px 12px 0 0; /* ✨ 圓弧向上 */
-                box-shadow: 0 -2px 5px rgba(0,0,0,0.1); cursor: pointer;
+                box-shadow: 0 -2px 6px rgba(0,0,0,0.1); cursor: pointer;
+                transition: height 0.2s ease;
             }
+            /* 點擊時的小縮放效果 */
+            .tab-m:active { height: 45px; margin-top: -5px; }
         }
 
-        /* 標籤顏色定義 */
+        /* 顏色定義 */
         .bg-cover { background: #a8b6bf; } .bg-flight { background: #c9ada7; } .bg-pack { background: #9a8c98; }
         .bg-d1 { background: #b8af9d; } .bg-d2 { background: #8da491; } .bg-d3 { background: #d4a373; }
         .bg-d4 { background: #b5838d; } .bg-d5 { background: #6d6875; } .bg-d6 { background: #83c5be; }
@@ -100,15 +103,25 @@
         <div id="slider">
             <div class="slides-wrapper" id="wrapper">
                 <div class="slide active"><div class="cover-container"><img src="JEJU.png" class="cover-img"></div></div>
-                <div class="slide"><div class="content-overlay"><div class="day-header"><div class="day-label">航班資訊</div></div><div class="scroll-content">...</div></div></div>
-                <div class="slide"><div class="content-overlay"><div class="day-header"><div class="day-label">行李清單</div></div><div class="scroll-content">...</div></div></div>
-                <div class="slide"><div class="content-overlay"><div class="day-header"><div class="day-label">Day 1</div><div class="transport-icon-btn" onclick="toggleInfo(this)">🚌</div></div><div class="scroll-content">...</div></div></div>
-                <div class="slide"><div class="content-overlay"><div class="day-header"><div class="day-label">Day 2</div></div><div class="scroll-content">...</div></div></div>
-                <div class="slide"><div class="content-overlay"><div class="day-header"><div class="day-label">Day 3</div></div><div class="scroll-content">...</div></div></div>
-                <div class="slide"><div class="content-overlay"><div class="day-header"><div class="day-label">Day 4</div></div><div class="scroll-content">...</div></div></div>
-                <div class="slide"><div class="content-overlay"><div class="day-header"><div class="day-label">Day 5</div></div><div class="scroll-content">...</div></div></div>
-                <div class="slide"><div class="content-overlay"><div class="day-header"><div class="day-label">Day 6</div></div><div class="scroll-content">...</div></div></div>
-                <div class="slide"><div class="content-overlay"><div class="day-header"><div class="day-label">提醒</div></div><div class="scroll-content">...</div></div></div>
+                <div class="slide"><div class="content-overlay"><div class="day-header"><div class="day-label">航班資訊</div></div><div class="scroll-content">
+                    <ul><li><b>去程 IT 654</b> 06:40-09:50</li><li><b>回程 IT 655</b> 11:45-12:55</li></ul>
+                </div></div></div>
+                <div class="slide"><div class="content-overlay"><div class="day-header"><div class="day-label">行李清單</div></div><div class="scroll-content">
+                    <ul><li>護照、K-ETA、WOWPASS</li><li>轉接頭、網卡、行動電源</li></ul>
+                </div></div></div>
+                <div class="slide"><div class="content-overlay">
+                    <div class="day-header"><div class="day-label">Day 1</div><div class="transport-icon-btn" onclick="toggleInfo(this)">🚌</div></div>
+                    <div class="scroll-content">
+                        <div class="transport-info">📍 101路於鹹德下 / 201路往東行。</div>
+                        <ul><li><b>11:30</b> 海女包飯、鹹德浴場</li><li><b>15:30</b> 倫敦貝果博物館</li><li><b>18:15</b> 細花排骨</li></ul>
+                    </div>
+                </div></div>
+                <div class="slide"><div class="content-overlay"><div class="day-header"><div class="day-label">Day 2</div></div><div class="scroll-content"><ul><li>牛島環島 & 城山日出峰</li></ul></div></div></div>
+                <div class="slide"><div class="content-overlay"><div class="day-header"><div class="day-label">Day 3</div></div><div class="scroll-content"><ul><li>正房瀑布、柱狀節理、山茶花之丘</li></ul></div></div></div>
+                <div class="slide"><div class="content-overlay"><div class="day-header"><div class="day-label">Day 4</div></div><div class="scroll-content"><ul><li>三麗鷗樂園、亂打秀🎭</li></ul></div></div></div>
+                <div class="slide"><div class="content-overlay"><div class="day-header"><div class="day-label">Day 5</div></div><div class="scroll-content"><ul><li>尋找海豚🐬、涯月香水、超市爆買</li></ul></div></div></div>
+                <div class="slide"><div class="content-overlay"><div class="day-header"><div class="day-label">Day 6</div></div><div class="scroll-content"><ul><li>機場退稅、起飛回家✈️</li></ul></div></div></div>
+                <div class="slide"><div class="content-overlay"><div class="day-header"><div class="day-label">提醒</div></div><div class="scroll-content"><ul><li>Naver Map / Papago 必備</li><li>祝旅途愉快！🍊</li></ul></div></div></div>
                 <div class="slide"><div class="cover-container" style="z-index: 5;"><img src="JEJU B.png" class="cover-img"></div></div>
             </div>
         </div>
@@ -128,9 +141,9 @@
         function toggleInfo(btn) {
             const info = btn.parentElement.nextElementSibling.querySelector('.transport-info');
             info.classList.toggle('open');
+            btn.style.background = info.classList.contains('open') ? "#ffcc80" : "rgba(255, 255, 255, 0.9)";
         }
 
-        // 觸控滑動翻頁
         let touchStartX = 0;
         document.getElementById('slider').addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; }, {passive: true});
         document.getElementById('slider').addEventListener('touchend', e => {
