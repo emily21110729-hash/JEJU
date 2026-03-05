@@ -9,52 +9,51 @@
         :root { --orange: #FF8C00; --paper: #ffffff; --text-main: #333; --bg-grey: #d7ccc8; }
         body { margin: 0; padding: 0; background-color: var(--bg-grey); font-family: 'Shippori Mincho', serif; height: 100vh; width: 100vw; overflow: hidden; display: flex; justify-content: center; align-items: center; }
         .main-container { position: relative; width: 480px; height: 82vh; display: flex; justify-content: center; align-items: center; }
-        
-        /* 📚 書本主容器 */
         #slider { width: 100%; height: 100%; position: relative; overflow: hidden; z-index: 100; border-radius: 25px; background: var(--paper); box-shadow: 0 10px 40px rgba(0,0,0,0.1); }
-        .slides-wrapper { display: flex; width: 1100%; height: 100%; transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
-        .slide { width: 9.0909%; height: 100%; flex-shrink: 0; position: relative; visibility: hidden; display: flex; flex-direction: column; }
+        
+        /* 修正跑版：總共 10 頁，寬度設為 1000% */
+        .slides-wrapper { display: flex; width: 1000%; height: 100%; transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        .slide { width: 10%; height: 100%; flex-shrink: 0; position: relative; visibility: hidden; display: flex; flex-direction: column; }
         .slide.active { visibility: visible; }
 
-        /* 🖼️ 封面 */
         .cover-page { width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; background: #ffffff; }
         .cover-img { width: 85%; height: auto; object-fit: contain; }
 
-        /* 🌅 頁眉與按鈕 */
         .day-header { position: relative; height: 90px; margin: 15px; border-radius: 20px; overflow: hidden; display: flex; align-items: center; padding: 0 25px; flex-shrink: 0; z-index: 1; }
         .day-header::before { content: ""; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: url('orange.jpg') center/cover; opacity: 0.6; z-index: -1; }
         .day-label { font-size: 24px; font-weight: 700; color: #fff; text-shadow: 1px 2px 4px rgba(0,0,0,0.3); }
-        .transport-icon-btn { position: absolute; right: 20px; top: 50%; transform: translateY(-50%); width: 38px; height: 38px; background: rgba(255, 255, 255, 0.9); border: 1.5px solid var(--orange); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.1); z-index: 10; }
 
+        .transport-icon-btn { position: absolute; right: 20px; top: 50%; transform: translateY(-50%); width: 38px; height: 38px; background: rgba(255, 255, 255, 0.9); border: 1.5px solid var(--orange); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; cursor: pointer; z-index: 10; }
         .scroll-content { flex: 1; overflow-y: auto; padding: 0 22px 20px 22px; color: #444; }
         @media (max-width: 600px) { .scroll-content { padding-bottom: 60px; } }
 
-        /* 🚌 交通摺疊 */
         .transport-info { max-height: 0; overflow: hidden; transition: all 0.3s ease; background: #fffdf7; border-radius: 12px; font-size: 12px; line-height: 1.6; }
         .transport-info.open { max-height: 400px; padding: 15px; margin-top: 5px; margin-bottom: 15px; border: 1.5px solid #ffe0b2; }
 
-        /* ✅ 行李清單勾選樣式 */
+        /* 行李勾選樣式 */
         .check-item { display: flex; align-items: center; padding: 8px 0; border-bottom: 1px solid #f2f2f2; cursor: pointer; font-size: 14px; }
-        .check-item input { margin-right: 12px; width: 18px; height: 18px; accent-color: var(--orange); cursor: pointer; }
+        .check-item input { margin-right: 12px; width: 18px; height: 18px; accent-color: var(--orange); }
         .check-item input:checked + span { text-decoration: line-through; color: #bbb; }
 
-        /* 樣式細節 */
         .section-title { font-size: 13px; color: var(--orange); font-weight: bold; margin: 15px 0 5px 0; display: flex; align-items: center; }
+        .section-title::after { content: ""; flex: 1; height: 1px; background: #eee; margin-left: 10px; }
         ul { list-style: none; padding: 0; margin: 0; }
-        li { padding: 8px 0; border-bottom: 1px solid #f9f9f9; font-size: 14px; line-height: 1.4; }
+        li { padding: 6px 0; border-bottom: 1px solid #f9f9f9; font-size: 14px; }
         .time-tag { font-weight: bold; color: #888; font-size: 11px; margin-right: 5px; }
 
-        /* 🔖 標籤 */
+        /* 🔖 電腦標籤 */
         .tabs-pc { position: absolute; left: 100%; top: 50%; display: flex; flex-direction: column; gap: 8px; z-index: 50; transform: translate(-100%, -50%); transition: transform 0.4s ease; }
         .edge-trigger-pc { position: absolute; right: -30px; top: 10%; width: 60px; height: 80%; z-index: 150; cursor: pointer; }
         .edge-trigger-pc:hover ~ .tabs-pc, .tabs-pc:hover { transform: translate(-10px, -50%); }
         .tab-pc { width: 70px; height: 38px; padding-right: 12px; display: flex; align-items: center; justify-content: flex-end; font-size: 11px; font-weight: 700; color: white; border-radius: 0 15px 15px 0; box-shadow: 2px 2px 5px rgba(0,0,0,0.1); cursor: pointer; }
+
+        /* 🔖 手機標籤 */
         .tabs-mobile { display: none; }
         @media (max-width: 600px) {
             .main-container { width: 92vw; height: 82vh; }
-            .tabs-mobile { display: flex; position: absolute; bottom: 0; left: 0; width: 100%; height: 50px; z-index: 200; gap: 2px; padding: 0 5px; box-sizing: border-box; align-items: flex-end; }
-            .tab-m { flex: 1; height: 40px; display: flex; align-items: center; justify-content: center; font-size: 13px; color: white; border-radius: 10px 10px 0 0; cursor: pointer; }
             .edge-trigger-pc, .tabs-pc { display: none; }
+            .tabs-mobile { display: flex; position: absolute; bottom: 0; left: 0; width: 100%; height: 50px; z-index: 200; gap: 2px; padding: 0 5px; box-sizing: border-box; align-items: flex-end; }
+            .tab-m { flex: 1; height: 40px; display: flex; align-items: center; justify-content: center; font-size: 12px; color: white; border-radius: 10px 10px 0 0; cursor: pointer; }
         }
 
         .bg-cover { background: #a8b6bf; } .bg-flight { background: #c9ada7; } .bg-pack { background: #9a8c98; }
@@ -67,119 +66,100 @@
         <div class="edge-trigger-pc"></div>
         <div class="tabs-pc">
             <div class="tab-pc bg-cover" onclick="moveSlideTo(0)">封面頁</div>
-            <div class="tab-pc bg-flight" onclick="moveSlideTo(1)">3/8</div>
-            <div class="tab-pc bg-pack" onclick="moveSlideTo(2)">3/9</div>
-            <div class="tab-pc bg-d1" onclick="moveSlideTo(3)">3/10</div>
-            <div class="tab-pc bg-d2" onclick="moveSlideTo(4)">3/11</div>
-            <div class="tab-pc bg-d3" onclick="moveSlideTo(5)">3/12</div>
-            <div class="tab-pc bg-d4" onclick="moveSlideTo(6)">3/13</div>
-            <div class="tab-pc bg-pack" onclick="moveSlideTo(7)">行李</div>
+            <div class="tab-pc bg-flight" onclick="moveSlideTo(1)">航班</div>
+            <div class="tab-pc bg-pack" onclick="moveSlideTo(2)">3/8</div>
+            <div class="tab-pc bg-d1" onclick="moveSlideTo(3)">3/9</div>
+            <div class="tab-pc bg-d2" onclick="moveSlideTo(4)">3/10</div>
+            <div class="tab-pc bg-d3" onclick="moveSlideTo(5)">3/11</div>
+            <div class="tab-pc bg-d4" onclick="moveSlideTo(6)">3/12</div>
+            <div class="tab-pc bg-d5" onclick="moveSlideTo(7)">3/13</div>
+            <div class="tab-pc bg-d6" onclick="moveSlideTo(8)">行李</div>
         </div>
 
         <div id="slider">
             <div class="slides-wrapper" id="wrapper">
                 <div class="slide active"><div class="cover-page"><img src="JEJU.png" class="cover-img"></div></div>
 
+                <div class="slide"><div class="day-header"><div class="day-label">航班資訊</div></div><div class="scroll-content">
+                    <div class="section-title">去程 ✈️ IT 654</div><ul><li>06:40 TPE ➔ 09:50 CJU</li></ul>
+                    <div class="section-title">回程 ✈️ IT 655</div><ul><li>11:45 CJU ➔ 12:55 TPE</li></ul>
+                </div></div>
+
                 <div class="slide"><div class="day-header"><div class="day-label">3/8</div><div class="transport-icon-btn" onclick="toggleInfo(this)">🚌</div></div>
                 <div class="scroll-content">
-                    <div class="transport-info">
-                        📍 🚗10:30海岸公路 / 🚗11:30去Chahkan<br>
-                        📍 🚌12:50鐵板炒雞 / 🚌14:20雞➔鹹德<br>
-                        📍 🚌19:00前往mumu住宿
-                    </div>
-                    <div class="section-title">今日亮點</div>
-                    <ul><li><span class="time-tag">10:50</span> 彩虹海岸公路+白馬燈塔+蛋塔</li><li><span class="time-tag">13:20</span> 🍽️ 春川鐵板炒雞</li><li><span class="time-tag">15:00</span> 鹹德：海女包飯、Cafe delmoondo、Olive Young</li><li><span class="time-tag">18:00</span> 🍽️ 細花排骨</li></ul>
+                    <div class="transport-info">📍 🚗海岸公路(10:30) / 🚗去chahkan(11:30)<br>📍 🚌鐵板炒雞(12:50) / 🚌往鹹德(14:20)<br>📍 🚌mumu住宿(19:00)</div>
+                    <ul><li><span class="time-tag">10:50</span> 彩虹海岸公路+白馬燈塔+蛋塔</li><li><span class="time-tag">11:50</span> Chahkan 👟 ➔ 🍽️ 春川炒雞</li><li><span class="time-tag">15:00-18:00</span> 鹹德逛街 (Hogg、海女包飯、Delmoondo)</li><li><span class="time-tag">18:00</span> 🍽️ 細花排骨</li></ul>
                 </div></div>
 
                 <div class="slide"><div class="day-header"><div class="day-label">3/9</div><div class="transport-icon-btn" onclick="toggleInfo(this)">🚌</div></div>
                 <div class="scroll-content">
-                    <div class="transport-info">
-                        📍 🚌07:30民宿-倫敦貝果 / 🚌09:10月汀里<br>
-                        📍 🚌10:20城山港 / 🛥️11:20下牛木洞港<br>
-                        📍 🚌04:00城山港 / 🚗05:40涉地可支
-                    </div>
-                    <div class="section-title">牛島與城山</div>
-                    <ul><li><span class="time-tag">08:10</span> 🥯 倫敦貝果 & 小狗咖啡廳</li><li><span class="time-tag">11:50</span> 🛥️ 牛島全日玩耍</li><li><span class="time-tag">16:30</span> ⛰️ 城山日出峰 / 涉地可支</li></ul>
+                    <div class="transport-info">📍 🚌倫敦貝果(07:30) / 🚌月汀里(09:10)<br>📍 🛥️下牛木洞港(11:20) / 🚌城山港(04:00)</div>
+                    <ul><li><span class="time-tag">08:10</span> 🥯 倫敦貝果博物館 & 小狗咖啡廳</li><li><span class="time-tag">11:50-16:00</span> 🛥️ 牛島全日玩耍</li><li><span class="time-tag">16:30</span> ⛰️ 城山日出峰 / 涉地可支</li></ul>
                 </div></div>
 
-                <div class="slide"><div class="day-header"><div class="day-label">3/10</div><div class="transport-icon-btn" onclick="toggleInfo(this)">🚌</div></div>
+                <div class="slide"><div class="day-header"><div class="day-label">3/10</div></div>
                 <div class="scroll-content">
-                    <div class="transport-info">📍 移動：mumu ➔ 第一 70 酒店<br>📍 景點：山茶花、中文海邊、節理帶、偶來市場</div>
-                    <ul><li>🔹 🌺 山茶花之丘 (18:00關門)</li><li>🔹 中文海水浴場、星巴克、ocean</li><li>🔹 🗿 柱狀節理帶、橘子閣樓</li><li>🔹 偶來市場 & 李仲線逛街</li></ul>
+                    <ul><li>🔹 🌺 山茶花之丘 (18:00關門)</li><li>🔹 中文海水浴場、ocean咖啡廳</li><li>🔹 🗿 柱狀節理帶、橘子閣樓</li><li>🔹 偶來市場 & 李仲線逛街</li></ul>
                 </div></div>
 
                 <div class="slide"><div class="day-header"><div class="day-label">3/11</div><div class="transport-icon-btn" onclick="toggleInfo(this)">🚌</div></div>
                 <div class="scroll-content">
-                    <div class="transport-info">📍 🚌08:00羊牧場 / 🚌10:00茶博館 / 🚌12:00挾才<br>📍 🚌15:00漢潭步道 / 🚌19:00豆腐鍋</div>
-                    <ul><li><span class="time-tag">09:00</span> 🐑 Saebyeol 小羊牧場</li><li><span class="time-tag">11:00</span> 🍵 Osulloc 茶博物館</li><li><span class="time-tag">12:30</span> 🏝️ 挾才海灘 + 逛小物店</li><li><span class="time-tag">15:40</span> 🚶 漢潭步道 + 橡子漫畫</li><li><span class="time-tag">19:00</span> 🍽️ 張一品豆腐鍋</li></ul>
+                    <div class="transport-info">📍 🚌小羊牧場(08:00) / 🚌茶博館(10:00)<br>📍 🚌漢潭步道(15:00) / 🚌豆腐鍋(19:00)</div>
+                    <ul><li><span class="time-tag">09:00</span> 🐑 Saebyeol 小羊牧場</li><li><span class="time-tag">11:00</span> 🍵 Osulloc 茶博物館</li><li><span class="time-tag">12:30</span> 🏝️ 挾才海灘 + 午餐 + 小物店</li><li><span class="time-tag">15:40</span> 🚶 漢潭步道 + 橡子漫畫</li><li><span class="time-tag">17:20</span> ☕ haejigae & 香水體驗</li></ul>
                 </div></div>
 
                 <div class="slide"><div class="day-header"><div class="day-label">3/12</div><div class="transport-icon-btn" onclick="toggleInfo(this)">🚌</div></div>
                 <div class="scroll-content">
-                    <div class="transport-info">📍 🚌09:00東門市場<br>📍 購物：免稅店(~19:00), 大創(~22:00), 樂天(~23:00)</div>
-                    <ul><li><span class="time-tag">09:30</span> 東門市場巡禮</li><li><span class="time-tag">10:30-16:00</span> 七星街 + 橡子廚房 + 地下街</li><li><span class="time-tag">16:00</span> 🛒 寶健路爆買行程</li></ul>
+                    <div class="transport-info">📍 🚌東門市場(09:00)<br>📍 免稅店(~19:00), 大創(~22:00)</div>
+                    <ul><li><span class="time-tag">09:30</span> 東門市場</li><li><span class="time-tag">10:30-16:00</span> 七星街 + 橡子廚房 + 地下街</li><li><span class="time-tag">16:00</span> 🛒 寶健路爆買</li></ul>
                 </div></div>
 
                 <div class="slide"><div class="day-header"><div class="day-label">3/13</div></div>
-                <div class="scroll-content">
-                    <div class="section-title">賦歸</div>
-                    <ul><li>🍽️ 早餐：Egg drop ➔ 前往機場 ✈️</li></ul>
-                </div></div>
+                <div class="scroll-content"><ul><li>🍽️ 早餐：Egg drop ➔ CJU 機場</li></ul></div></div>
 
-                <div class="slide">
-                    <div class="day-header"><div class="day-label">行李清單</div></div>
-                    <div class="scroll-content">
-                        <div class="check-list">
-                            <label class="check-item"><input type="checkbox"><span>🔹護照、錢包、韓幣 🇰🇷</span></label>
-                            <label class="check-item"><input type="checkbox"><span>🔹ESIM、手機掛繩、行充*2</span></label>
-                            <label class="check-item"><input type="checkbox"><span>🔹轉接頭、充電器、耳機、行李秤</span></label>
-                            <label class="check-item"><input type="checkbox"><span>🔹帽子、包包、眼鏡、墨鏡</span></label>
-                            <label class="check-item"><input type="checkbox"><span>🔹外套、5套衣服、內衣、睡衣褲</span></label>
-                            <label class="check-item"><input type="checkbox"><span>🔹免洗內褲、襪子</span></label>
-                            <label class="check-item"><input type="checkbox"><span>🔹隱眼、沖洗液、藥水、眼藥水</span></label>
-                            <label class="check-item"><input type="checkbox"><span>🔹化妝品、髮捲、假睫毛、面膜</span></label>
-                            <label class="check-item"><input type="checkbox"><span>🔹洗髮沐浴、卸妝、護髮、洗面乳</span></label>
-                            <label class="check-item"><input type="checkbox"><span>🔹拖鞋、毛巾</span></label>
-                            <label class="check-item"><input type="checkbox"><span>🔹防曬、雨傘、口罩、生理用品</span></label>
-                            <label class="check-item"><input type="checkbox"><span>🔹衛生紙、濕紙巾、塑膠袋</span></label>
-                            <label class="check-item"><input type="checkbox"><span>🔹暈車藥、胃藥、藥膏、ok繃</span></label>
-                        </div>
+                <div class="slide"><div class="day-header"><div class="day-label">行李清單</div></div><div class="scroll-content">
+                    <div class="check-list">
+                        <label class="check-item"><input type="checkbox"><span>護照、錢包、韓幣 🇰🇷</span></label>
+                        <label class="check-item"><input type="checkbox"><span>ESIM、行動電源、轉接頭</span></label>
+                        <label class="check-item"><input type="checkbox"><span>隱眼、沖洗液、藥水、藥物</span></label>
+                        <label class="check-item"><input type="checkbox"><span>化妝品、保養品、髮捲</span></label>
+                        <label class="check-item"><input type="checkbox"><span>5套衣服、內衣、襪子、睡衣</span></label>
+                        <label class="check-item"><input type="checkbox"><span>洗髮沐浴、毛巾、拖鞋</span></label>
+                        <label class="check-item"><input type="checkbox"><span>防曬、雨傘、生理用品、口罩</span></label>
                     </div>
-                </div>
+                </div></div>
 
                 <div class="slide"><div class="cover-page"><img src="JEJU B.png" class="cover-img"></div></div>
             </div>
 
             <div class="tabs-mobile">
                 <div class="tab-m bg-cover" onclick="moveSlideTo(0)">🏠</div>
-                <div class="tab-m bg-flight" onclick="moveSlideTo(1)">8</div>
-                <div class="tab-m bg-pack" onclick="moveSlideTo(2)">9</div>
-                <div class="tab-m bg-d1" onclick="moveSlideTo(3)">10</div>
-                <div class="tab-m bg-d2" onclick="moveSlideTo(4)">11</div>
-                <div class="tab-m bg-d3" onclick="moveSlideTo(5)">12</div>
-                <div class="tab-m bg-d4" onclick="moveSlideTo(6)">13</div>
-                <div class="tab-m bg-pack" onclick="moveSlideTo(7)">🧳</div>
+                <div class="tab-m bg-flight" onclick="moveSlideTo(1)">✈️</div>
+                <div class="tab-m bg-pack" onclick="moveSlideTo(2)">8</div>
+                <div class="tab-m bg-d1" onclick="moveSlideTo(3)">9</div>
+                <div class="tab-m bg-d2" onclick="moveSlideTo(4)">10</div>
+                <div class="tab-m bg-d3" onclick="moveSlideTo(5)">11</div>
+                <div class="tab-m bg-d4" onclick="moveSlideTo(6)">12</div>
+                <div class="tab-m bg-d5" onclick="moveSlideTo(7)">13</div>
+                <div class="tab-m bg-d6" onclick="moveSlideTo(8)">🧳</div>
             </div>
         </div>
     </div>
 
     <script>
-        let currentIdx = 0; const totalSlides = 9;
+        let currentIdx = 0; const totalSlides = 10;
         const wrapper = document.getElementById('wrapper');
         const slides = document.querySelectorAll('.slide');
-
         function moveSlideTo(idx) {
             currentIdx = idx;
             wrapper.style.transform = `translateX(-${currentIdx * (100 / totalSlides)}%)`;
             slides.forEach((slide, i) => slide.classList.toggle('active', i === currentIdx));
         }
-
         function toggleInfo(btn) {
             const info = btn.closest('.slide').querySelector('.transport-info');
             info.classList.toggle('open');
             btn.style.background = info.classList.contains('open') ? "#ffcc80" : "rgba(255, 255, 255, 0.9)";
         }
-
         let touchStartX = 0;
         document.getElementById('slider').addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; }, {passive: true});
         document.getElementById('slider').addEventListener('touchend', e => {
