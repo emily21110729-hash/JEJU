@@ -11,7 +11,7 @@
         .main-container { position: relative; width: 480px; height: 82vh; display: flex; justify-content: center; align-items: center; }
         #slider { width: 100%; height: 100%; position: relative; overflow: hidden; z-index: 100; border-radius: 25px; background: var(--paper); box-shadow: 0 10px 40px rgba(0,0,0,0.1); }
         
-        /* 修正跑版：總共 10 頁，寬度設為 1000% */
+        /* 總共 10 頁，寬度 1000% */
         .slides-wrapper { display: flex; width: 1000%; height: 100%; transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
         .slide { width: 10%; height: 100%; flex-shrink: 0; position: relative; visibility: hidden; display: flex; flex-direction: column; }
         .slide.active { visibility: visible; }
@@ -30,24 +30,24 @@
         .transport-info { max-height: 0; overflow: hidden; transition: all 0.3s ease; background: #fffdf7; border-radius: 12px; font-size: 12px; line-height: 1.6; }
         .transport-info.open { max-height: 400px; padding: 15px; margin-top: 5px; margin-bottom: 15px; border: 1.5px solid #ffe0b2; }
 
-        /* 行李勾選樣式 */
-        .check-item { display: flex; align-items: center; padding: 8px 0; border-bottom: 1px solid #f2f2f2; cursor: pointer; font-size: 14px; }
+        /* ✅ 行李勾選樣式：一行一項 */
+        .check-item { display: flex; align-items: center; padding: 10px 0; border-bottom: 1px solid #f2f2f2; cursor: pointer; font-size: 14px; }
         .check-item input { margin-right: 12px; width: 18px; height: 18px; accent-color: var(--orange); }
         .check-item input:checked + span { text-decoration: line-through; color: #bbb; }
 
         .section-title { font-size: 13px; color: var(--orange); font-weight: bold; margin: 15px 0 5px 0; display: flex; align-items: center; }
         .section-title::after { content: ""; flex: 1; height: 1px; background: #eee; margin-left: 10px; }
         ul { list-style: none; padding: 0; margin: 0; }
-        li { padding: 6px 0; border-bottom: 1px solid #f9f9f9; font-size: 14px; }
+        li { padding: 8px 0; border-bottom: 1px solid #f9f9f9; font-size: 14px; line-height: 1.4; }
         .time-tag { font-weight: bold; color: #888; font-size: 11px; margin-right: 5px; }
 
-        /* 🔖 電腦標籤 */
+        /* 🔖 電腦版標籤 */
         .tabs-pc { position: absolute; left: 100%; top: 50%; display: flex; flex-direction: column; gap: 8px; z-index: 50; transform: translate(-100%, -50%); transition: transform 0.4s ease; }
         .edge-trigger-pc { position: absolute; right: -30px; top: 10%; width: 60px; height: 80%; z-index: 150; cursor: pointer; }
         .edge-trigger-pc:hover ~ .tabs-pc, .tabs-pc:hover { transform: translate(-10px, -50%); }
         .tab-pc { width: 70px; height: 38px; padding-right: 12px; display: flex; align-items: center; justify-content: flex-end; font-size: 11px; font-weight: 700; color: white; border-radius: 0 15px 15px 0; box-shadow: 2px 2px 5px rgba(0,0,0,0.1); cursor: pointer; }
 
-        /* 🔖 手機標籤 */
+        /* 🔖 手機版標籤 */
         .tabs-mobile { display: none; }
         @media (max-width: 600px) {
             .main-container { width: 92vw; height: 82vh; }
@@ -87,46 +87,93 @@
 
                 <div class="slide"><div class="day-header"><div class="day-label">3/8</div><div class="transport-icon-btn" onclick="toggleInfo(this)">🚌</div></div>
                 <div class="scroll-content">
-                    <div class="transport-info">📍 🚗海岸公路(10:30) / 🚗去chahkan(11:30)<br>📍 🚌鐵板炒雞(12:50) / 🚌往鹹德(14:20)<br>📍 🚌mumu住宿(19:00)</div>
-                    <ul><li><span class="time-tag">10:50</span> 彩虹海岸公路+白馬燈塔+蛋塔</li><li><span class="time-tag">11:50</span> Chahkan 👟 ➔ 🍽️ 春川炒雞</li><li><span class="time-tag">15:00-18:00</span> 鹹德逛街 (Hogg、海女包飯、Delmoondo)</li><li><span class="time-tag">18:00</span> 🍽️ 細花排骨</li></ul>
+                    <div class="transport-info">
+                        📍 🚗去海岸公路(10:30) / 🚗去chahkan(11:30)<br>
+                        📍 🚌春川鐵板炒雞(12:50) / 🚌🐔➔鹹德(14:20)<br>
+                        📍 🚌mumu住宿(19:00)
+                    </div>
+                    <ul>
+                        <li><span class="time-tag">10:50-11:30</span> 彩虹海岸公路+白馬燈塔+蛋塔</li>
+                        <li><span class="time-tag">11:50-12:50</span> 👟 Chahkan 購物</li>
+                        <li><span class="time-tag">13:20-14:20</span> 🍽️ 吃春川鐵板炒雞</li>
+                        <li><span class="time-tag">15:00-18:00</span> 🌊 鹹德：Hogg、海女包飯、Delmoondo、大蒜麵包、943studio、Daily Stitch、Olive Young</li>
+                        <li><span class="time-tag">18:00-19:00</span> 🍽️ 晚餐：細花排骨</li>
+                    </ul>
                 </div></div>
 
                 <div class="slide"><div class="day-header"><div class="day-label">3/9</div><div class="transport-icon-btn" onclick="toggleInfo(this)">🚌</div></div>
                 <div class="scroll-content">
-                    <div class="transport-info">📍 🚌倫敦貝果(07:30) / 🚌月汀里(09:10)<br>📍 🛥️下牛木洞港(11:20) / 🚌城山港(04:00)</div>
-                    <ul><li><span class="time-tag">08:10</span> 🥯 倫敦貝果博物館 & 小狗咖啡廳</li><li><span class="time-tag">11:50-16:00</span> 🛥️ 牛島全日玩耍</li><li><span class="time-tag">16:30</span> ⛰️ 城山日出峰 / 涉地可支</li></ul>
+                    <div class="transport-info">
+                        📍 🚌民宿-倫敦貝果(07:30) / 🚌月汀里(09:10)<br>
+                        📍 🚌城山港(10:20) / 🛥️下牛木洞港(11:20)<br>
+                        📍 🚌城山港(04:00) / 🚗涉地可支(05:40)
+                    </div>
+                    <ul>
+                        <li><span class="time-tag">08:10-09:10</span> 🥯 倫敦貝果 & 小狗咖啡廳</li>
+                        <li><span class="time-tag">09:40-10:20</span> 🏝️ 月汀里海岸</li>
+                        <li><span class="time-tag">11:50-04:00</span> 🛥️ 牛島全日玩耍</li>
+                        <li><span class="time-tag">04:45-05:40</span> ⛰️ 城山日出峰</li>
+                        <li><span class="time-tag">05:55-06:30</span> 🚗 涉地可支</li>
+                    </ul>
                 </div></div>
 
-                <div class="slide"><div class="day-header"><div class="day-label">3/10</div></div>
+                <div class="slide"><div class="day-header"><div class="day-label">3/10</div><div class="transport-icon-btn" onclick="toggleInfo(this)">🚌</div></div>
                 <div class="scroll-content">
-                    <ul><li>🔹 🌺 山茶花之丘 (18:00關門)</li><li>🔹 中文海水浴場、ocean咖啡廳</li><li>🔹 🗿 柱狀節理帶、橘子閣樓</li><li>🔹 偶來市場 & 李仲線逛街</li></ul>
+                    <div class="transport-info">📍 移動：從mumu 到第一 70 酒店<br>📍 順序：山茶花➔中文海邊➔節理帶➔偶來市場</div>
+                    <ul>
+                        <li>🔹 🌺 山茶花之丘 (18:00關門)</li>
+                        <li>🔹 中文海水浴場海邊+oy+星巴克+ocean</li>
+                        <li>🔹 🗿 柱狀節理帶、橘子閣樓</li>
+                        <li>🔹 🛍️ 偶來市場 (07:00-21:00) & 李仲線逛街</li>
+                    </ul>
                 </div></div>
 
                 <div class="slide"><div class="day-header"><div class="day-label">3/11</div><div class="transport-icon-btn" onclick="toggleInfo(this)">🚌</div></div>
                 <div class="scroll-content">
-                    <div class="transport-info">📍 🚌小羊牧場(08:00) / 🚌茶博館(10:00)<br>📍 🚌漢潭步道(15:00) / 🚌豆腐鍋(19:00)</div>
-                    <ul><li><span class="time-tag">09:00</span> 🐑 Saebyeol 小羊牧場</li><li><span class="time-tag">11:00</span> 🍵 Osulloc 茶博物館</li><li><span class="time-tag">12:30</span> 🏝️ 挾才海灘 + 午餐 + 小物店</li><li><span class="time-tag">15:40</span> 🚶 漢潭步道 + 橡子漫畫</li><li><span class="time-tag">17:20</span> ☕ haejigae & 香水體驗</li></ul>
+                    <div class="transport-info">
+                        📍 🚌羊牧場(08:00) / 🚌茶博館(10:00) / 🚌午餐(12:00)<br>
+                        📍 🚌小物店(14:00) / 🚌漢潭步道(15:00) / 🚌豆腐鍋(19:00)
+                    </div>
+                    <ul>
+                        <li><span class="time-tag">09:00-10:00</span> 🐑 Saebyeol 小羊牧場</li>
+                        <li><span class="time-tag">11:00-12:00</span> 🍵 Osulloc 茶博物館</li>
+                        <li><span class="time-tag">12:30-14:00</span> 🏝️ 挾才海灘 + 午餐</li>
+                        <li><span class="time-tag">14:20-15:00</span> 🎁 逛小物店</li>
+                        <li><span class="time-tag">15:40-17:00</span> 🚶 漢潭步道 + 橡子漫畫</li>
+                        <li><span class="time-tag">17:20-18:00</span> ☕ haejigae / 18:00 Assisi香水</li>
+                        <li><span class="time-tag">19:00-20:00</span> 🍽️ 張一品豆腐鍋</li>
+                    </ul>
                 </div></div>
 
                 <div class="slide"><div class="day-header"><div class="day-label">3/12</div><div class="transport-icon-btn" onclick="toggleInfo(this)">🚌</div></div>
                 <div class="scroll-content">
-                    <div class="transport-info">📍 🚌東門市場(09:00)<br>📍 免稅店(~19:00), 大創(~22:00)</div>
-                    <ul><li><span class="time-tag">09:30</span> 東門市場</li><li><span class="time-tag">10:30-16:00</span> 七星街 + 橡子廚房 + 地下街</li><li><span class="time-tag">16:00</span> 🛒 寶健路爆買</li></ul>
+                    <div class="transport-info">📍 🚌東門市場(09:00)<br>📍 營業時間：免稅店(~19:00), 大創(~22:00), 樂天(~23:00)</div>
+                    <ul>
+                        <li><span class="time-tag">09:30-10:30</span> 🥟 東門市場</li>
+                        <li><span class="time-tag">10:30-15:00</span> 🛍️ 七星街 + 橡子廚房</li>
+                        <li><span class="time-tag">15:00-16:00</span> 🛍️ 中央地下街</li>
+                        <li><span class="time-tag">16:00之後</span> 🛒 寶健路爆買行程</li>
+                    </ul>
                 </div></div>
 
                 <div class="slide"><div class="day-header"><div class="day-label">3/13</div></div>
                 <div class="scroll-content"><ul><li>🍽️ 早餐：Egg drop ➔ CJU 機場</li></ul></div></div>
 
                 <div class="slide"><div class="day-header"><div class="day-label">行李清單</div></div><div class="scroll-content">
-                    <div class="check-list">
-                        <label class="check-item"><input type="checkbox"><span>護照、錢包、韓幣 🇰🇷</span></label>
-                        <label class="check-item"><input type="checkbox"><span>ESIM、行動電源、轉接頭</span></label>
-                        <label class="check-item"><input type="checkbox"><span>隱眼、沖洗液、藥水、藥物</span></label>
-                        <label class="check-item"><input type="checkbox"><span>化妝品、保養品、髮捲</span></label>
-                        <label class="check-item"><input type="checkbox"><span>5套衣服、內衣、襪子、睡衣</span></label>
-                        <label class="check-item"><input type="checkbox"><span>洗髮沐浴、毛巾、拖鞋</span></label>
-                        <label class="check-item"><input type="checkbox"><span>防曬、雨傘、生理用品、口罩</span></label>
-                    </div>
+                    <label class="check-item"><input type="checkbox"><span>護照、錢包、韓幣 🇰🇷</span></label>
+                    <label class="check-item"><input type="checkbox"><span>ESIM、耳機、手機掛繩</span></label>
+                    <label class="check-item"><input type="checkbox"><span>行李秤、行充*2</span></label>
+                    <label class="check-item"><input type="checkbox"><span>轉接頭、充電器</span></label>
+                    <label class="check-item"><input type="checkbox"><span>帽子、眼鏡、墨鏡</span></label>
+                    <label class="check-item"><input type="checkbox"><span>外套、5套衣服、內衣</span></label>
+                    <label class="check-item"><input type="checkbox"><span>睡衣褲、免洗內褲、襪子</span></label>
+                    <label class="check-item"><input type="checkbox"><span>防曬、面膜、假睫毛、髮捲</span></label>
+                    <label class="check-item"><input type="checkbox"><span>隱眼.沖洗液&藥水、卸妝</span></label>
+                    <label class="check-item"><input type="checkbox"><span>洗面乳、沐浴乳、洗髮精、護髮油</span></label>
+                    <label class="check-item"><input type="checkbox"><span>毛巾、拖鞋</span></label>
+                    <label class="check-item"><input type="checkbox"><span>雨傘、口罩、生理用品</span></label>
+                    <label class="check-item"><input type="checkbox"><span>衛生紙、濕紙巾、塑膠袋</span></label>
+                    <label class="check-item"><input type="checkbox"><span>暈車藥、胃藥、ok繃、藥膏</span></label>
                 </div></div>
 
                 <div class="slide"><div class="cover-page"><img src="JEJU B.png" class="cover-img"></div></div>
